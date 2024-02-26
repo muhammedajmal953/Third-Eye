@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/user.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user update-Admin-ThirdEye</title>
+</head>
+<body>
+    <div class="login-container">
+        <form class="login-form" method="post" action="/admin/user-updated/<%=user._id%>">
+          <h1>User Update</h1>
+          <p>update user</p>
+          <div class="input-group">
+            <input type="text" id="username" name="username" value="<%=user.username%>" >
+          
+          </div>
+          <div class="input-group">
+            <input type="text" id="email" name="email"  value="<%=user.email%>" >
+            <p id="passwordVal"></p>
+          </div>
+          <div class="input-group">
+            <input type="number" id="email" name="phone" value="<%=user.phone%>" >
+            <p id="passwordVal"></p>
+          </div>
+          <div class="input-group">
+            <input type="password" id="password" name="password"  value="<%=user.password%>" >
+            <p id="passwordVal"></p>
+          </div>
+       
+         <button type="submit" class="btn btn-success">Update</button>
+         
+        </form>
+      </div>
+</body>
+</html>

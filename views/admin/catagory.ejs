@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Nest Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/favicon.svg" />
+    <!-- Template CSS -->
+    <link href="/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="" class="brand-wrap">
+                <h1 class="h1">Third Eye</h1>
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside"> 
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/dashboard">
+                        <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/products">
+                        <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="page-orders-1.html">
+                        <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-orders-1.html">Order list 1</a>
+                        <a href="page-orders-2.html">Order list 2</a>
+                        <a href="page-orders-detail.html">Order detail</a>
+                    </div>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="page-sellers-cards.html">
+                        <i class="icon material-icons md-store"></i>
+                        <span class="text">Sellers</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-sellers-cards.html">Sellers cards</a>
+                        <a href="page-sellers-list.html">Sellers list</a>
+                        <a href="page-seller-detail.html">Seller profile</a>
+                    </div>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/catagory">
+                        <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Catagory</span>
+                    </a>
+
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="page-transactions-1.html">
+                        <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Transactions</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-transactions-1.html">Transaction 1</a>
+                        <a href="page-transactions-2.html">Transaction 2</a>
+                    </div>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/customers">
+                        <i class="icon material-icons md-person"></i>
+                        <span class="text">Customers</span>
+                    </a>
+
+                </li>
+
+            </ul>
+            <hr />
+
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+
+            </div>
+            <div class="col-nav">
+                <ul class="nav">
+                    <li class="nav-item ">
+                      <a href="/admin/logout" class="btn btn-success text-dark">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <div class="d-flex  mb-5">
+            <h1  class="mt-4">Catagory View</h1>
+            <a href="/admin/add-catagory" style="margin: 30px;">
+                <button class="btn btn-success">Add Catagory</button>
+            </a>
+            <a href="/admin/unlisted-catagory" style="margin: 30px;">
+                <button class="btn btn-warning">Show removed</button>
+            </a>
+        </div>
+        <div class="container d-flex">
+            <% for(i=0;i<catagory.length;i++){ %>
+                <%if(catagory[i].isActive==true) { %>
+                    <div class="col-lg-3 col-md-4">
+                        <div class="card card-product-grid me-4">
+                            <a href="#" class="img-wrap"> <img src="/catagory/<%=catagory[i].image %>" alt="Product"  width="100px" height="200px"/>
+                            </a>
+                            <div class="info-wrap">
+                                <h4 href="#" class="title text-truncate">
+                                    <%=catagory[i].catagoryName %>
+                                </h4>
+
+                              <div class="d-flex">
+                                <a href="/admin/edit-catagory?id=<%=catagory[i]._id%>"
+                                    class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i>
+                                    Edit </a>
+                                <form  action="/admin/remove-catagory?id=<%=catagory[i]._id%>" method="post">
+                                    <input type="submit" class="btn btn-sm font-sm btn-danger rounded" value="Remove">
+
+                                </form>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                    <% } %>
+        </div>
+       
+    </main>
+    <script src="/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/js/vendors/select2.min.js"></script>
+    <script src="/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="/js/vendors/chart.js"></script>
+    <!-- Main Script -->
+    <script src="/js/main.js?v=1.1" type="text/javascript"></script>
+    <script src="/js/custom-chart.js" type="text/javascript"></script>
+</body>
+
+</html>

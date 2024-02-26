@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en" class="light-theme">
+
+
+<!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:26 GMT -->
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--favicon-->
+    <link rel="icon" href="/user/images/favicon-32x32.webp" type="image/webp" />
+
+    <!-- CSS files -->
+    <link href="/user/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/user/cdn.jsdelivr.net/npm/bootstrap-icons%401.7.2/font/bootstrap-icons.css">
+    <!-- Plugins -->
+    <link rel="stylesheet" type="text/css" href="/user/plugins/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="/user/plugins/slick/slick-theme.css" />
+
+    <link href="/user/css/style.css" rel="stylesheet">
+    <link href="/user/css/dark-theme.css" rel="stylesheet">
+
+    <title>ThirdEye - eCommerce</title>
+</head>
+
+<body>
+
+
+    <!--page loader-->
+    <div class="loader-wrapper">
+        <div
+            class="d-flex justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
+            <div class="spinner-border text-dark" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <!--end loader-->
+
+    <!--start top header-->
+    <header class="top-header">
+        <nav class="navbar navbar-expand-xl w-100 navbar-dark container gap-3">
+            <a class="navbar-brand d-none d-xl-inline" href="index.html">
+                <h3 class="mt-1">THIRD EYE</h3>
+            </a>
+            <a class="mobile-menu-btn d-inline d-xl-none" href="javascript:;" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar">
+                <i class="bi bi-list"></i>
+            </a>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
+                <div class="offcanvas-header">
+                    <div class="offcanvas-logo"><img src="/user/images/logo.webp" class="logo-img" alt="">
+                    </div>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body primary-menu">
+                    <ul class="navbar-nav justify-content-start flex-grow-1 gap-1">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user/home">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="tv-shows.html"
+                                data-bs-toggle="dropdown">
+                                Categories
+                            </a>
+                            <div class="dropdown-menu dropdown-large-menu">
+                                <div class="row">
+
+                                    <!-- end col-3 -->
+                                    <div class="col-12 col-xl-4">
+                                        <h6 class="large-menu-title">Sunglass</h6>
+                                        <ul class="list-unstyled">
+                                            <li><a href="javascript:;">Computer Glass</a>
+                                            </li>
+                                            <li><a href="javascript:;">Fancy Frames</a>
+                                            </li>
+
+
+                                        </ul>
+                                    </div>
+                                    <!-- end col-3 -->
+
+                                    <!-- end col-3 -->
+                                </div>
+                                <!-- end row -->
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="/user/productList" data-bs-toggle="dropdown">
+                              Shop
+                            </a>
+                          </li>
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;" >
+                              Account
+                            </a>
+                          </li>
+                        
+                    </ul>
+                </div>
+            </div>
+            <ul class="navbar-nav secondary-menu flex-row">
+                <li class="nav-item">
+                    <a class="nav-link dark-mode-icon" href="javascript:;">
+                        <div class="mode-icon">
+                            <i class="bi bi-moon"></i>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="search.html"><i class="bi bi-search"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="wishlist.html"><i class="bi bi-suit-heart"></i></a>
+                </li>
+                <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
+                    <a class="nav-link position-relative" href="javascript:;">
+                        <div class="cart-badge">8</div>
+                        <i class="bi bi-basket2"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="account-dashboard.html"><i class="bi bi-person-circle"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <!--end top header-->
+    <div style="margin-top: 100px;">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/user/home">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Product-page</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row g-3 mb-5 ms-5">
+        <div class="col-lg-6">
+            <div class="wrap-modal-slider">
+                <div class="slider-for">
+                    <div>
+                        <img src="/products/<%=product.images[0]%>" alt="" width="500px"  class="img-fluid zoom">
+                    </div>
+                </div>
+                <div class="slider-nav mt-3">
+                  
+                  <%for(i=1;i<product.images.length;i++){%>  
+                    <div>
+                        <img src="/products/<%=product.images[i]%>" alt="" width="100px"  class="img-fluid zoom">
+                    </div>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xl-6">
+            <div class="product-info">
+                <h4 class="product-title fw-bold mb-1">
+                    <%=product.productName%>
+                </h4>
+                <p class="mb-0">
+                    <%=product.description%>
+                </p>
+                <div class="product-rating">
+                    <div class="hstack gap-2 border p-1 mt-3 width-content">
+                        <div><span class="rating-number">4.8</span><i class="bi bi-star-fill ms-1 text-success"></i>
+                        </div>
+                        <div class="vr"></div>
+                        <div>162 Ratings</div>
+                    </div>
+                </div>
+                <hr>
+                <div class="product-price d-flex align-items-center gap-3">
+                    <div class="h4 fw-bold">
+                        ₹ <%=product.price%>
+                    </div>
+                </div>
+                <p class="fw-bold mb-0 mt-1 text-danger">only <%=product.quantity%> left</p>
+                <p class="fw-bold mb-0 mt-1 text-success">inclusive of all taxes</p>
+                <div class="cart-buttons mt-3">
+                    <div class="buttons d-flex flex-column gap-3 mt-4">
+                        <a href="javascript:;" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 flex-grow-1"><i
+                                class="bi bi-basket2 me-2"></i>Add to Bag</a>
+                        <a href="javascript:;" class="btn btn-lg btn-outline-dark btn-ecomm px-5 py-3"><i
+                                class="bi bi-suit-heart me-2"></i>Wishlist</a>
+                    </div>
+                </div>
+                <hr class="my-3">
+                <div class="product-share">
+                    <h6 class="fw-bold mb-3">Share This Product</h6>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <div class="">
+                            <button type="button" class="btn-social bg-twitter"><i class="bi bi-twitter"></i></button>
+                        </div>
+                        <div class="">
+                            <button type="button" class="btn-social bg-facebook"><i class="bi bi-facebook"></i></button>
+                        </div>
+                        <div class="">
+                            <button type="button" class="btn-social bg-linkden"><i class="bi bi-linkedin"></i></button>
+                        </div>
+                        <div class="">
+                            <button type="button" class="btn-social bg-youtube"><i class="bi bi-youtube"></i></button>
+                        </div>
+                        <div class="">
+                            <button type="button" class="btn-social bg-pinterest"><i
+                                    class="bi bi-pinterest"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--start footer-->
+    <section class="footer-section bg-section-2 section-padding">
+        <div class="container ">
+            <div class="row row-cols-1 row-cols-lg-4 g-4">
+                <div class="col">
+                    <div class="footer-widget-6">
+                        <h3>THIRD EYE</h3>
+                        <h5 class="mb-3 fw-bold">About Us</h5>
+                        <p class="mb-2">Founded in 2023, Visionary Optics is a leading e-commerce platform specializing
+                            in eyewear.
+                            With a mission to provide stylish and high-quality eyewear to customers worldwide, Visionary
+                            Optics offers a diverse range of products, including prescription glasses, sunglasses, and
+                            contact lenses.
+                            Through innovative technology and a user-friendly interface, customers can easily browse and
+                            purchase eyewear tailored to their preferences and vision needs.
+                           </p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="footer-widget-7">
+                        <h5 class="mb-3 fw-bold">Explore</h5>
+                        <ul class="widget-link list-unstyled">
+                            <li><a href="">Sunglass</a></li>
+                            <li><a href="">Computerglass</a></li>
+                            <li><a href="">Fancy frames</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="footer-widget-8">
+                        <h5 class="mb-3 fw-bold">Company</h5>
+                        <ul class="widget-link list-unstyled">
+                            <li><a href="javascript:;">About Us</a></li>
+                            <li><a href="javascript:;">Contact Us</a></li>
+                            <li><a href="javascript:;">FAQ</a></li>
+                            <li><a href="javascript:;">Privacy</a></li>
+                            <li><a href="javascript:;">Terms</a></li>
+                            <li><a href="javascript:;">Complaints</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="footer-widget-9">
+                        <h5 class="mb-3 fw-bold">Follow Us</h5>
+                        <div class="social-link d-flex align-items-center gap-2">
+                            <a href="javascript:;"><i class="bi bi-facebook"></i></a>
+                            <a href="javascript:;"><i class="bi bi-twitter"></i></a>
+                            <a href="javascript:;"><i class="bi bi-linkedin"></i></a>
+                            <a href="javascript:;"><i class="bi bi-youtube"></i></a>
+                            <a href="javascript:;"><i class="bi bi-instagram"></i></a>
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <h5 class="mb-0 fw-bold">Support</h5>
+                            <p class="mb-0 text-muted">support@example.com</p>
+                        </div>
+                        <div class="">
+                            <h5 class="mb-0 fw-bold">Toll Free</h5>
+                            <p class="mb-0 text-muted">1800- 8xx 2xx</p>
+                        </div>
+                    </div>
+                </div>
+            </div><!--end row-->
+            <div class="my-5"></div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h5 class="fw-bold mb-3">Download Mobile App</h5>
+                    </div>
+                    <div
+                        class="app-icon d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
+                        <div>
+                            <a href="javascript:;">
+                                <img src="/user/images/play-store.webp" width="160" alt="">
+                            </a>
+                        </div>
+                        <div>
+                            <a href="javascript:;">
+                                <img src="/user/images/apple-store.webp" width="160" alt="">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div><!--end row-->
+
+        </div>
+    </section>
+    <!--end footer-->
+
+    <footer class="footer-strip text-center py-3 bg-section-2 border-top positon-absolute bottom-0">
+        <p class="mb-0 text-muted">© 2023. www.thirdeye.com | All rights reserved.</p>
+    </footer>
+
+
+
+
+
+    <!--Start Back To Top Button-->
+    <a href="javaScript:;" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!--End Back To Top Button-->
+
+
+    <!-- JavaScript files -->
+    <script src="/user/js/bootstrap.bundle.min.js"></script>
+    <script src="/user/js/jquery.min.js"></script>
+    <script src="/user/plugins/slick/slick.min.js"></script>
+    <script src="/user/js/main.js"></script>
+    <script src="/user/js/index.js"></script>
+    <script src="/user/js/loader.js"></script>
+
+</body>
+
+
+<!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:51 GMT -->
+
+</html>

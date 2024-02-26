@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Admin-ThirdEye</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="" />
+        <meta property="og:type" content="" />
+        <meta property="og:url" content="" />
+        <meta property="og:image" content="" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/favicon.svg" />
+        <!-- Template CSS -->
+        <link href="/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+    </head>
+       
+    <body>
+        <aside class="navbar-aside" id="offcanvas_aside">
+            <div class="aside-top">
+                <a href="" class="brand-wrap">
+                    <h1 class="h1">Third Eye</h1>
+                </a>
+                <div>
+                    <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
+                </div>
+            </div>
+        </aside> 
+        <main>
+            <section class="content-main mt-80 mb-80">
+                <div class="card mx-auto card-login">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Add Products</h4>
+                        <form  method="post" action="/admin/edit-product/<%=product._id%>" enctype="multipart/form-data" accept="image">
+                            <div class="mb-3">
+                                <input class="form-control" value="<%=product.productName%>" type="text" name="productName">
+                            </div>
+                            <!-- form-group// -->
+                            <div class="mb-3">
+                                
+                               <textarea name="description"  id="" class="form-control" cols="30" rows="5" ><%=product.description%></textarea>
+                            </div>
+                         
+                            <div class="mb-3">
+                                <input class="form-control" value="<%=product.price%>"  type="number" name="price">
+                            </div>
+                            <div class="mb-3">
+                                <input class="form-control" value="<%=product.quantity%>"  type="number" name="quantity">
+                            </div>
+                            <select class="form-control mb-2" name="catagory" id="" >
+                                <option value=""><%=product.catagory%></option>
+                                <%for(i=0;i<catagory.length;i++){%>
+                                    <%if (catagory[i].catagoryName!=product.catagory){%>
+                                    <option><%=catagory[i].catagoryName%></option>
+                                    <%}%>
+                                  <%}%>
+                            </select>
+                            <div class="mb-3">
+                                <%for(i=0;i<product.images.length;i++){%>
+                                
+                                <img id="showImgEdit" src="/products/<%=product.images[i]%>" width="100px" height="120px" id="imageView" >
+
+                                <%}%>
+
+                                <input class="form-control" onchange="viewImage()" type="file" name="images" multiple>
+                            </div>
+                         
+                            <div class="mb-4">
+                                <button type="submit" class="btn btn-primary w-100">Edit Product</button>
+                            </div>
+                            <!-- form-group// -->
+                        </form>
+                       
+                    </div>
+                </div>
+            </section>
+           
+        </main>
+        <script src="/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="/js/main.js?v=1.1" type="text/javascript"></script>
+        <script>
+            const viewImage=()=>{
+                
+            }
+        </script>
+    </body>
+</html>

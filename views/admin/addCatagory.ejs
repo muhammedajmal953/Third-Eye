@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Nest Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/imgs/theme/favicon.svg"
+    />
+    <!-- Template CSS -->
+    <link href="/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="" class="brand-wrap">
+                <h1 class="h1">Third Eye</h1>
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
+            </div>
+        </div>
+    </aside> 
+    <main>
+      <section class="content-main mt-80 mb-80">
+        <div class="card mx-auto card-login">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Add Catagory</h4>
+            <%if (message) {%>
+            <h6 class="text-danger mb-3" id="message"><%=message%></h6>
+            <%}%>
+
+            <form
+              method="post"
+              action="/admin/add-catagory"
+              enctype="multipart/form-data"
+              accept="image"
+              onsubmit="return validateCat()"
+            >
+              <div class="mb-3">
+                <input
+                  class="form-control"
+                  placeholder="Catagory Name"
+                  type="text"
+                  id="catagoryName"
+                  name="catagoryName"
+                />
+              </div>
+              <!-- form-group// -->
+              <div class="mb-3">
+                <img src="" alt="" id="imageView" hight="100px" width="100px"/>
+                <input
+                  class="form-control"
+                  placeholder="Select image"
+                  type="file"
+                  name="image"
+                  onchange="viewImage()"
+                />
+              </div>
+
+              <div class="mb-4">
+                <button type="submit" class="btn btn-primary w-100">
+                  Add catagory
+                </button>
+              </div>
+              <!-- form-group// -->
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/js/main.js?v=1.1" type="text/javascript"></script>
+
+    <script>
+      setTimeout(() => {
+        document.getElementById("message").style.display = "none";
+      }, 3000);
+      function validateCat() {
+        const trimedName = document.getElementById("catagoryName").value.trim();
+        if (trimedName === "") {
+          alert("catagoryname not be empty or space");
+          return false;
+        }
+        return true;
+      }
+      function viewImage() {
+        const displayImage = (document.getElementById("imageView").src =
+          URL.createObjectURL(event.target.files[0]));
+      }
+    </script>
+  </body>
+</html>

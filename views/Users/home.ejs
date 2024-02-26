@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en" class="light-theme">
+
+
+<!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:26 GMT -->
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--favicon-->
+  <link rel="icon" href="/user/images/favicon-32x32.webp" type="image/webp" />
+
+  <!-- CSS files -->
+  <link href="/user/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/user/cdn.jsdelivr.net/npm/bootstrap-icons%401.7.2/font/bootstrap-icons.css">
+  <!-- Plugins -->
+  <link rel="stylesheet" type="text/css" href="/user/plugins/slick/slick.css" />
+  <link rel="stylesheet" type="text/css" href="/user/plugins/slick/slick-theme.css" />
+
+  <link href="/user/css/style.css" rel="stylesheet">
+  <link href="/user/css/dark-theme.css" rel="stylesheet">
+
+  <title>ThirdEye - eCommerce</title>
+</head>
+
+<body>
+
+
+  <!--page loader-->
+  <div class="loader-wrapper">
+    <div class="d-flex justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
+      <div class="spinner-border text-dark" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
+  <!--end loader-->
+
+  <!--start top header-->
+  <header class="top-header">
+    <nav class="navbar navbar-expand-xl w-100 navbar-dark container gap-3">
+      <a class="navbar-brand d-none d-xl-inline" href="index.html">
+        <h3 class="mt-1">THIRD EYE</h3>
+      </a>
+      <a class="mobile-menu-btn d-inline d-xl-none" href="javascript:;" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasNavbar">
+        <i class="bi bi-list"></i>
+      </a>
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
+        <div class="offcanvas-header">
+          <div class="offcanvas-logo"><img src="/user/images/logo.webp" class="logo-img" alt="">
+          </div>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body primary-menu">
+          <ul class="navbar-nav justify-content-start flex-grow-1 gap-1">
+            <li class="nav-item">
+              <a class="nav-link" href="/user/home">Home</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="tv-shows.html"
+                data-bs-toggle="dropdown">
+                Categories
+              </a>
+              <div class="dropdown-menu dropdown-large-menu">
+                <div class="row">
+
+                  <!-- end col-3 -->
+                  <div class="col-12 col-xl-4">
+                    <h6 class="large-menu-title">Sunglass</h6>
+                    <ul class="list-unstyled">
+                      <li><a href="javascript:;">Computer Glass</a>
+                      </li>
+                      <li><a href="javascript:;">Fancy Frames</a>
+                      </li>
+
+
+                    </ul>
+                  </div>
+                  <!-- end col-3 -->
+
+                  <!-- end col-3 -->
+                </div>
+                <!-- end row -->
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/productList" >
+                Shop
+              </a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="/user/profile" >
+                Account
+              </a>
+            </li>
+           
+          </ul>
+        </div>
+      </div>
+      <ul class="navbar-nav secondary-menu flex-row">
+        <li class="nav-item">
+          <a class="nav-link dark-mode-icon" href="javascript:;">
+            <div class="mode-icon">
+              <i class="bi bi-moon"></i>
+            </div>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="search.html"><i class="bi bi-search"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="wishlist.html"><i class="bi bi-suit-heart"></i></a>
+        </li>
+        <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
+          <a class="nav-link position-relative" href="javascript:;">
+            <div class="cart-badge">8</div>
+            <i class="bi bi-basket2"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="account-dashboard.html"><i class="bi bi-person-circle"></i></a>
+        </li>
+            <li class="nav-item">
+              <a class="btn btn-success" href="/user/logout">Logout</a>
+            </li>
+      </ul>
+    </nav>
+  </header>
+  <!--end top header-->
+
+
+  <!--start page content-->
+  <div class="page-content">
+
+    <!--start carousel-->
+    <section class="slider-section">
+      <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+            aria-current="true"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="4"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active bg-primary">
+            <div class="row d-flex align-items-center">
+              <div class="col d-none d-lg-flex justify-content-center">
+                <div class="">
+                  <h3 class="h3 fw-light text-white fw-bold">New Arrival</h3>
+                  <h1 class="h1 text-white fw-bold">Classic Collection</h1>
+                  <p class="text-white fw-bold"><i>Last call for upto 25%</i></p>
+                  <div class=""><a class="btn btn-dark btn-ecomm" href="shop-grid.html">Shop Now</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <img src="/user/images/sliders/thirdeyeBanner.webp" class="img-fluid" alt="...">
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </section>
+    <!--end carousel-->
+
+
+
+
+
+    <!--start tabular product-->
+    <section class="product-tab-section section-padding bg-light">
+      <div class="container">
+        <div class="text-center pb-3">
+          <h3 class="mb-0 h3 fw-bold">Products</h3>
+          <p class="mb-0 text-capitalize"></p>
+        </div>
+            
+        <hr>
+        <div class="tab-content tabular-product">
+          <div class="tab-pane fade show active" id="new-arrival">
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-5 g-4">
+
+              <%for(i=0;i<product.length;i++){%>
+                <%if(product[i].isListed===true) {%>
+                  <div class="col">
+                    <a href="/user/product-details?id=<%=product[i]._id%>">
+                      <div class="card">
+                        <div class="position-relative overflow-hidden">
+                          <img src="/products/<%=product[i].images[0]%>" class="card-img-top" width="100px" height="200px">
+                        </div>
+                        <div class="card-body">
+                          <div class="product-info text-center">
+                            <h6 class="mb-1 fw-bold product-name">
+                              <%=product[i].productName%>
+                            </h6>
+                            <div class="ratings mb-1 h6">
+                              <i class="bi bi-star-fill text-warning"></i>
+                              <i class="bi bi-star-fill text-warning"></i>
+                              <i class="bi bi-star-fill text-warning"></i>
+                              <i class="bi bi-star-fill text-warning"></i>
+                              <i class="bi bi-star-fill text-warning"></i>
+                            </div>
+                            <p class="mb-0 h6 fw-bold product-price">
+                             Rs- <%=product[i].price%>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                  <%}%>
+                    <%}%>
+
+                    <a href="/user/productList">
+                      <button type="button" class="btn btn-outline-primary">View More</button>
+                    </a>
+            </div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </section>
+    <!--end tabular product-->
+
+
+
+    <!--start cartegory slider-->
+    <section class="cartegory-slider section-padding bg-section-2">
+      <div class="container">
+        <div class="text-center pb-3">
+          <h3 class="mb-0 h3 fw-bold">Categories</h3>
+          <p class="mb-0 text-capitalize">Select your favorite categories and purchase</p>
+        </div>
+        <div class="cartegory-box">
+          <%for(i=0;i<catagory.length;i++){%>
+            <%if(catagory[i].isActive===true) {%>
+              <a href="shop-grid-type-4.html">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="overflow-hidden">
+                      <img src="/catagory/<%=catagory[i].image%>" class="card-img-top rounded-0" width="100px" height="200px">
+                    </div>
+                    <div class="text-center">
+                      <h5 class="mb-1 cartegory-name mt-3 fw-bold">
+                        <%=catagory[i].catagoryName%>
+                      </h5> 
+                    </div>
+                  </div>
+                </div>
+              </a>
+              <%}%>
+            <%}%>
+              
+        </div>
+      </div>
+    </section>
+    <!--end cartegory slider-->
+
+
+
+
+
+
+  </div>
+  <!--end page content-->
+
+
+  <!--start footer-->
+  <section class="footer-section bg-section-2 section-padding">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-lg-4 g-4">
+        <div class="col">
+          <div class="footer-widget-6">
+            <h3>THIRD EYE</h3>
+            <h5 class="mb-3 fw-bold">About Us</h5>
+            <p class="mb-2">Founded in 2023, Visionary Optics is a leading e-commerce platform specializing in eyewear.
+              With a mission to provide stylish and high-quality eyewear to customers worldwide, Visionary Optics offers
+              a diverse range of products, including prescription glasses, sunglasses, and contact lenses.
+              Through innovative technology and a user-friendly interface, customers can easily browse and purchase
+              eyewear tailored to their preferences and vision needs.
+              </p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="footer-widget-7">
+            <h5 class="mb-3 fw-bold">Explore</h5>
+            <ul class="widget-link list-unstyled">
+              <li><a href="">Sunglass</a></li>
+              <li><a href="">Computerglass</a></li>
+              <li><a href="">Fancy frames</a></li>
+
+
+            </ul>
+          </div>
+        </div>
+        <div class="col">
+          <div class="footer-widget-8">
+            <h5 class="mb-3 fw-bold">Company</h5>
+            <ul class="widget-link list-unstyled">
+              <li><a href="javascript:;">About Us</a></li>
+              <li><a href="javascript:;">Contact Us</a></li>
+              <li><a href="javascript:;">FAQ</a></li>
+              <li><a href="javascript:;">Privacy</a></li>
+              <li><a href="javascript:;">Terms</a></li>
+              <li><a href="javascript:;">Complaints</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col">
+          <div class="footer-widget-9">
+            <h5 class="mb-3 fw-bold">Follow Us</h5>
+            <div class="social-link d-flex align-items-center gap-2">
+              <a href="javascript:;"><i class="bi bi-facebook"></i></a>
+              <a href="javascript:;"><i class="bi bi-twitter"></i></a>
+              <a href="javascript:;"><i class="bi bi-linkedin"></i></a>
+              <a href="javascript:;"><i class="bi bi-youtube"></i></a>
+              <a href="javascript:;"><i class="bi bi-instagram"></i></a>
+            </div>
+            <div class="mb-3 mt-3">
+              <h5 class="mb-0 fw-bold">Support</h5>
+              <p class="mb-0 text-muted">support@example.com</p>
+            </div>
+            <div class="">
+              <h5 class="mb-0 fw-bold">Toll Free</h5>
+              <p class="mb-0 text-muted">1800- 8xx 2xx</p>
+            </div>
+          </div>
+        </div>
+      </div><!--end row-->
+      <div class="my-5"></div>
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center">
+            <h5 class="fw-bold mb-3">Download Mobile App</h5>
+          </div>
+          <div class="app-icon d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
+            <div>
+              <a href="javascript:;">
+                <img src="/user/images/play-store.webp" width="160" alt="">
+              </a>
+            </div>
+            <div>
+              <a href="javascript:;">
+                <img src="/user/images/apple-store.webp" width="160" alt="">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div><!--end row-->
+
+    </div>
+  </section>
+  <!--end footer-->
+
+  <footer class="footer-strip text-center py-3 bg-section-2 border-top positon-absolute bottom-0">
+    <p class="mb-0 text-muted">© 2023. www.thirdeye.com | All rights reserved.</p>
+  </footer>
+
+
+
+
+
+  <!--Start Back To Top Button-->
+  <a href="javaScript:;" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
+  <!--End Back To Top Button-->
+
+
+  <!-- JavaScript files -->
+  <script src="/user/js/bootstrap.bundle.min.js"></script>
+  <script src="/user/js/jquery.min.js"></script>
+  <script src="/user/plugins/slick/slick.min.js"></script>
+  <script src="/user/js/main.js"></script>
+  <script src="/user/js/index.js"></script>
+  <script src="/user/js/loader.js"></script>
+
+</body>
+
+
+<!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:51 GMT -->
+
+</html>
