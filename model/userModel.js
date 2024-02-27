@@ -7,8 +7,13 @@ const UsersSchema = mongoose.Schema({
   username: { type: String},
   email: { type: String},
   password: { type: String},
-  address: {
-  },
+  address: [{
+    houseName: { type: String },
+    village:{type:String},
+    city: { type: String },
+    state: { type: String },
+    pincode:{type:Number}  
+  }],
   phone: { type: Number },
   gender: String,
   isBlocked: Boolean,

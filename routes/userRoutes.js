@@ -23,9 +23,9 @@ userRoutes.get('/', userControler.landing)
 userRoutes.get('/login', userControler.get_login);
 userRoutes.post('/login', userControler.user_login); // POST route for user login
 
-//Route for google sign in
-userRoutes.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
-userRoutes.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/user/login'}),userControler.google_login)
+// //Route for google sign in
+// userRoutes.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+// userRoutes.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/user/login'}),userControler.google_login)
 
 
 
@@ -48,11 +48,20 @@ userRoutes.get('/product-details', isLoggedIn, isBlocked,userControler.view_prod
 
 //Route for user profile
 
-userRoutes.get('/profile',isLoggedIn,isBlocked,userControler.view_profile)
+userRoutes.get('/profile', isLoggedIn, isBlocked, userControler.view_profile)
+//get edit user
+userRoutes.get('/profileEdit',isLoggedIn,isBlocked,userControler.edit_profile)
+//save the editted profile
+userRoutes.post('/profileUpdate',userControler.update_profile)
 
+userRoutes.post("/changePassword", userControler.change_password)
+//show address
+userRoutes.get('/adresses',userControler.show_adress)
 
+userRoutes.post('/addAdress',userControler.addAddress)
 //logout user
 userRoutes.get('/logout', userControler.user_logout)
+
 
 
 

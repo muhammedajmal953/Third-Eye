@@ -230,7 +230,6 @@ exports.get_products = async (req, res) => {
 
 
     const products = await Product.find().limit(15).sort(sortCriteria)
-    console.log("products : ", products);
     const catagory = await Catagory.find()
     res.render('./Users/productsGrid', { products: products, catagory: catagory, sortBy })
   } catch (error) {
@@ -239,26 +238,136 @@ exports.get_products = async (req, res) => {
 };
 
 //handle user Profile View
-exports.view_profile =async (req,res) => {
+exports.view_profile = async (req, res) => {
   try {
     const id = req.session.user
-    
+
     const user = await Users.findOne({ _id: id })
-    
+
     if (user) {
-      return res.render('./Users/userProfile',{user})
+      return res.render('./Users/userProfile', { user })
     }
   } catch (error) {
-    
+
   }
 }
 
 
+//handle edit profile  get
+
+exports.edit_profile = async (req, res) => {
+  try {
+    const id = req.query.id
+
+    const user = await Users.findOne({ _id: id })
+
+    if (user) {
+      return res.render('./Users/editProfile', { user })
+    }
+  } catch (error) {
+
+  }
+}
+
+exports.update_profile = async (req, res) => {
+  try {
+    const id = req.query.id
+    const { email, username, phone } = req.body
+    const newEmail = email.trim()
+    const newName = username.trim()
+    const newPhone = phone.trim()
+    const updates = {
+      newEmail,
+      newName,
+      newPhone
+    }
+    await Users.findByIdAndUpdate(id, updates)
+    res.redirect('/user/profile')
+  } catch (error) {
+
+  }
+}
+
+
+//change password updating
+exports.change_password = async (req, res) => {
+  try {
+    let password = req.query.password
+
+    const { oldPassword, newPassword } = req.body;
+
+    // Retrieve the user's current password from the database
+    const user = await Users.findOne({ password });
+    console.log(user);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Compare the provided old password with the one stored in the database
+    const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isPasswordMatch) {
+      return res.status(400).json({ error: 'Old password is incorrect' });
+    }
+
+    // Hash the new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password in the database
+    await Users.updateOne({ _id: user._id }, { password: hashedNewPassword });
+
+    // Respond with success message
+    res.status(200).json({ message: 'Password changed successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+//show address
+exports.show_adress = async (req, res) => {
+  try {
+    const id = req.query.id
+
+    const user = await Users.findOne({ _id: id })
+
+    res.render('./Users/address', { user })
+  } catch (error) {
+
+  }
+}
+
+//addind address
+exports.addAddress = async (req, res) => {
+  try {
+    const id = req.query.id
+    const {houseName,pincode,village,city,state,}=req.body
+       
+
+    const address = {
+      pincode,
+      houseName,
+      village,
+      city,
+      state
+     }
+    
+    const user = await Users.findByIdAndUpdate({ _id: id }, { $addToSet: { address: address } })
+    
+
+        res.render('./Users/address', { user })
+     
+    
+
+  } catch (error) {
+
+  }
+}
 //handling the Logout
 
 exports.user_logout = (req, res) => {
   try {
-      req.session.user=null
-      res.redirect("/user");
+    req.session.user = null
+    res.redirect("/user");
   } catch (error) { }
 };
