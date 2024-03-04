@@ -120,8 +120,8 @@
                     <a class="nav-link" href="wishlist.html"><i class="bi bi-suit-heart"></i></a>
                 </li>
                 <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
-                    <a class="nav-link position-relative" href="javascript:;">
-                        <div class="cart-badge">8</div>
+                    <a class="nav-link position-relative" href="/user/cart">
+                        <div class="cart-badge"></div>
                         <i class="bi bi-basket2"></i>
                     </a>
                 </li>
@@ -184,8 +184,11 @@
                 <p class="fw-bold mb-0 mt-1 text-success">inclusive of all taxes</p>
                 <div class="cart-buttons mt-3">
                     <div class="buttons d-flex flex-column gap-3 mt-4">
-                        <a href="javascript:;" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 flex-grow-1"><i
-                                class="bi bi-basket2 me-2"></i>Add to Bag</a>
+                        <form action="/user/addToCart?productId=<%=product._id%>" method="post">
+        
+                            <button type="submit" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 flex-grow-1"><i
+                                class="bi bi-basket2 me-2"></i>Add to Bag</button>
+                        </form>
                         <a href="javascript:;" class="btn btn-lg btn-outline-dark btn-ecomm px-5 py-3"><i
                                 class="bi bi-suit-heart me-2"></i>Wishlist</a>
                     </div>
@@ -319,12 +322,28 @@
 
 
     <!-- JavaScript files -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/user/js/bootstrap.bundle.min.js"></script>
     <script src="/user/js/jquery.min.js"></script>
     <script src="/user/plugins/slick/slick.min.js"></script>
     <script src="/user/js/main.js"></script>
     <script src="/user/js/index.js"></script>
     <script src="/user/js/loader.js"></script>
+
+    <script>
+//     import axios from 'axios'
+//     async function addToCart() {
+//         const productId=document.getElementById('cart').value
+//          console.log('clicked');
+//         try {
+//             const response = await axios.post('http://localhost:5000/user/addToCart', { productId })
+        
+//         } 
+//         catch (error) {
+//         }
+    
+// }
+    </script>
 
 </body>
 

@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Catagory = require("../model/catagoryModel");
 const Product = require("../model/productModel");
 const Users = require("../model/userModel");
@@ -5,7 +6,9 @@ const nodemailer = require("nodemailer");
 const { generateOtp } = require("../services/generateOtp");
 const otpModel = require("../model/otpModel");
 const sendMail = require("../services/emailSender");
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const Cart = require("../model/cartModel");
+
 
 let globalEmail;
 let globalPhone;
@@ -327,7 +330,7 @@ exports.change_password = async (req, res) => {
 //show address
 exports.show_adress = async (req, res) => {
   try {
-    const id = req.query.id
+    const id = req.session.user
 
     const user = await Users.findOne({ _id: id })
 
@@ -341,8 +344,8 @@ exports.show_adress = async (req, res) => {
 exports.addAddress = async (req, res) => {
   try {
     const id = req.query.id
-    const {houseName,pincode,village,city,state,}=req.body
-       
+    const { houseName, pincode, village, city, state } = req.body
+
 
     const address = {
       pincode,
@@ -350,24 +353,177 @@ exports.addAddress = async (req, res) => {
       village,
       city,
       state
-     }
-    
+    }
+    console.log(address);
     const user = await Users.findByIdAndUpdate({ _id: id }, { $addToSet: { address: address } })
-    
 
-        res.render('./Users/address', { user })
-     
-    
 
+    res.redirect('/user/adresses')
+
+
+
+  } catch (error) {
+
+  }
+}
+
+exports.get_editAddress = async (req, res) => {
+  try {
+    const id = req.session.user
+
+    const index = req.query.index
+    const user = await Users.findById(id)
+
+    const address = user.address[index]
+    res.render('./Users/editAddress', { address, index })
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//save the edited address
+exports.addressEdit = async (req, res) => {
+  const addressIndex = req.query.addressIndex
+  const userId = req.session.user
+  const { houseName, pincode, city, village, state } = req.body
+  const newAddress = {
+    houseName,
+    pincode,
+    city,
+    village,
+    state
+  }
+
+  const user = await Users.findById(userId)
+
+  user.address[addressIndex] = newAddress
+  await user.save()
+
+  res.redirect('/user/adresses')
+}
+
+//delete address
+exports.deleteAddress = async (req, res) => {
+  try {
+    const userId = req.session.user
+    const addressId = req.query.addressId
+
+    await Users.updateOne({ _id: userId }, { $pull: { address: { _id: addressId } } })
+    res.redirect('/user/adresses')
   } catch (error) {
 
   }
 }
 //handling the Logout
 
+
+//handling add to cart
+exports.addToCart = async (req, res) => {
+  try {
+    let userId = req.session.user
+    let { productId } = req.query
+
+    const product = await Product.findOne({ _id: productId })
+    let { productName, price } = product
+    let imageUrl = product.images[0]
+    let cart = await Cart.findOne({ userId })
+    let quantity = 1
+
+    if (cart) {
+      let cartTotal = cart.totalPrice
+      let itemIndex = cart.products.findIndex(p => p.productId == productId);
+      if (itemIndex > -1) {
+        let productItem = cart.products[itemIndex];
+        productItem.quantity = quantity;
+        cart.products[itemIndex] = productItem;
+      } else {
+        cart.products.push({
+          productId,
+          productName,
+          price,
+          quantity,
+          imageUrl,
+        })
+        cart.totalPrice = cartTotal + price
+        cart = await cart.save()
+      }
+      res.redirect('/user/cart')
+    } else {
+      const newCart = new Cart({
+        userId,
+        products: [{
+          productId,
+          productName,
+          price,
+          quantity,
+          imageUrl,
+        }],
+        totalPrice: price
+      })
+      newCart.save()
+      res.redirect('/user/cart')
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Something went wrong");
+  }
+
+
+}
+
+exports.show_cart = async (req, res) => {
+  try {
+    const userId = req.session.user
+
+    const userCart = await Cart.findOne({ userId: userId })
+
+    const products = userCart.products
+    res.render('./Users/cart', { products, userCart })
+
+
+  } catch (error) {
+
+  }
+}
+
+
+//remove from cart
+
+  exports.removeCart = async (req, res) => {
+    try {
+      const productId = req.query.productId;
+      const price = parseInt(req.query.price); // Parse price to ensure it's a number
+  
+      console.log(`Removing product: ${productId}, Price: ${price}`);
+      
+      // Remove the product from the cart
+      await Cart.updateOne({ 'products.productId': productId},{ $pull: { products: { productId: productId } },$inc:{totalPrice:-price} });
+  
+      // Find the cart and update the total price
+     
+    
+      // Send a success response back to the client
+      res.status(200).json('Product removed from cart successfully.');
+    } catch (error) {
+      // Handle any errors that occur during the update operation
+      console.error('Error removing product from cart:', error);
+      res.status(500).send('Internal server error.');
+    }
+  };
+
+exports.quantityCart = async (req, res) => {
+  let qty = req.query.qty
+
+
+
+
+}
+
 exports.user_logout = (req, res) => {
   try {
     req.session.user = null
     res.redirect("/user");
-  } catch (error) { }
+  } catch (error) {
+
+  }
 };

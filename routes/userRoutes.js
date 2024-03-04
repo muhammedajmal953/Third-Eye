@@ -55,14 +55,28 @@ userRoutes.get('/profileEdit',isLoggedIn,isBlocked,userControler.edit_profile)
 userRoutes.post('/profileUpdate',userControler.update_profile)
 
 userRoutes.post("/changePassword", userControler.change_password)
-//show address
-userRoutes.get('/adresses',userControler.show_adress)
-
+//show addresses
+userRoutes.get('/adresses',isLoggedIn,isBlocked,userControler.show_adress)
+//add address
 userRoutes.post('/addAdress',userControler.addAddress)
+//edit address page render
+userRoutes.get('/editAddress',userControler.get_editAddress)
+
+userRoutes.post('/addressEdit',userControler.addressEdit)
+userRoutes.post('/deleteAddress',userControler.deleteAddress)
+
 //logout user
 userRoutes.get('/logout', userControler.user_logout)
 
+//show Cart
+userRoutes.get('/cart',isLoggedIn,isBlocked, userControler.show_cart)
+
+userRoutes.post('/addToCart', userControler.addToCart)
 
 
+userRoutes.post('/removeCart', userControler.removeCart)
 
+userRoutes.post('/cartQuantity',userControler.quantityCart)
+
+ 
 module.exports = userRoutes; // Exporting userRoutes

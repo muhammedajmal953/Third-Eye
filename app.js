@@ -35,7 +35,7 @@ app.use(express.static('uploads'));
 
 // Setting up session middleware for managing sessions
 app.use(session({ 
-  secret: 'secret-key', 
+  secret: 'secret-key',   
   resave: false, 
   saveUninitialized: true,
   cookie: { maxAge: 6000000 } // Session cookie configuration

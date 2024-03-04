@@ -147,7 +147,7 @@ exports.edit_catagory = async (req, res) => {
         .toBuffer()
         const filename=`cropped_${req.file.originalname}`
         imageUrl=filename
-  
+  1
         await sharp(imageBuffer).toFile(`./uploads/catagory/${filename}`)
     }
 
@@ -163,7 +163,7 @@ exports.edit_catagory = async (req, res) => {
   } catch (error) {
     // Handle any errors that occur during the process
     console.error("Error editing category:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send("error of eddting catagory");
   }
 }
 
@@ -330,9 +330,9 @@ exports.list_products = async (req, res) => {
 exports.admin_logout=(req,res)=>{
 
   try {
-     req.session.destroy(()=>{
-       res.redirect('/admin')
-     })
+     delete  res.session.admin
+     res.redirect('/admin')
+  
   } catch (error) {
     
   }

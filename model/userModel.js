@@ -17,7 +17,6 @@ const UsersSchema = mongoose.Schema({
   phone: { type: Number },
   gender: String,
   isBlocked: Boolean,
-  googleId:{type:String}
 });
 
 const Users = mongoose.model('Users', UsersSchema);             
