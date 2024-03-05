@@ -424,10 +424,10 @@ exports.addToCart = async (req, res) => {
     let { productId } = req.query
 
     const product = await Product.findOne({ _id: productId })
-    let { productName, price } = product
+    let { productName, price,quantity} = product
     let imageUrl = product.images[0]
     let cart = await Cart.findOne({ userId })
-    let quantity = 1
+    let cartQty = 1
 
     if (cart) {
       let cartTotal = cart.totalPrice
@@ -442,6 +442,7 @@ exports.addToCart = async (req, res) => {
           productName,
           price,
           quantity,
+          cartQty,
           imageUrl,
         })
         cart.totalPrice = cartTotal + price
@@ -456,6 +457,7 @@ exports.addToCart = async (req, res) => {
           productName,
           price,
           quantity,
+          cartQty,
           imageUrl,
         }],
         totalPrice: price
@@ -511,12 +513,16 @@ exports.show_cart = async (req, res) => {
     }
   };
 
-exports.quantityCart = async (req, res) => {
-  let qty = req.query.qty
+exports.totalIncrement= async (req, res) => {
+  let price = parseInt(req.query.price)
+  let indexId=req.query.indexId
+  let index=req.query.index
+  console.log('access here');
+  
+    const carUpdate=await Cart.updateOne({ 'products._id': indexId }, { $inc: { totalPrice: price } })
+    res.status(200).json('Product removed from cart successfully.');
 
-
-
-
+ 
 }
 
 exports.user_logout = (req, res) => {

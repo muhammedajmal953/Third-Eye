@@ -179,11 +179,11 @@
                                 <span class="text-dark fw-bold">Rs-<%= products[i].price %></span>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-outline-secondary decrease-btn" type="button" onclick="changeQuantity(this, -1)">-</button>
+                                        <button class="btn btn-outline-secondary decrease-btn" type="button" onclick="changeQuantity(this, -1);">-</button>
                                     </div>
-                                    <input type="number" class="form-control text-center  quantity-input"  readonly value="1" min="1" max="<%= products[i].quantity%>" onchange="updateQuantity()" data-product-id="<%= products[i]._id %>" >
+                                    <input type="number" class="form-control text-center  quantity-input"  readonly value="<%= products[i].cartQty %>" min="1" max="<%= products[i].quantity%>" data-product-id="<%= products[i]._id %>" >
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary increase-btn" type="button" onclick="changeQuantity(this, 1)">+</button>
+                                        <button class="btn btn-outline-secondary increase-btn" type="button" onclick="changeQuantity(this, 1);incrimentTotal('<%=products[i]._id%>','<%=products[i].price%>,<%=i%>')">+</button>
                                     </div>
                                 </div>
                             </label>
@@ -362,12 +362,19 @@
 
 <script>
    // Function to update the quantity input value and trigger change event
- async  function updateQuantity(change){
-      
+ async  function incrimentTotal(indexId,price,index){
+try {
+  const response=await axios.post(`/user/totalIncrement?indexId=${indexId}&price=${price}&index=${index}`)
+  alert(response.data)
+  window.location.reload()
+  
+} catch (error) {
+  
+}      
    }
 // Function to change the quantity when increase or decrease button is clicked
 function changeQuantity(button, change) {
-  
+
     const input = button.parentElement.parentElement.querySelector('.quantity-input');
     let quantity = parseInt(input.value);
 
@@ -384,7 +391,6 @@ function changeQuantity(button, change) {
 
     // Trigger change event to update quantity on the backend
     input.dispatchEvent(new Event('change'));
-    updateQuantity(input);
 }
 async function removeCart(productId,price){
   try {
