@@ -8,6 +8,7 @@ const otpModel = require("../model/otpModel");
 const sendMail = require("../services/emailSender");
 const bcrypt = require('bcrypt');
 const Cart = require("../model/cartModel");
+const Order = require("../model/orderModel");
 
 
 let globalEmail;
@@ -424,7 +425,7 @@ exports.addToCart = async (req, res) => {
     let { productId } = req.query
 
     const product = await Product.findOne({ _id: productId })
-    let { productName, price,quantity} = product
+    let { productName, price, quantity } = product
     let imageUrl = product.images[0]
     let cart = await Cart.findOne({ userId })
     let cartQty = 1
@@ -491,38 +492,119 @@ exports.show_cart = async (req, res) => {
 
 //remove from cart
 
-  exports.removeCart = async (req, res) => {
-    try {
-      const productId = req.query.productId;
-      const price = parseInt(req.query.price); // Parse price to ensure it's a number
-  
-      console.log(`Removing product: ${productId}, Price: ${price}`);
-      
-      // Remove the product from the cart
-      await Cart.updateOne({ 'products.productId': productId},{ $pull: { products: { productId: productId } },$inc:{totalPrice:-price} });
-  
-      // Find the cart and update the total price
-     
-    
-      // Send a success response back to the client
-      res.status(200).json('Product removed from cart successfully.');
-    } catch (error) {
-      // Handle any errors that occur during the update operation
-      console.error('Error removing product from cart:', error);
-      res.status(500).send('Internal server error.');
-    }
-  };
+exports.removeCart = async (req, res) => {
+  try {
+    const productId = req.query.productId;
+    let price = parseInt(req.query.price); // Parse price to ensure it's a number
+    let cartQty = parseInt(req.query.cartQty)
 
-exports.totalIncrement= async (req, res) => {
-  let price = parseInt(req.query.price)
-  let indexId=req.query.indexId
-  let index=req.query.index
-  console.log('access here');
-  
-    const carUpdate=await Cart.updateOne({ 'products._id': indexId }, { $inc: { totalPrice: price } })
+
+    price = price * cartQty
+
+    // Remove the product from the cart
+    await Cart.updateOne({ 'products._id': productId }, { $pull: { products: { _id: productId } }, $inc: { totalPrice: -price } });
+
+    // Find the cart and update the total price
+
+
+    // Send a success response back to the client
     res.status(200).json('Product removed from cart successfully.');
+  } catch (error) {
+    // Handle any errors that occur during the update operation
+    console.error('Error removing product from cart:', error);
+    res.status(500).send('Internal server error.');
+  }
+};
 
- 
+exports.totalIncrement = async (req, res) => {
+  try {
+    let price = parseInt(req.query.price)
+    let indexId = req.query.indexId
+
+    const carUpdate = await Cart.updateOne({ 'products._id': indexId }, { $inc: { totalPrice: price, 'products.$.cartQty': 1 } })
+    const cart = await Cart.findOne({ 'products._id': indexId })
+    let totalPrice = cart.totalPrice
+    res.status(200).json(totalPrice);
+
+  } catch (error) {
+    console.error('Error incrementing product quantity in cart:', error);
+    res.status(500).send('Internal server error.');
+  }
+
+}
+
+
+exports.totalDecrement = async (req, res) => {
+  try {
+    console.log('accessed decrement');
+    let price = parseInt(req.query.price)
+    let indexId = req.query.indexId
+
+    const carUpdate = await Cart.updateOne({ 'products._id': indexId }, { $inc: { totalPrice: -price, 'products.$.cartQty': -1 } })
+    const cart = await Cart.findOne({ 'products._id': indexId })
+    let totalPrice = cart.totalPrice
+    res.status(200).json(totalPrice);
+
+  } catch (error) {
+    console.error('Error incrementing product quantity in cart:', error);
+    res.status(500).send('Internal server error.');
+  }
+
+}
+
+
+exports.get_checkout = async (req, res) => {
+  try {
+    const userId = req.session.user
+    const user = await Users.findById(userId)
+    const addresses = user.address
+    const cart = await Cart.findOne({ userId: userId })
+    const products = cart.produts
+    res.render('./Users/checkout', {
+      user,
+      addresses,
+      cart,
+      products
+    })
+  } catch (error) {
+
+  }
+}
+
+
+exports.orderPlace = async (req, res) => {
+  try {
+    console.log('order recieved');
+    let userId = req.session.user
+    let { cart, address } = req.query
+    let user = await Users.findById(userId)
+    let userCart = await Cart.findById(cart)
+
+    let { totalPrice, products } = userCart
+    let items = []
+    items = products
+    
+    const order = new Order({
+      userId,
+      shippingAddress: address,
+      items,
+      totalAmount: totalPrice
+    })
+    
+    await order.save()
+    await Cart.deleteOne({_id:cart})
+    for (i = 0; i < items.length; i++){
+      await Product.updateOne({_id:items[i].productId},{$inc:{quantity:-items[i].cartQty}})
+    }
+    res.send('product ordered')
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('order not placed');
+  }
+}
+
+exports.orderView = async (req, res) => {
+  
 }
 
 exports.user_logout = (req, res) => {

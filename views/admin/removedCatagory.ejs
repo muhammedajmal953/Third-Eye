@@ -25,7 +25,8 @@
                 <h1 class="h1">Third Eye</h1>
             </a>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
+                <button class="btn btn-icon btn-aside-minimize"><i
+                        class="text-muted material-icons md-menu_open"></i></button>
             </div>
         </div>
         <nav>
@@ -48,16 +49,11 @@
                         <a href="page-categories.html">Categories</a>
                     </div>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-orders-1.html">
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/orders">
                         <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
-                    <div class="submenu">
-                        <a href="page-orders-1.html">Order list 1</a>
-                        <a href="page-orders-2.html">Order list 2</a>
-                        <a href="page-orders-detail.html">Order detail</a>
-                    </div>
                 </li>
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-sellers-cards.html">
@@ -108,14 +104,14 @@
             <div class="col-nav">
                 <ul class="nav">
                     <li class="nav-item ">
-                      <a href="/admin/logout" class="btn btn-success text-dark">Logout</a>
+                        <a href="/admin/logout" class="btn btn-success text-dark">Logout</a>
                     </li>
                 </ul>
             </div>
         </header>
         <div class="d-flex">
             <h1>Removed Catagory</h1>
-           
+
             <a href="/admin/catagory" style="margin: 30px;">
                 <button class="btn btn-success">Back to Catagory</button>
             </a>
@@ -132,15 +128,17 @@
                                     <%=catagory[i].catagoryName %>
                                 </h4>
 
-                              <div class="d-flex">
-                                <a href="/admin/edit-catagory?id=<%=catagory[i]._id%>"
-                                    class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i>
-                                    Edit </a>
-                                <form  action="/admin/unRemove-catagory?id=<%=catagory[i]._id%>" method="post">
-                                    <input type="submit" class="btn btn-sm font-sm btn-danger rounded" value="Un-remove">
+                                <div class="d-flex">
+                                    <a href="/admin/edit-catagory?id=<%=catagory[i]._id%>"
+                                        class="btn btn-sm font-sm rounded btn-brand"> <i
+                                            class="material-icons md-edit"></i>
+                                        Edit </a>
+                                    <form action="/admin/unRemove-catagory?id=<%=catagory[i]._id%>" method="post">
+                                        <input type="submit" class="btn btn-sm font-sm btn-danger rounded"
+                                            value="Un-remove">
 
-                                </form>
-                              </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

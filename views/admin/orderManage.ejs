@@ -103,61 +103,8 @@
                 </ul>
             </div>
         </header>
-        <div class="d-flex mb-5">
-            <h1 class="mt-4 me-5">Products</h1>
-            <a href="/admin/add-product" style="margin: 30px;">
-                <button class="btn btn-success">Add Product</button>
-            </a>
-            <a href="/admin/unListedProducts" style="margin: 30px;">
-                <button class="btn btn-success">Show Unlisted</button>
-            </a>
-        </div>
-        <div class="container d-flex">
-            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-4 g-4">
-
-                <% for(i=0;i<product.length;i++){ %>
-                    <%if(product[i].isListed==true) { %>
-
-                        <div class="col-lg-3 col-md-4 ">
-                            <div class="card card-product-grid me-4">
-                                <a href="#" class="img-wrap"> <img src="/products/<%=product[i].images[0] %>"
-                                        alt="Product"  />
-                                </a>
-                                <div class="info-wrap">
-                                    <h4 class="title text-truncate">
-                                        <%=product[i].productName %>
-                                    </h4>
-                                    <h6>
-                                        <%=product[i].catagory%>
-                                    </h6>
-                                    <h6>
-                                        <%=product[i].quantity%>nos
-                                    </h6>
-                                    <p>
-                                        ₹ <%=product[i].price %>
-
-                                    </p>
-                                    <div class="d-flex">
-                                        <a href="/admin/edit-product?id=<%=product[i]._id%>"
-                                            class="btn btn-sm font-sm rounded btn-brand"> <i
-                                                class="material-icons md-edit"></i>
-                                            Edit </a>
-                                        <form action="/admin/unlist-product?id=<%=product[i]._id%>" method="post">
-                                            <input type="submit" class="btn btn-sm font-sm btn-danger rounded"
-                                                value="Remove">
-
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-
-                        <% } %>
-                            <% } %>
-            </div>
-            </div>
+      
+     
 
     </main>
     <script src="/js/vendors/jquery-3.6.0.min.js"></script>

@@ -179,18 +179,18 @@
                                 <span class="text-dark fw-bold">Rs-<%= products[i].price %></span>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <button class="btn btn-outline-secondary decrease-btn" type="button" onclick="changeQuantity(this, -1);">-</button>
+                                        <button class="btn btn-outline-secondary decrease-btn" type="button" onclick="changeQuantity(this, -1);decrimentTotal('<%=products[i]._id%>','<%=products[i].price%>')">-</button>
                                     </div>
                                     <input type="number" class="form-control text-center  quantity-input"  readonly value="<%= products[i].cartQty %>" min="1" max="<%= products[i].quantity%>" data-product-id="<%= products[i]._id %>" >
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary increase-btn" type="button" onclick="changeQuantity(this, 1);incrimentTotal('<%=products[i]._id%>','<%=products[i].price%>,<%=i%>')">+</button>
+                                        <button class="btn btn-outline-secondary increase-btn" type="button" onclick="changeQuantity(this, 1);incrimentTotal('<%=products[i]._id%>','<%=products[i].price%>,<%= products[i].quantity%>')">+</button>
                                     </div>
                                 </div>
                             </label>
                         </div>
                         <div class="d-none d-xl-block vr"></div>
                         <div class="d-grid gap-2 align-self-start align-self-xl-center">
-                            <button type="button" onclick="removeCart('<%=products[i].productId%>','<%=products[i].price%>')" class="btn btn-outline-dark px-5 btn-ecomm remove-btn">Remove</button>
+                            <button type="button" onclick="removeCart('<%=products[i]._id%>','<%=products[i].price%>','<%=products[i].cartQty%>')" class="btn btn-outline-dark px-5 btn-ecomm remove-btn">Remove</button>
                         </div>
                     </div>
                 </div>
@@ -202,7 +202,7 @@
 
       <div class="card rounded-0">
 			  <div class="card-body">
-          <button type="button" class="btn btn-outline-dark btn-ecomm" >Proceed to Order</button> 
+          <button type="button" class="btn btn-outline-dark btn-ecomm" >Continue shopping</button> 
 			  </div>
 			</div> 
 
@@ -213,7 +213,7 @@
              <h5 class="fw-bold mb-4">Order Summary</h5>
              <div class="hstack align-items-center justify-content-between">
                <p class="mb-0">Bag Total</p>
-               <p class="mb-0"><%=userCart.totalPrice%></p>
+               <p class="mb-0" id="bagTotal"><%=userCart.totalPrice%></p>
              </div>
              <hr>
              <div class="hstack align-items-center justify-content-between">
@@ -228,10 +228,10 @@
             <hr>
             <div class="hstack align-items-center justify-content-between fw-bold text-content">
               <p class="mb-0">Total Amount</p>
-              <p class="mb-0"><%=userCart.totalPrice%></p>
+              <p class="mb-0" id="total"><%=userCart.totalPrice%></p>
             </div>
              <div class="d-grid mt-4">
-                <button type="button" class="btn btn-dark btn-ecomm py-3 px-5">Place Order</button>
+                <a href="/user/checkout"><button type="button" class="btn btn-dark btn-ecomm py-3 px-5">Place Order</button></a>
              </div>
            </div>
          </div>
@@ -362,16 +362,39 @@
 
 <script>
    // Function to update the quantity input value and trigger change event
- async  function incrimentTotal(indexId,price,index){
-try {
-  const response=await axios.post(`/user/totalIncrement?indexId=${indexId}&price=${price}&index=${index}`)
-  alert(response.data)
-  window.location.reload()
+async  function incrimentTotal(indexId,price,max){
   
+try {
+  const response=await axios.post(`/user/totalIncrement?indexId=${indexId}&price=${price}`)
+  
+  let totalprice=response.data
+  let upadateTotal=document.getElementById('total').innerHTML=totalprice
+  let updateCartTotal=document.getElementById('bagTotal').innerHTML=totalprice
+
+
+
 } catch (error) {
   
-}      
-   }
+}       
+}
+
+
+async  function decrimentTotal(indexId,price){
+try {
+  const response=await axios.post(`/user/totalDecrement?indexId=${indexId}&price=${price}`)
+  
+  let totalprice=response.data
+
+  let upadateTotal=document.getElementById('total').innerHTML=totalprice
+  let updateCartTotal=document.getElementById('bagTotal').innerHTML=totalprice
+
+} catch (error) {
+  
+}       
+}
+
+
+
 // Function to change the quantity when increase or decrease button is clicked
 function changeQuantity(button, change) {
 
@@ -388,13 +411,13 @@ function changeQuantity(button, change) {
 
     // Update the input value
     input.value = quantity;
-
+     
     // Trigger change event to update quantity on the backend
     input.dispatchEvent(new Event('change'));
 }
-async function removeCart(productId,price){
+async function removeCart(productId,price,cartQty){
   try {
-    const response = await axios.post(`/user/removeCart?productId=${productId}&price=${price}`);
+    const response = await axios.post(`/user/removeCart?productId=${productId}&price=${price}&cartQty=${cartQty}`);
     Swal.fire({
   icon: 'success',
   title: 'Success',

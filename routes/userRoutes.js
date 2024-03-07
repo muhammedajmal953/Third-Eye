@@ -76,7 +76,16 @@ userRoutes.post('/addToCart', userControler.addToCart)
 
 userRoutes.post('/removeCart', userControler.removeCart)
 
-userRoutes.post('/totalIncrement',userControler.totalIncrement)
+userRoutes.post('/totalIncrement', userControler.totalIncrement)
 
+userRoutes.post('/totalDecrement', userControler.totalDecrement)
+
+
+userRoutes.get('/checkout', userControler.get_checkout)
+
+
+userRoutes.post('/proceedOrder', userControler.orderPlace)
+
+userRoutes.get('/proceedOrder',userControler.orderView)
  
 module.exports = userRoutes; // Exporting userRoutes

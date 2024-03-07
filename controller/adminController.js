@@ -147,7 +147,6 @@ exports.edit_catagory = async (req, res) => {
         .toBuffer()
         const filename=`cropped_${req.file.originalname}`
         imageUrl=filename
-  1
         await sharp(imageBuffer).toFile(`./uploads/catagory/${filename}`)
     }
 
