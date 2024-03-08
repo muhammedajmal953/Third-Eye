@@ -1,5 +1,6 @@
 const Admin = require('../model/adminModel');
 const Catagory = require('../model/catagoryModel');
+const Order = require('../model/orderModel');
 const Product = require('../model/productModel');
 const Users = require('../model/userModel');
 const sharp = require('sharp');
@@ -7,19 +8,18 @@ const sharp = require('sharp');
 
 
 // Render login page
-exports.get_login=(req,res)=>{
-    try {
-       if(req.session.admin)
-       {
-         // If admin is already logged in, redirect to dashboard
-        return res.redirect('/admin/dashboard')
-       }
-       // not logged in redirect to login page
-       return  res.render('./admin/login');
-    } catch (error) {
-      res.status(500).send("Internal Server Error");
-      console.error("Error rendering login page:", error);
+exports.get_login = (req, res) => {
+  try {
+    if (req.session.admin) {
+      // If admin is already logged in, redirect to dashboard
+      return res.redirect('/admin/dashboard')
     }
+    // not logged in redirect to login page
+    return res.render('./admin/login');
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+    console.error("Error rendering login page:", error);
+  }
 }
 
 
@@ -28,41 +28,41 @@ exports.get_login=(req,res)=>{
 
 exports.admin_login =
   async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const admins = await Admin.findOne({email:email,password:password});
-    if (email == admins.email && password == admins.password) {
-      req.session.admin=admins._id
-      res.redirect("/admin/Dashboard");
-    } else {
-      req.session.error = "Invalid Credentials";
-      return res.redirect("/admin");
+    try {
+      const { email, password } = req.body;
+      const admins = await Admin.findOne({ email: email, password: password });
+      if (email == admins.email && password == admins.password) {
+        req.session.admin = admins._id
+        res.redirect("/admin/Dashboard");
+      } else {
+        req.session.error = "Invalid Credentials";
+        return res.redirect("/admin");
+      }
+    } catch (error) {
+      res.status(500).send("invalid credentials");
     }
-  } catch (error) {
-    res.status(500).send("invalid credentials");
-  }
   };
 
 
-  //dash board rendering
+//dash board rendering
 
-exports.getDashoard=async(req,res)=>{
+exports.getDashoard = async (req, res) => {
   try {
-    const users= await Users.find()
-    res.render('./admin/index',{users:users})
+    const users = await Users.find()
+    res.render('./admin/index', { users: users })
   } catch (error) {
-    
+
   }
 }
 
 
 //userlist rendering
-exports.userList=async(req,res)=>{
+exports.userList = async (req, res) => {
   try {
-    const users= await Users.find()
-    res.render('./admin/customers-details',{users:users})
+    const users = await Users.find()
+    res.render('./admin/customers-details', { users: users })
   } catch (error) {
-    
+
   }
 }
 
@@ -103,30 +103,30 @@ exports.add_catagory = async (req, res) => {
 
 
   try {
-     const existingCat=await Catagory.findOne({catagoryName:req.body.catagoryName})      
-      if(existingCat){
-        return res.render("./admin/addCatagory",{message:'catagory already exist'})
-    
-      }
+    const existingCat = await Catagory.findOne({ catagoryName: req.body.catagoryName })
+    if (existingCat) {
+      return res.render("./admin/addCatagory", { message: 'catagory already exist' })
+
+    }
 
     // adding catagory to data base
     let imageUrl
-    const imageBuffer=await sharp(req.file.path)
-    .resize({width:400,height:500,fit:sharp.fit.cover})
+    const imageBuffer = await sharp(req.file.path)
+      .resize({ width: 400, height: 500, fit: sharp.fit.cover })
       .toBuffer()
-      const filename=`cropped_${req.file.originalname}`
-      imageUrl=filename
+    const filename = `cropped_${req.file.originalname}`
+    imageUrl = filename
 
-      await sharp(imageBuffer).toFile(`./uploads/catagory/${filename}`)
-            
+    await sharp(imageBuffer).toFile(`./uploads/catagory/${filename}`)
+
     const addCatagory = new Catagory({
       catagoryName: req.body.catagoryName,
-      image:imageUrl,
+      image: imageUrl,
       isActive: true
     });
 
     await addCatagory.save();
-  //redirect to catagory list page after adding
+    //redirect to catagory list page after adding
     res.redirect('/admin/catagory');
   } catch (error) {
     console.error("Error adding category:", error);
@@ -142,12 +142,12 @@ exports.edit_catagory = async (req, res) => {
     // Check if a file was uploaded and set the image URL accordingly
     let imageUrl;
     if (req.file) {
-      const imageBuffer=await sharp(req.file.path)
-      .resize({width:400,height:500,fit:sharp.fit.cover})
+      const imageBuffer = await sharp(req.file.path)
+        .resize({ width: 400, height: 500, fit: sharp.fit.cover })
         .toBuffer()
-        const filename=`cropped_${req.file.originalname}`
-        imageUrl=filename
-        await sharp(imageBuffer).toFile(`./uploads/catagory/${filename}`)
+      const filename = `cropped_${req.file.originalname}`
+      imageUrl = filename
+      await sharp(imageBuffer).toFile(`./uploads/catagory/${filename}`)
     }
 
     // Update the category in the database
@@ -206,18 +206,18 @@ exports.add_products = async (req, res) => {
     const imageUrls = []
 
 
-    if(req.files){
-      for(i=0;i<req.files.length;i++){
-        const imageBuffer=await sharp(req.files[i].path)
-        .resize({width:400,height:500,fit:sharp.fit.cover})
+    if (req.files) {
+      for (i = 0; i < req.files.length; i++) {
+        const imageBuffer = await sharp(req.files[i].path)
+          .resize({ width: 400, height: 500, fit: sharp.fit.cover })
           .toBuffer()
-          const filename=`cropped_${req.files[i].originalname}`
-          imageUrls[i]=filename
+        const filename = `cropped_${req.files[i].originalname}`
+        imageUrls[i] = filename
 
-          await sharp(imageBuffer).toFile(`./uploads/products/${filename}`)
+        await sharp(imageBuffer).toFile(`./uploads/products/${filename}`)
       }
     }
-    
+
     // Create a new product instance
     const addProduct = new Product({
       productName: req.body.productName,
@@ -266,22 +266,22 @@ exports.edit_products = async (req, res) => {
       productData.catagory = req.body.catagory;
     }
     if (req.files.length > 0) {
-      const imageUrls=[]
-      for(i=0;i<req.files.length;i++){
-        const imageBuffer=await sharp(req.files[i].path)
-        .resize({width:400,height:500,fit:sharp.fit.cover})
+      const imageUrls = []
+      for (i = 0; i < req.files.length; i++) {
+        const imageBuffer = await sharp(req.files[i].path)
+          .resize({ width: 400, height: 500, fit: sharp.fit.cover })
           .toBuffer()
-          const filename=`cropped_${req.files[i].originalname}`
-          imageUrls[i]=filename
+        const filename = `cropped_${req.files[i].originalname}`
+        imageUrls[i] = filename
 
-          await sharp(imageBuffer).toFile(`./uploads/products/${filename}`)
+        await sharp(imageBuffer).toFile(`./uploads/products/${filename}`)
       }
       productData.images = imageUrls;
     }
 
     // Update the product in the database
     await Product.findByIdAndUpdate(productId, productData);
-    
+
     // Redirect to the products page after successful update
     res.redirect('/admin/products');
   } catch (error) {
@@ -323,17 +323,62 @@ exports.list_products = async (req, res) => {
   }
 }
 
+exports.orders = async (req, res) => {
+  try {
+    const orders = await Order.find()
+    if (!orders) {
+      res.render('./admin/orderManage', { orders: '' })
+    }
+    res.render('./admin/orderManage', { orders })
+  } catch (error) {
+
+  }
+}
+
+exports.ordersDetails = async (req, res) => {
+  try {
+    const orderId = req.query.orderId
+
+    const order = await Order.findById(orderId)
+
+    const orderedItems = order.items
+
+    res.render('./admin/orderdetails', { orderedItems })
+  } catch (error) {
+
+  }
+}
+
+
+exports.change_status = async (req, res) => {
+  try {
+    const { changedStatus, itemsId } = req.body
+
+    const updateStatus = await Order.findOneAndUpdate({ 'items._id': itemsId }, { $set: { 'items.$.status': changedStatus } }, { returnOriginal: false })
+
+
+
+
+
+
+    res.status(200).json(changedStatus)
+
+  } catch (error) {
+
+  }
+}
+
 
 
 // adminLogout handling
-exports.admin_logout=(req,res)=>{
+exports.admin_logout = (req, res) => {
 
   try {
-     delete  res.session.admin
-     res.redirect('/admin')
-  
+    delete res.session.admin
+    res.redirect('/admin')
+
   } catch (error) {
-    
+
   }
 
 }

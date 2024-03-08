@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 
 
 const orderSchema = mongoose.Schema({
-    userID: ObjectId,
+    userId: ObjectId,
+    username: String,
+    email:String,
     shippingAddress: String,
     odrderedDate: {
         type: Date,
@@ -14,14 +16,11 @@ const orderSchema = mongoose.Schema({
         productName:String,
         price: Number,
         cartQty: Number,
-        imageUrl:String
+        imageUrl: String,
+        status: { type: String, default: 'Pending' }
     }],
     paymentMethod: String,
     totalAmount: Number,
-    status: {
-        type: String,
-        default:'pending'
-    },
     deleveredAt: Date
 })
 

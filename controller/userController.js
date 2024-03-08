@@ -9,6 +9,7 @@ const sendMail = require("../services/emailSender");
 const bcrypt = require('bcrypt');
 const Cart = require("../model/cartModel");
 const Order = require("../model/orderModel");
+const { findById } = require("../model/adminModel");
 
 
 let globalEmail;
@@ -479,6 +480,10 @@ exports.show_cart = async (req, res) => {
     const userId = req.session.user
 
     const userCart = await Cart.findOne({ userId: userId })
+    if (!userCart) {
+     return  res.render('./Users/cart', { products:'', userCart:'' })
+    }
+    
 
     const products = userCart.products
     res.render('./Users/cart', { products, userCart })
@@ -579,16 +584,19 @@ exports.orderPlace = async (req, res) => {
     let { cart, address } = req.query
     let user = await Users.findById(userId)
     let userCart = await Cart.findById(cart)
-
+    let {username,email}=user
     let { totalPrice, products } = userCart
     let items = []
     items = products
     
     const order = new Order({
+      username,
+      email,
       userId,
       shippingAddress: address,
       items,
-      totalAmount: totalPrice
+      totalAmount: totalPrice,
+      paymentMethod:'Cod'
     })
     
     await order.save()
@@ -604,8 +612,36 @@ exports.orderPlace = async (req, res) => {
 }
 
 exports.orderView = async (req, res) => {
+  try {
+    const userId = req.session.user;
+
   
-}
+    const orders = await Order.find({ userId: userId });
+
+    if (orders.length > 0) {
+      console.log('Orders are ready');
+
+      const items = orders.flatMap(order => order.items);
+    
+      const user = await Users.findById(userId);
+      if (user) {
+        console.log('User is ok');
+      }
+
+      console.log(items);
+      
+      res.render('./Users/orderList', { items, user });
+    } else {
+      console.log('No orders found for the user');
+      // Render the view with an empty array of items
+      res.render('./Users/orderList', { items: [], user });
+    }
+  } catch (error) {
+    console.error('Error retrieving orders:', error);
+    // Handle the error and render an error page or provide appropriate response
+    res.status(500).send('Error retrieving orders');
+  }
+};
 
 exports.user_logout = (req, res) => {
   try {

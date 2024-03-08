@@ -13,8 +13,8 @@ async function isBlocked (req ,res, next){
         }
         return next()
        
-     } catch (error) {
-       
+    } catch (error) {
+        
      }
    
 }

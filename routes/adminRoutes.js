@@ -93,6 +93,12 @@ adminRoutes.post('/unlist-product',adminControler.unlist_product)
 
 adminRoutes.post('/list-product',adminControler.list_products)
 
+adminRoutes.get('/orders',isAdminLoggedIn, adminControler.orders)
+
+adminRoutes.get('/viewOrder', isAdminLoggedIn, adminControler.ordersDetails)
+
+adminRoutes.post('/orderStatus',adminControler.change_status)
+
 adminRoutes.get('/logout',adminControler.admin_logout)
 
 module.exports=adminRoutes

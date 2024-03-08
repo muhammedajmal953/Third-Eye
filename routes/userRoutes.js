@@ -81,11 +81,11 @@ userRoutes.post('/totalIncrement', userControler.totalIncrement)
 userRoutes.post('/totalDecrement', userControler.totalDecrement)
 
 
-userRoutes.get('/checkout', userControler.get_checkout)
+userRoutes.get('/checkout',isLoggedIn,isBlocked, userControler.get_checkout)
 
 
 userRoutes.post('/proceedOrder', userControler.orderPlace)
 
-userRoutes.get('/proceedOrder',userControler.orderView)
+userRoutes.get('/orders',isLoggedIn,isBlocked,userControler.orderView)
  
 module.exports = userRoutes; // Exporting userRoutes
