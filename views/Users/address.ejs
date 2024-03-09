@@ -449,7 +449,7 @@
               aria-label="Close"
             ></button>
           </div>
-          <form action="/user/addAdress?id=<%=user._id%>" method="post">
+          <form action="/user/addAdress?id=<%=user._id%>" method="post" onsubmit="return validateAddress()">
             <div class="modal-body">
               <div class="mt-4">
                 <h6 class="fw-bold mb-3">Address</h6>
@@ -534,7 +534,30 @@
     <script src="/user/js/main.js"></script>
     <script src="/user/js/index.js"></script>
     <script src="/user/js/loader.js"></script>
-  </body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+       function validateAddress(){
+          const house=document.getElementById('floatingAddress').value.trim()
+          const state=document.getElementById('floatingState').value.trim()
+          const village=document.getElementById('floatingLocalityTown').value.trim()
+          const city=document.getElementById('floatingCity').value.trim()
+          const pincode= document.getElementById('floatingPinCode').value.trim()
 
+
+          if(house===''||state===''||village===''||city===''||pincode===''){
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "all fields must be filled"
+            });  
+            return false
+          }
+
+          return true
+      }
+
+    </script>
+  </body>
+     
   <!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/account-saved-address.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:57 GMT -->
 </html>

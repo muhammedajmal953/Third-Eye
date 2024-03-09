@@ -7,12 +7,12 @@ const cartSchema = mongoose.Schema({
         productId: ObjectId,
         quantity:Number,
         cartQty: {
-            type: Number, default:0 },
+            type: Number, min:1 },
         productName: String,
         price: Number,
         imageUrl:String
     }],
-    totalPrice:Number
+    totalPrice: {type: Number,min:1 }
 
     
 

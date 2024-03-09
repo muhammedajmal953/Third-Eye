@@ -7,5 +7,5 @@ function removeTag() {
 }
 
 window.onload = () => {
-    setTimeout(removeTag,3000)
+    setTimeout(removeTag,2500)
 }

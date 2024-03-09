@@ -92,17 +92,17 @@
               </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/user/productList" >
+              <a class="nav-link" href="/user/productList">
                 Shop
               </a>
             </li>
 
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="/user/profile" >
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="/user/profile">
                 Account
               </a>
             </li>
-           
+
           </ul>
         </div>
       </div>
@@ -129,129 +129,139 @@
         <li class="nav-item">
           <a class="nav-link" href="account-dashboard.html"><i class="bi bi-person-circle"></i></a>
         </li>
-            <li class="nav-item">
-              <a class="btn btn-success" href="/user/logout">Logout</a>
-            </li>
+        <li class="nav-item">
+          <a class="btn btn-success" href="/user/logout">Logout</a>
+        </li>
       </ul>
     </nav>
   </header>
   <!--end top header-->
 
 
-<!--start page content-->
-<div class="page-content">
+  <!--start page content-->
+  <div class="page-content">
 
 
-   <!--start breadcrumb-->
-   <div class="py-4 border-bottom">
-    <div class="container">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0"> 
-          <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-          <li class="breadcrumb-item"><a href="javascript:;">Cart</a></li>
-        </ol>
-      </nav>
-    </div>
-   </div>
-   <!--end breadcrumb-->
-
-
-   <!--start product details-->
-   <section class="section-padding">
-    <div class="container">
-      <div class="d-flex align-items-center px-3 py-2 border mb-4">
-        <div class="text-start">
-          <h4 class="mb-0 h4 fw-bold">Third Eye Cart</h4>
-       </div>
+    <!--start breadcrumb-->
+    <div class="py-4 border-bottom">
+      <div class="container">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Cart</a></li>
+          </ol>
+        </nav>
       </div>
-	   <div class="row g-4">
-	    <div class="col-12 col-lg-8 col-xl-8">
-        <h6 class="fw-bold mb-3 py-2 px-3 bg-light">Products</h6>
-        <% for (let i = 0; i < products.length; i++) { %>
-            <div class="card rounded-0 mb-3">
+    </div>
+    <!--end breadcrumb-->
+
+
+    <!--start product details-->
+    <section class="section-padding">
+      <div class="container">
+        <div class="d-flex align-items-center px-3 py-2 border mb-4">
+          <div class="text-start">
+            <h4 class="mb-0 h4 fw-bold">Third Eye Cart</h4>
+          </div>
+        </div>
+        <div class="row g-4">
+          <div class="col-12 col-lg-8 col-xl-8">
+            <h6 class="fw-bold mb-3 py-2 px-3 bg-light">Products</h6>
+            <% for (let i=0; i < products.length; i++) { %>
+              <div class="card rounded-0 mb-3">
                 <div class="card-body">
-                    <div class="d-flex flex-column flex-xl-row gap-3">
-                        <div class="address-info form-check flex-grow-1">
-                            <img src="/products/<%= products[i].imageUrl %>" width="150px" height="150px">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                                <span class="fw-bold mb-0 h5"><%= products[i].productName %></span><br>
-                                <span class="fw-bold mb-0 text-danger">Only <%= products[i].quantity %> left</span><br>
-                                <span class="text-dark fw-bold">Rs-<%= products[i].price %></span>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <button class="btn btn-outline-secondary decrease-btn" type="button" onclick="changeQuantity(this, -1);decrimentTotal('<%=products[i]._id%>','<%=products[i].price%>') ">-</button>
-                                    </div>
-                                    <input type="number" class="form-control text-center  quantity-input"  readonly value="<%= products[i].cartQty %>" min="1" max="<%= products[i].quantity%>" data-product-id="<%= products[i]._id %>" >
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary increase-btn" type="button" onclick="changeQuantity(this, 1);incrimentTotal('<%=products[i]._id%>','<%=products[i].price%>,<%= products[i].quantity%>')">+</button>
-                                    </div>
-                                </div>
-                            </label>
+                  <div class="d-flex flex-column flex-xl-row gap-3">
+                    <div class="address-info form-check flex-grow-1">
+                      <img src="/products/<%= products[i].imageUrl %>" width="150px" height="150px">
+                      <label class="form-check-label" for="flexRadioDefault1">
+                        <span class="fw-bold mb-0 h5">
+                          <%= products[i].productName %>
+                        </span><br>
+                        <span class="fw-bold mb-0 text-danger">Only <%= products[i].quantity %> left</span><br>
+                        <span class="text-dark fw-bold">Rs-<%= products[i].price %></span>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary decrease-btn" type="button"
+                              onclick="decrimentTotal('<%=products[i]._id%>','<%=products[i].price%>', '<%= i %>');">-</button>
+                          </div>
+                          <input type="number" class="form-control text-center  quantity-input" readonly
+                            value="<%= products[i].cartQty %>" min="1" max="<%= products[i].quantity%>"
+                            data-product-id="<%= products[i]._id %>">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary increase-btn" type="button"
+                              onclick="incrimentTotal('<%=products[i]._id%>','<%=products[i].price%>','<%= products[i].quantity%>', '<%= i %>');">+</button>
+                          </div>
                         </div>
-                        <div class="d-none d-xl-block vr"></div>
-                        <div class="d-grid gap-2 align-self-start align-self-xl-center">
-                            <button type="button" onclick="removeCart('<%=products[i]._id%>','<%=products[i].price%>','<%=products[i].cartQty%>')" class="btn btn-outline-dark px-5 btn-ecomm remove-btn">Remove</button>
-                        </div>
+                      </label>
                     </div>
+                    <div class="d-none d-xl-block vr"></div>
+                    <div class="d-grid gap-2 align-self-start align-self-xl-center">
+                      <button type="button"
+                        onclick="removeCart('<%=products[i]._id%>','<%=products[i].price%>','<%=products[i].cartQty%>')"
+                        class="btn btn-outline-dark px-5 btn-ecomm remove-btn">Remove</button>
+                    </div>
+                  </div>
                 </div>
+              </div>
+              <% } %>
+          </div>
+          <div class="card rounded-0">
+            <div class="card-body">
+              <button type="button" class="btn btn-outline-dark btn-ecomm">Continue shopping</button>
             </div>
-        <% } %>
-    </div>
-    
- 
+          </div>
 
-      <div class="card rounded-0">
-			  <div class="card-body">
-          <button type="button" class="btn btn-outline-dark btn-ecomm" >Continue shopping</button> 
-			  </div>
-			</div> 
+        </div>
+        <div class="col-12 col-lg-4 col-xl-4">
+          <div class="card rounded-0 mb-3">
+            <div class="card-body">
+              <h5 class="fw-bold mb-4">Order Summary</h5>
+              <div class="hstack align-items-center justify-content-between">
+                <p class="mb-0">Bag Total</p>
+                <p class="mb-0" id="bagTotal">
+                  <%=userCart.totalPrice%>
+                </p>
+              </div>
+              <hr>
+              <div class="hstack align-items-center justify-content-between">
+                <p class="mb-0">Bag discount</p>
+                <p class="mb-0 text-success">- 0</p>
+              </div>
+              <hr>
+              <div class="hstack align-items-center justify-content-between">
+                <p class="mb-0">Delivery</p>
+                <p class="mb-0">0</p>
+              </div>
+              <hr>
+              <div class="hstack align-items-center justify-content-between fw-bold text-content">
+                <p class="mb-0">Total Amount</p>
+                <p class="mb-0" id="total">
+                  <%=userCart.totalPrice%>
+                </p>
+              </div>
+              <div class="d-grid mt-4">
+                <a href="/user/checkout"><button type="button" class="btn btn-dark btn-ecomm py-3 px-5">Place
+                    Order</button></a>
+              </div>
+            </div>
+          </div>
 
-		 </div>
-		 <div class="col-12 col-lg-4 col-xl-4">
-		     <div class="card rounded-0 mb-3">
-           <div class="card-body">
-             <h5 class="fw-bold mb-4">Order Summary</h5>
-             <div class="hstack align-items-center justify-content-between">
-               <p class="mb-0">Bag Total</p>
-               <p class="mb-0" id="bagTotal"><%=userCart.totalPrice%></p>
-             </div>
-             <hr>
-             <div class="hstack align-items-center justify-content-between">
-              <p class="mb-0">Bag discount</p>
-              <p class="mb-0 text-success">- 0</p>
-            </div>
-            <hr>
-            <div class="hstack align-items-center justify-content-between">
-              <p class="mb-0">Delivery</p>
-              <p class="mb-0">0</p>
-            </div>
-            <hr>
-            <div class="hstack align-items-center justify-content-between fw-bold text-content">
-              <p class="mb-0">Total Amount</p>
-              <p class="mb-0" id="total"><%=userCart.totalPrice%></p>
-            </div>
-             <div class="d-grid mt-4">
-                <a href="/user/checkout"><button type="button" class="btn btn-dark btn-ecomm py-3 px-5">Place Order</button></a>
-             </div>
-           </div>
-         </div>
+        </div>
+      </div><!--end row-->
 
-		 </div>
-	 </div><!--end row-->
-       
-    </div>
+  </div>
   </section>
-   <!--start product details-->
+  <!--start product details-->
 
 
-  
-  
- </div>
+
+
+  </div>
   <!--end page content-->
 
 
- <!--start footer-->
- <section class="footer-section bg-section-2 section-padding">
+  <!--start footer-->
+  <section class="footer-section bg-section-2 section-padding">
     <div class="container">
       <div class="row row-cols-1 row-cols-lg-4 g-4">
         <div class="col">
@@ -263,7 +273,7 @@
               a diverse range of products, including prescription glasses, sunglasses, and contact lenses.
               Through innovative technology and a user-friendly interface, customers can easily browse and purchase
               eyewear tailored to their preferences and vision needs.
-              </p>
+            </p>
           </div>
         </div>
         <div class="col">
@@ -344,12 +354,12 @@
 
 
 
-<!--Start Back To Top Button-->
+  <!--Start Back To Top Button-->
   <a href="javaScript:;" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
-<!--End Back To Top Button-->
-  
+  <!--End Back To Top Button-->
 
-   <!-- JavaScript files -->
+
+  <!-- JavaScript files -->
   <script src="/user/js/bootstrap.bundle.min.js"></script>
   <script src="/user/js/jquery.min.js"></script>
   <script src="/user/plugins/slick/slick.min.js"></script>
@@ -361,42 +371,45 @@
 </body>
 
 <script>
-   // Function to update the quantity input value and trigger change event
-async  function incrimentTotal(indexId,price,max){
-  
-try {
-  const response=await axios.post(`/user/totalIncrement?indexId=${indexId}&price=${price}`)
-  
-  let totalprice=response.data
-  let upadateTotal=document.getElementById('total').innerHTML=totalprice
-  let updateCartTotal=document.getElementById('bagTotal').innerHTML=totalprice
+  // Function to update the quantity input value and trigger change event
+  async function incrimentTotal(indexId, price, max, i) {
+
+    try {
+      console.log(max);
+
+      if ((Number(document.querySelectorAll('.quantity-input')[i].value) + 1) <= max) {
+        const response = await axios.post(`/user/totalIncrement?indexId=${indexId}&price=${price}`)
+
+        let totalprice = response.data
+        let upadateTotal = document.getElementById('total').innerHTML = totalprice
+        let updateCartTotal = document.getElementById('bagTotal').innerHTML = totalprice
+      }
+      changeQuantity(document.querySelectorAll('.increase-btn')[i], 1);
+    } catch (error) {
+
+    }
+  }
+
+
+  async function decrimentTotal(indexId, price, i) {
+    try {
+      if ((Number(document.querySelectorAll('.quantity-input')[i].value) - 1) > 0) {
+        const response = await axios.post(`/user/totalDecrement?indexId=${indexId}&price=${price}`);
+        let totalprice = response.data
+
+        let upadateTotal = document.getElementById('total').innerHTML = totalprice
+        let updateCartTotal = document.getElementById('bagTotal').innerHTML = totalprice
+      }
+      changeQuantity(document.querySelectorAll('.decrease-btn')[i], -1);
+    } catch (error) {
+
+    }
+  }
 
 
 
-} catch (error) {
-  
-}       
-}
-
-
-async  function decrimentTotal(indexId,price){
-try {
-  const response=await axios.post(`/user/totalDecrement?indexId=${indexId}&price=${price}`)
-  
-  let totalprice=response.data
-
-  let upadateTotal=document.getElementById('total').innerHTML=totalprice
-  let updateCartTotal=document.getElementById('bagTotal').innerHTML=totalprice
-
-} catch (error) {
-  
-}       
-}
-
-
-
-// Function to change the quantity when increase or decrease button is clicked
-function changeQuantity(button, change) {
+  // Function to change the quantity when increase or decrease button is clicked
+  function changeQuantity(button, change) {
 
     const input = button.parentElement.parentElement.querySelector('.quantity-input');
     let quantity = parseInt(input.value);
@@ -413,45 +426,33 @@ function changeQuantity(button, change) {
 
     // Update the input value
     input.value = quantity;
-     
+
     // Trigger change event to update quantity on the backend
     input.dispatchEvent(new Event('change'));
-    const plusButton = button.parentElement.querySelector('.increase-btn');
-    if (quantity >= max) {
-        plusButton.style.visibility = 'hidden';
-    } else {
-        plusButton.style.visibility = 'visible';
-    }
 
-    // Hide the minus button if the quantity reaches the minimum
-    const minusButton = button.parentElement.querySelector('.decrease-btn');
-    if (quantity <= min) {
-        minusButton.style.visibility = 'hidden';
-    } else {
-        minusButton.style.visibility = 'visible';
-    }
-}
-async function removeCart(productId,price,cartQty){
-  try {
-    const response = await axios.post(`/user/removeCart?productId=${productId}&price=${price}&cartQty=${cartQty}`);
-    Swal.fire({
-  icon: 'success',
-  title: 'Success',
-  text: response.data,
-}).then((result) => {
-  if (result.isConfirmed) {
-    // Reload the page
-    window.location.reload();
   }
-});
+  async function removeCart(productId, price, cartQty) {
+    try {
+      const response = await axios.post(`/user/removeCart?productId=${productId}&price=${price}&cartQty=${cartQty}`);
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: response.data,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Reload the page
+          window.location.reload();
+        }
+      });
 
-  
-  } catch (error) {
-    console.error('Error removing item from cart:', error);
-    // Handle error appropriately (e.g., show an error message to the user)
+
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+      // Handle error appropriately (e.g., show an error message to the user)
+    }
   }
-}
 
 </script>
 <!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/address.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:55 GMT -->
+
 </html>

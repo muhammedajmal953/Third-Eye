@@ -1,107 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>Nest Dashboard</title>
-        <meta http-equiv="x-ua-compatible" content="ie=edge" />
-        <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta property="og:title" content="" />
-        <meta property="og:type" content="" />
-        <meta property="og:url" content="" />
-        <meta property="og:image" content="" />
-        <!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/favicon.svg" />
-        <!-- Template CSS -->
-        <link href="/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
-    </head>
 
-    <body>
-        <aside class="navbar-aside" id="offcanvas_aside">
-            <div class="aside-top">
-                <a href="" class="brand-wrap">
-                    <h1 class="h1">Third Eye</h1>
-                </a>
-                <div>
-                    <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
+<head>
+    <meta charset="utf-8" />
+    <title>Nest Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/favicon.svg" />
+    <!-- Template CSS -->
+    <link href="/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="" class="brand-wrap">
+                <h1 class="h1">Third Eye</h1>
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"><i
+                        class="text-muted material-icons md-menu_open"></i></button>
+            </div>
+        </div>
+    </aside>
+    <main>
+        <section class="content-main mt-80 mb-80">
+            <div class="card mx-auto card-login">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Add Products</h4>
+                    <form method="post" action="/admin/add-product" enctype="multipart/form-data"
+                        onsubmit="return validateProd()" accept="image">
+                        <div class="mb-3">
+                            <input class="form-control" placeholder="Product Name" id="productName" type="text"
+                                name="productName">
+                        </div>
+                        <!-- form-group// -->
+                        <div class="mb-3">
+
+                            <textarea class="form-control" name="description" cols="30" rows="5" id="discription"
+                                placeholder="discription"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <input class="form-control" placeholder="Price" id="price" type="number" name="price" required>
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-control" placeholder="quantity" id="quantity" type="number" name="quantity" required>
+                        </div>
+                        <select class="form-control mb-2 dropdown has-submenu" name="catagory" required>
+                            <option value="">catagory</option>
+                            <%for(i=0;i<catagory.length;i++){%>
+                                <% if (catagory[i].isActive===true) { %>
+                                    <option>
+                                        <%=catagory[i].catagoryName%>
+                                    </option>
+                                    <% } %>
+                                        <%}%>
+                        </select>
+                        <div class="mb-3">
+                            <div id="imageContainer"></div>
+                            <input class="form-control" onchange="viewImages()" placeholder="Select image" type="file"
+                                name="images" multiple required>
+                        </div>
+
+                        <div class="mb-4">
+                            <button type="submit" class="btn btn-primary w-100">Add Product</button>
+                        </div>
+                        <!-- form-group// -->
+                    </form>
+
                 </div>
             </div>
-        </aside> 
-        <main>
-            <section class="content-main mt-80 mb-80">
-                <div class="card mx-auto card-login">
-                    <div class="card-body">
-                        <h4 class="card-title mb-4">Add Products</h4>
-                        <form  method="post" action="/admin/add-product" enctype="multipart/form-data" onsubmit="return validateProd()" accept="image">
-                            <div class="mb-3">
-                                <input class="form-control" placeholder="Product Name" id="productName" type="text" name="productName">
-                            </div>
-                            <!-- form-group// -->
-                            <div class="mb-3">
-                                
-                               <textarea class="form-control" name="description" cols="30" rows="5" id="discription" placeholder="discription"></textarea>
-                            </div>
-                         
-                            <div class="mb-3">
-                                <input class="form-control" placeholder="Price" id="price" type="number" name="price">
-                            </div>
-                            <div class="mb-3">
-                                <input class="form-control" placeholder="Quantity" type="number" name="quantity">
-                            </div>
-                            <select class="form-control mb-2 dropdown has-submenu" name="catagory"  >
-                                <option value="">catagory</option>
-                                <%for(i=0;i<catagory.length;i++){%>
-                                    <option><%=catagory[i].catagoryName%></option>
-                                  <%}%>
-                            </select>
-                            <div class="mb-3">
-                              <div id="imageContainer"></div>
-                                <input class="form-control" onchange="viewImages()" placeholder="Select image" type="file" name="images" multiple required>
-                            </div>
-                         
-                            <div class="mb-4">
-                                <button type="submit" class="btn btn-primary w-100">Add Product</button>
-                            </div>
-                            <!-- form-group// -->
-                        </form>
-                       
-                    </div>
-                </div>
-            </section>
-           
-        </main>
-        <script src="/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="/js/main.js?v=1.1" type="text/javascript"></script>
-        <script>
-            function validateProd(){
+        </section>
 
-             const trimedName=document.getElementById('productName').value.trim()
-             const trimedDiscription=document.getElementById('discription').value.trim()
+    </main>
+    <script src="/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Main Script -->
+    <script src="/js/main.js?v=1.1" type="text/javascript"></script>
+    <script>
+    function validateProd() {
+    const trimmedName = document.getElementById('productName').value.trim();
+    const trimmedDescription = document.getElementById('discription').value.trim();
+    const price = parseFloat(document.getElementById('price').value);
+    const quantity = parseInt(document.getElementById('quantity').value);
 
-             if(trimedName===''||trimedDiscription===''){
-                alert('catagoryname not be empty or space')
-                return false
-             }
-             return true
-           
-            }
+    if (trimmedName.length === 0 || trimmedDescription.length === 0 || price < 0 || quantity < 0) {
+        Swal.fire({
+  icon: "error",
+  title: "Oops...",
+  text: 'The fields should not be empty and should not contain negative values.',
+ 
+});
+        return false;
+    }
+    return true;
+}
+        function viewImages() {
+            let inputFiles = event.target.files
+            let imageContainer = document.getElementById('imageContainer')
 
-            function viewImages(){
-              let inputFiles=event.target.files
-              let imageContainer=document.getElementById('imageContainer')
-
-              for(i=0;i<inputFiles.length;i++){
-                const img=document.createElement('img')
-                img.className="ImagePreview"
-                 img.style.height='100px'
-                 img.style.width='100px'
-                img.src=URL.createObjectURL(inputFiles[i])
+            for (i = 0; i < inputFiles.length; i++) {
+                const img = document.createElement('img')
+                img.className = "ImagePreview"
+                img.style.height = '100px'
+                img.style.width = '100px'
+                img.src = URL.createObjectURL(inputFiles[i])
                 imageContainer.appendChild(img)
-              }
             }
-        </script>
-    </body>
+        }
+    </script>
+</body>
+
 </html>

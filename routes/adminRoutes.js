@@ -37,9 +37,10 @@ adminRoutes.get('/add-catagory',isAdminLoggedIn,async (req,res)=>{
 adminRoutes.post('/add-catagory',upload.single('image'),adminControler.add_catagory)
 
 adminRoutes.get('/edit-catagory',isAdminLoggedIn,async (req,res)=>{
-    const id=req.query.id
+    const id = req.query.id
+    const message=req.query.message
     const catag=await Catagory.findOne({_id:id})
-    res.render('./admin/editCatagory',{catag:catag})
+    res.render('./admin/editCatagory',{message:message,catag:catag})
 })
 adminRoutes.post('/edit-catagory/:id',upload.single('image'),adminControler.edit_catagory)
 

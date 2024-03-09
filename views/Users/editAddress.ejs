@@ -172,35 +172,35 @@
           <div class="card-body p-lg-5">
               <h5 class="mb-0 fw-bold">Edit Address</h5>
               <hr>
-               <form method="post" action="/user/addressEdit?addressIndex=<%=index%>" >
+               <form method="post" action="/user/addressEdit?addressIndex=<%=index%>"  onsubmit="return validateAddress()" >
                  <div class="row row-cols-1 g-3">
                     <div class="col">
                       <div class="form-floating">
-                        <input type="text" class="form-control rounded-0" id="" name="houseName" value="<%=address.houseName%>">
+                        <input type="text" class="form-control rounded-0" id="house" name="houseName" value="<%=address.houseName%>">
                         <label for="floatingInputName">houseName</label>
                       </div>
                     </div>
                     <div class="col">
                       <div class="form-floating">
-                        <input type="number" class="form-control rounded-0" id="" name="pincode" value="<%=address.pincode%>">
+                        <input type="number" class="form-control rounded-0" id="pincode" name="pincode" value="<%=address.pincode%>">
                         <label for="floatingInputNumber">pincode</label>
                       </div>
                     </div>
                     <div class="col">
                       <div class="form-floating">
-                        <input type="text" class="form-control rounded-0" id="" name="city" value="<%=address.city%>">
+                        <input type="text" class="form-control rounded-0" id="city" name="city" value="<%=address.city%>">
                         <label for="floatingInputEmail">District/city</label>
                       </div>
                     </div>
                     <div class="col">
                         <div class="form-floating">
-                          <input type="text" class="form-control rounded-0" id="" name="village" value="<%=address.village%>">
+                          <input type="text" class="form-control rounded-0" id="village" name="village" value="<%=address.village%>">
                           <label for="floatingInputEmail">Village/Town</label>
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-floating">
-                          <input type="text" class="form-control rounded-0" id="" name="state" value="<%=address.state%>">
+                          <input type="text" class="form-control rounded-0" id="state" name="state" value="<%=address.state%>">
                           <label for="floatingInputEmail">State</label>
                         </div>
                     </div>
@@ -318,5 +318,30 @@
     <script src="/user/js/main.js"></script>
     <script src="/user/js/index.js"></script>
     <script src="/user/js/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      function validateAddress(){
+          const house=document.getElementById('house').value.trim()
+          const state=document.getElementById('state').value.trim()
+          const village=document.getElementById('village').value.trim()
+          const city=document.getElementById('city').value.trim()
+          const pincode= document.getElementById('pincode').value.trim()
+
+
+          if(house===''||state===''||village===''||city===''||pincode===''){
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "all fields must be filled"
+            });  
+            return false
+          }
+
+          return true
+      }
+    </script>
   </body>
+
+
+
 </html>

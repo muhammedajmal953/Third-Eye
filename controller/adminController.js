@@ -1,10 +1,11 @@
+const { ObjectId } = require('mongodb');
 const Admin = require('../model/adminModel');
 const Catagory = require('../model/catagoryModel');
 const Order = require('../model/orderModel');
 const Product = require('../model/productModel');
 const Users = require('../model/userModel');
 const sharp = require('sharp');
-
+const path=require('path')
 
 
 // Render login page
@@ -149,7 +150,14 @@ exports.edit_catagory = async (req, res) => {
       imageUrl = filename
       await sharp(imageBuffer).toFile(`./uploads/catagory/${filename}`)
     }
-
+     
+    const existingCatagory = await Catagory.findOne({ catagoryName: req.body.catagoryName })
+     
+    const existingId=new ObjectId(req.params.id)
+    
+    if (existingCatagory&&existingCatagory._id!=req.params.id) {   
+      return res.redirect(`/admin/edit-catagory?id=${req.params.id}`)
+    }
     // Update the category in the database
     await Catagory.findByIdAndUpdate({ _id: req.params.id }, {
       catagoryName: req.body.catagoryName,
@@ -204,7 +212,6 @@ exports.add_products = async (req, res) => {
   try {
     // Extract image URLs from the uploaded files
     const imageUrls = []
-
 
     if (req.files) {
       for (i = 0; i < req.files.length; i++) {

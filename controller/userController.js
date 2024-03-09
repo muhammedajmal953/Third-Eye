@@ -141,7 +141,7 @@ exports.user_SignUp = async (req, res) => {
 
     await otpStore.save();
 
-    res.render("./Users/otpVerification");
+    res.render("./Users/otpVerification",{message:''});
   } catch (error) {
     // Handle any errors that occur during the process
     console.error("Error signing up user:", error);
@@ -159,6 +159,12 @@ exports.verifyEmail = async (req, res) => {
       email: globalEmail,
       otp: userOtp,
     });
+
+    if (!savedOtp) {
+     return res.render("./Users/otpVerification",{message:'wrong otp'});
+    }
+
+
     if (userOtp === savedOtp.otp) {
       const userSave = new Users({
         username: globalUsername,
@@ -186,9 +192,9 @@ exports.resendOtp = async (req, res) => {
     console.log(`your new otp:${newOtp}`);
     await otpModel.updateOne({ email: globalEmail }, { otp: newOtp });
 
-    res.render("./Users/otpVerification");
-  } catch {
-
+    res.render("./Users/otpVerification",{message:''});
+  } catch { 
+     
   }
 };
 
@@ -233,7 +239,7 @@ exports.get_products = async (req, res) => {
       sortCriteria = { productName: -1 }
     }
 
-
+   
     const products = await Product.find().limit(15).sort(sortCriteria)
     const catagory = await Catagory.find()
     res.render('./Users/productsGrid', { products: products, catagory: catagory, sortBy })
@@ -274,6 +280,7 @@ exports.edit_profile = async (req, res) => {
   }
 }
 
+//edtit profile saving
 exports.update_profile = async (req, res) => {
   try {
     const id = req.query.id

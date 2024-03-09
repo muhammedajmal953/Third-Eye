@@ -87,13 +87,14 @@
               </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="/user/productList" data-bs-toggle="dropdown">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="/user/productList"
+                data-bs-toggle="dropdown">
                 Shop
               </a>
             </li>
 
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;" >
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:;">
                 Account
               </a>
             </li>
@@ -123,9 +124,9 @@
         <li class="nav-item">
           <a class="nav-link" href="account-dashboard.html"><i class="bi bi-person-circle"></i></a>
         </li>
-            <li class="nav-item">
-              <a class="btn btn-success" href="/user/login">Login</a>
-            </li>
+        <li class="nav-item">
+          <a class="btn btn-success" href="/user/login">Login</a>
+        </li>
       </ul>
     </nav>
   </header>
@@ -195,38 +196,44 @@
           <div class="tab-pane fade show active" id="new-arrival">
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-5 g-4">
 
-              <%for(i=0;i<5;i++){%>
-                <%if(product[i].isListed===true) {%>
-                  <div class="col">
-                    <a href="/user/product-details?id=<%=product[i]._id%>">
-                      <div class="card">
-                        <div class="position-relative overflow-hidden">
-                          <img src="/products/<%=product[i].images[0]%>" class="card-img-top" width="100px" height="200px">
-                        </div>
-                        <div class="card-body">
-                          <div class="product-info text-center">
-                            <h6 class="mb-1 fw-bold product-name">
-                              <%=product[i].productName%>
-                            </h6>
-                            <div class="ratings mb-1 h6">
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                            </div>
-                            <p class="mb-0 h6 fw-bold product-price">
-                             Rs- <%=product[i].price%>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
+              
+
+           <% product.forEach((product)=> {%>
+
+            <% if (product.isListed===true) { %>
+             
+           
+            <div class="col">
+              <a href="/user/product-details?id=<%=product._id%>">
+                <div class="card">
+                  <div class="position-relative overflow-hidden">
+                    <img src="/products/<%=product.images[0]%>" class="card-img-top" width="100px"
+                      height="200px">
                   </div>
-                  <%}%>
-                    <%}%>
+                  <div class="card-body">
+                    <div class="product-info text-center">
+                      <h6 class="mb-1 fw-bold product-name">
+                        <%=product.productName%>
+                      </h6>
+                      <div class="ratings mb-1 h6">
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                      </div>
+                      <p class="mb-0 h6 fw-bold product-price">
+                        Rs- <%=product.price%>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </a>
             </div>
-          </div>
+            <% } %>
+            <%})%>    
+
+           </div>
 
 
 
@@ -251,7 +258,8 @@
                 <div class="card">
                   <div class="card-body">
                     <div class="overflow-hidden">
-                      <img src="/catagory/<%=catagory[i].image%>" class="card-img-top rounded-0" width="100px" height="200px">
+                      <img src="/catagory/<%=catagory[i].image%>" class="card-img-top rounded-0" width="100px"
+                        height="200px">
                     </div>
                     <div class="text-center">
                       <h5 class="mb-1 cartegory-name mt-3 fw-bold">

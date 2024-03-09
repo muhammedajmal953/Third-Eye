@@ -207,12 +207,12 @@
                         ><i class="bi bi-basket3 me-2"></i>Orders</a >
                       <a
                         href="/user/profile"
-                        class="list-group-item active"
+                        class="list-group-item "
                         ><i class="bi bi-person me-2"></i>Profile</a
                       >
                       <a
                         href="/user/profileEdit?id=<%=user._id%>"
-                        class="list-group-item"
+                        class="list-group-item active"
                         ><i class="bi bi-pencil me-2"></i>Edit Profile</a
                       >
                       <a
@@ -422,26 +422,40 @@
     <script src="/user/js/main.js"></script>
     <script src="/user/js/index.js"></script>
     <script src="/user/js/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
      function validateEditUser() {
     let username = document.getElementById('username').value.trim();
     let phone = document.getElementById('phone').value.trim();
     let email = document.getElementById('email').value.trim();
 
-    let nameRegex = /^[a-zA-Z]{5,20}$/;
+    let nameRegex = /^[a-zA-Z]{3,20}$/;
     let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;
     let phoneRegex = /^\d{10}$/;
 
     if (!nameRegex.test(username) && username === '') {
-        alert('Name must be filled with at least 5 letters');
+      Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text:'Name must filled and atleast 3 letters'
+            });  
+        
         return false;
     }
     if (!emailRegex.test(email)) {
-        alert('Email must be filled with a valid form');
+      Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text:'Email must be filled with a valid form'
+            });  
         return false;
     }
     if (!phoneRegex.test(phone) && phone === '') {
-        alert('Phone must be filled with a valid form');
+      Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text:'Phone must be filled with a valid form'
+            });  
         return false;
     }
     return true;
