@@ -56,11 +56,7 @@ adminRoutes.get('/unlisted-catagory',isAdminLoggedIn,async (req,res)=>{
     res.render("./admin/removedCatagory",{catagory:catagory})
 }) 
 
-adminRoutes.get('/products',isAdminLoggedIn,async (req,res)=>{
-    const product=await Product.find()
-
-    res.render("./admin/productList",{product:product})
-})
+adminRoutes.get('/products',isAdminLoggedIn,adminControler.products)
 
 
 adminRoutes.get('/add-product',isAdminLoggedIn,async (req,res)=>{

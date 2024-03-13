@@ -6,11 +6,10 @@ const nodemailer = require("nodemailer");
 const { generateOtp } = require("../services/generateOtp");
 const otpModel = require("../model/otpModel");
 const sendMail = require("../services/emailSender");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const Cart = require("../model/cartModel");
 const Order = require("../model/orderModel");
 const { findById } = require("../model/adminModel");
-
 
 let globalEmail;
 let globalPhone;
@@ -38,7 +37,7 @@ exports.get_login = (req, res) => {
     if (req.session.user) {
       return res.redirect("/user/home");
     }
-    return res.render("./Users/userLogin", { message: '' });
+    return res.render("./Users/userLogin", { message: "" });
   } catch (error) {
     console.error("Error rendering login page:", error);
     res.status(500).send("Internal Server Error");
@@ -56,11 +55,13 @@ exports.user_login = async (req, res) => {
 
     // Find user data based on provided email and password
     const userData = await Users.findOne({
-      email: loginEmail
+      email: loginEmail,
     });
 
     if (userData.isBlocked == true) {
-      return res.render("./Users/userLogin", { message: 'You are blocked With admin' });
+      return res.render("./Users/userLogin", {
+        message: "You are blocked With admin",
+      });
     }
 
     // If user data exists
@@ -81,14 +82,11 @@ exports.user_login = async (req, res) => {
           // Redirect to login page with an alert for invalid credentials
           res.redirect("/user/login");
         }
-
-      })
-
+      });
     } else {
       // Redirect to login page with an alert for invalid credentials
       res.redirect("/user/login");
       res.status(400).json({ error: "Invalid credentials" });
-
     }
   } catch (error) {
     // Handle any errors that occur during the process
@@ -99,13 +97,9 @@ exports.user_login = async (req, res) => {
 
 exports.google_login = async (req, res) => {
   try {
-    res.redirect('/user/home')
-  } catch (error) {
-
-  }
-}
-
-
+    res.redirect("/user/home");
+  } catch (error) { }
+};
 
 //User registration handling
 exports.user_SignUp = async (req, res) => {
@@ -122,12 +116,11 @@ exports.user_SignUp = async (req, res) => {
     //hashing the password that user registered
     bcrypt.hash(password, 10, (err, hash) => {
       globalPassword = hash;
-    })
+    });
 
     globalEmail = email;
     globalPhone = phone;
     globalUsername = username;
-
 
     OTP = generateOtp();
     console.log(OTP);
@@ -141,14 +134,13 @@ exports.user_SignUp = async (req, res) => {
 
     await otpStore.save();
 
-    res.render("./Users/otpVerification",{message:''});
+    res.render("./Users/otpVerification", { message: "" });
   } catch (error) {
     // Handle any errors that occur during the process
     console.error("Error signing up user:", error);
     res.status(500).send("Internal Server Error");
   }
 };
-
 
 //check otp is correct then save the user data
 exports.verifyEmail = async (req, res) => {
@@ -161,9 +153,8 @@ exports.verifyEmail = async (req, res) => {
     });
 
     if (!savedOtp) {
-     return res.render("./Users/otpVerification",{message:'wrong otp'});
+      return res.render("./Users/otpVerification", { message: "wrong otp" });
     }
-
 
     if (userOtp === savedOtp.otp) {
       const userSave = new Users({
@@ -192,10 +183,8 @@ exports.resendOtp = async (req, res) => {
     console.log(`your new otp:${newOtp}`);
     await otpModel.updateOne({ email: globalEmail }, { otp: newOtp });
 
-    res.render("./Users/otpVerification",{message:''});
-  } catch { 
-     
-  }
+    res.render("./Users/otpVerification", { message: "" });
+  } catch { }
 };
 
 exports.get_home = async (req, res) => {
@@ -221,28 +210,40 @@ exports.view_products = async (req, res) => {
 //handling Shop page rendering
 exports.get_products = async (req, res) => {
   try {
+    const page = req.params.page;
+    const sortBy = req.query.sort;
+    const totalProducts = await Product.find();
+    const limit = 6;
+    const totalPages = Math.ceil(totalProducts.length / limit);
 
-    const sortBy = req.query.sort
-    console.log("sortBy : ", sortBy);
     // const sortBy = 'hiToLow';
-    let sortCriteria = {}
+    let sortCriteria = {};
 
-    if (sortBy == 'hiToLow') {
-      console.log("hitolow")
-      sortCriteria = { price: -1 }
-
-    } else if (sortBy == 'lowToHi') {
-      sortCriteria = { price: 1 }
-    } else if (sortBy == 'aToZ') {
-      sortCriteria = { productName: 1 }
-    } else if (sortBy == 'zToA') {
-      sortCriteria = { productName: -1 }
+    if (sortBy == "hiToLow") {
+      console.log("hitolow");
+      sortCriteria = { price: -1 };
+    } else if (sortBy == "lowToHi") {
+      sortCriteria = { price: 1 };
+    } else if (sortBy == "aToZ") {
+      sortCriteria = { productName: 1 };
+    } else if (sortBy == "zToA") {
+      sortCriteria = { productName: -1 };
     }
 
-   
-    const products = await Product.find().limit(15).sort(sortCriteria)
-    const catagory = await Catagory.find()
-    res.render('./Users/productsGrid', { products: products, catagory: catagory, sortBy })
+    const skip = (page - 1) * limit;
+     console.log(skip);
+    const products = await Product.find()
+      .sort(sortCriteria)
+      .skip(skip)
+      .limit(limit);
+    const catagory = await Catagory.find();
+    res.render("./Users/productsGrid", {
+      products: products,
+      catagory: catagory,
+      sortBy,
+      totalPages,
+      page
+    });
   } catch (error) {
     res.status(500).send("Oops  somthing Went Wrong...!!!");
   }
@@ -251,60 +252,50 @@ exports.get_products = async (req, res) => {
 //handle user Profile View
 exports.view_profile = async (req, res) => {
   try {
-    const id = req.session.user
+    const id = req.session.user;
 
-    const user = await Users.findOne({ _id: id })
+    const user = await Users.findOne({ _id: id });
 
     if (user) {
-      return res.render('./Users/userProfile', { user })
+      return res.render("./Users/userProfile", { user });
     }
-  } catch (error) {
-
-  }
-}
-
+  } catch (error) { }
+};
 
 //handle edit profile  get
 
 exports.edit_profile = async (req, res) => {
   try {
-    const id = req.query.id
+    const id = req.query.id;
 
-    const user = await Users.findOne({ _id: id })
+    const user = await Users.findOne({ _id: id });
 
     if (user) {
-      return res.render('./Users/editProfile', { user })
+      return res.render("./Users/editProfile", { user ,message:''});
     }
-  } catch (error) {
-
-  }
-}
+  } catch (error) { }
+};
 
 //edtit profile saving
 exports.update_profile = async (req, res) => {
   try {
-    const id = req.query.id
-    const { email, username, phone } = req.body
-    const newEmail = email.trim()
-    const newName = username.trim()
-    const newPhone = phone.trim()
+    const id = req.query.id;
+    const { email, username, phone } = req.body;
+    
     const updates = {
-      newEmail,
-      newName,
-      newPhone
-    }
-    await Users.findByIdAndUpdate(id, updates)
-    res.redirect('/user/profile')
-  } catch (error) {
-
-  }
-}
-
+      email,
+      username,
+      phone
+    };
+    await Users.findByIdAndUpdate(id, updates);
+    res.redirect("/user/profile");
+  } catch (error) { }
+};
 
 //change password updating
 exports.change_password = async (req, res) => {
   try {
-    let password = req.query.password
+    let password = req.query.password;
 
     const { oldPassword, newPassword } = req.body;
 
@@ -312,13 +303,13 @@ exports.change_password = async (req, res) => {
     const user = await Users.findOne({ password });
     console.log(user);
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Compare the provided old password with the one stored in the database
     const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
     if (!isPasswordMatch) {
-      return res.status(400).json({ error: 'Old password is incorrect' });
+      return res.render("./Users/editProfile", { user ,message:'Password changed Succesfully'});
     }
 
     // Hash the new password
@@ -327,120 +318,113 @@ exports.change_password = async (req, res) => {
     // Update the user's password in the database
     await Users.updateOne({ _id: user._id }, { password: hashedNewPassword });
 
-    // Respond with success message
-    res.status(200).json({ message: 'Password changed successfully' });
+    res.redirect("/user/profile");
+    
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 //show address
 exports.show_adress = async (req, res) => {
   try {
-    const id = req.session.user
+    const id = req.session.user;
 
-    const user = await Users.findOne({ _id: id })
+    const user = await Users.findOne({ _id: id });
 
-    res.render('./Users/address', { user })
-  } catch (error) {
-
-  }
-}
+    res.render("./Users/address", { user });
+  } catch (error) { }
+};
 
 //addind address
 exports.addAddress = async (req, res) => {
   try {
-    const id = req.query.id
-    const { houseName, pincode, village, city, state } = req.body
-
+    const id = req.query.id;
+    const { houseName, pincode, village, city, state } = req.body;
 
     const address = {
       pincode,
       houseName,
       village,
       city,
-      state
-    }
-    console.log(address);
-    const user = await Users.findByIdAndUpdate({ _id: id }, { $addToSet: { address: address } })
+      state,
+    };
+   
+    const user = await Users.findByIdAndUpdate(
+      { _id: id },
+      { $addToSet: { address: address } }
+    );
 
-
-    res.redirect('/user/adresses')
-
-
-
-  } catch (error) {
-
-  }
-}
+    res.redirect("/user/adresses");
+  } catch (error) { }
+};
 
 exports.get_editAddress = async (req, res) => {
   try {
-    const id = req.session.user
+    const id = req.session.user;
 
-    const index = req.query.index
-    const user = await Users.findById(id)
+    const index = req.query.index;
+    const user = await Users.findById(id);
 
-    const address = user.address[index]
-    res.render('./Users/editAddress', { address, index })
+    const address = user.address[index];
+    res.render("./Users/editAddress", { address, index });
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 //save the edited address
 exports.addressEdit = async (req, res) => {
-  const addressIndex = req.query.addressIndex
-  const userId = req.session.user
-  const { houseName, pincode, city, village, state } = req.body
+  const addressIndex = req.query.addressIndex;
+  const userId = req.session.user;
+  const { houseName, pincode, city, village, state } = req.body;
   const newAddress = {
     houseName,
     pincode,
     city,
     village,
-    state
-  }
+    state,
+  };
 
-  const user = await Users.findById(userId)
+  const user = await Users.findById(userId);
 
-  user.address[addressIndex] = newAddress
-  await user.save()
+  user.address[addressIndex] = newAddress;
+  await user.save();
 
-  res.redirect('/user/adresses')
-}
+  res.redirect("/user/adresses");
+};
 
 //delete address
 exports.deleteAddress = async (req, res) => {
   try {
-    const userId = req.session.user
-    const addressId = req.query.addressId
+    const userId = req.session.user;
+    const addressId = req.query.addressId;
 
-    await Users.updateOne({ _id: userId }, { $pull: { address: { _id: addressId } } })
-    res.redirect('/user/adresses')
-  } catch (error) {
-
-  }
-}
+    await Users.updateOne(
+      { _id: userId },
+      { $pull: { address: { _id: addressId } } }
+    );
+    res.redirect("/user/adresses");
+  } catch (error) { }
+};
 //handling the Logout
-
 
 //handling add to cart
 exports.addToCart = async (req, res) => {
   try {
-    let userId = req.session.user
-    let { productId } = req.query
+    let userId = req.session.user;
+    let { productId } = req.query;
 
-    const product = await Product.findOne({ _id: productId })
-    let { productName, price, quantity } = product
-    let imageUrl = product.images[0]
-    let cart = await Cart.findOne({ userId })
-    let cartQty = 1
+    const product = await Product.findOne({ _id: productId });
+    let { productName, price, quantity } = product;
+    let imageUrl = product.images[0];
+    let cart = await Cart.findOne({ userId });
+    let cartQty = 1;
 
     if (cart) {
-      let cartTotal = cart.totalPrice
-      let itemIndex = cart.products.findIndex(p => p.productId == productId);
+      let cartTotal = cart.totalPrice;
+      let itemIndex = cart.products.findIndex((p) => p.productId == productId);
       if (itemIndex > -1) {
         let productItem = cart.products[itemIndex];
         productItem.quantity = quantity;
@@ -453,54 +437,48 @@ exports.addToCart = async (req, res) => {
           quantity,
           cartQty,
           imageUrl,
-        })
-        cart.totalPrice = cartTotal + price
-        cart = await cart.save()
+        });
+        cart.totalPrice = cartTotal + price;
+        cart = await cart.save();
       }
-      res.redirect('/user/cart')
+      res.redirect("/user/cart");
     } else {
       const newCart = new Cart({
         userId,
-        products: [{
-          productId,
-          productName,
-          price,
-          quantity,
-          cartQty,
-          imageUrl,
-        }],
-        totalPrice: price
-      })
-      newCart.save()
-      res.redirect('/user/cart')
+        products: [
+          {
+            productId,
+            productName,
+            price,
+            quantity,
+            cartQty,
+            imageUrl,
+          },
+        ],
+        totalPrice: price,
+      });
+      newCart.save();
+      res.redirect("/user/cart");
     }
   } catch (error) {
     console.log(error);
     res.status(500).send("Something went wrong");
   }
-
-
-}
+};
 
 exports.show_cart = async (req, res) => {
   try {
-    const userId = req.session.user
+    const userId = req.session.user;
 
-    const userCart = await Cart.findOne({ userId: userId })
+    const userCart = await Cart.findOne({ userId: userId });
     if (!userCart) {
-     return  res.render('./Users/cart', { products:'', userCart:'' })
+      return res.render("./Users/cart", { products: "", userCart: "" });
     }
-    
 
-    const products = userCart.products
-    res.render('./Users/cart', { products, userCart })
-
-
-  } catch (error) {
-
-  }
-}
-
+    const products = userCart.products;
+    res.render("./Users/cart", { products, userCart });
+  } catch (error) { }
+};
 
 //remove from cart
 
@@ -508,94 +486,92 @@ exports.removeCart = async (req, res) => {
   try {
     const productId = req.query.productId;
     let price = parseInt(req.query.price); // Parse price to ensure it's a number
-    let cartQty = parseInt(req.query.cartQty)
+    let cartQty = parseInt(req.query.cartQty);
 
-
-    price = price * cartQty
+    price = price * cartQty;
 
     // Remove the product from the cart
-    await Cart.updateOne({ 'products._id': productId }, { $pull: { products: { _id: productId } }, $inc: { totalPrice: -price } });
+    await Cart.updateOne(
+      { "products._id": productId },
+      { $pull: { products: { _id: productId } }, $inc: { totalPrice: -price } }
+    );
 
     // Find the cart and update the total price
 
-
     // Send a success response back to the client
-    res.status(200).json('Product removed from cart successfully.');
+    res.status(200).json("Product removed from cart successfully.");
   } catch (error) {
     // Handle any errors that occur during the update operation
-    console.error('Error removing product from cart:', error);
-    res.status(500).send('Internal server error.');
+    console.error("Error removing product from cart:", error);
+    res.status(500).send("Internal server error.");
   }
 };
 
 exports.totalIncrement = async (req, res) => {
   try {
-    let price = parseInt(req.query.price)
-    let indexId = req.query.indexId
+    let price = parseInt(req.query.price);
+    let indexId = req.query.indexId;
 
-    const carUpdate = await Cart.updateOne({ 'products._id': indexId }, { $inc: { totalPrice: price, 'products.$.cartQty': 1 } })
-    const cart = await Cart.findOne({ 'products._id': indexId })
-    let totalPrice = cart.totalPrice
+    const carUpdate = await Cart.updateOne(
+      { "products._id": indexId },
+      { $inc: { totalPrice: price, "products.$.cartQty": 1 } }
+    );
+    const cart = await Cart.findOne({ "products._id": indexId });
+    let totalPrice = cart.totalPrice;
     res.status(200).json(totalPrice);
-
   } catch (error) {
-    console.error('Error incrementing product quantity in cart:', error);
-    res.status(500).send('Internal server error.');
+    console.error("Error incrementing product quantity in cart:", error);
+    res.status(500).send("Internal server error.");
   }
-
-}
-
+};
 
 exports.totalDecrement = async (req, res) => {
   try {
-    console.log('accessed decrement');
-    let price = parseInt(req.query.price)
-    let indexId = req.query.indexId
+    console.log("accessed decrement");
+    let price = parseInt(req.query.price);
+    let indexId = req.query.indexId;
 
-    const carUpdate = await Cart.updateOne({ 'products._id': indexId }, { $inc: { totalPrice: -price, 'products.$.cartQty': -1 } })
-    const cart = await Cart.findOne({ 'products._id': indexId })
-    let totalPrice = cart.totalPrice
+    const carUpdate = await Cart.updateOne(
+      { "products._id": indexId },
+      { $inc: { totalPrice: -price, "products.$.cartQty": -1 } }
+    );
+    const cart = await Cart.findOne({ "products._id": indexId });
+    let totalPrice = cart.totalPrice;
     res.status(200).json(totalPrice);
-
   } catch (error) {
-    console.error('Error incrementing product quantity in cart:', error);
-    res.status(500).send('Internal server error.');
+    console.error("Error incrementing product quantity in cart:", error);
+    res.status(500).send("Internal server error.");
   }
-
-}
-
+};
 
 exports.get_checkout = async (req, res) => {
   try {
-    const userId = req.session.user
-    const user = await Users.findById(userId)
-    const addresses = user.address
-    const cart = await Cart.findOne({ userId: userId })
-    const products = cart.produts
-    res.render('./Users/checkout', {
+    const userId = req.session.user;
+    const user = await Users.findById(userId);
+    const addresses = user.address;
+    const cart = await Cart.findOne({ userId: userId });
+    const products = cart.produts;
+    res.render("./Users/checkout", {
       user,
       addresses,
       cart,
-      products
-    })
-  } catch (error) {
-
-  }
-}
-
+      products,
+    });
+  } catch (error) { }
+};
 
 exports.orderPlace = async (req, res) => {
   try {
-    console.log('order recieved');
-    let userId = req.session.user
-    let { cart, address } = req.query
-    let user = await Users.findById(userId)
-    let userCart = await Cart.findById(cart)
-    let {username,email}=user
-    let { totalPrice, products } = userCart
-    let items = []
-    items = products
-    
+    console.log("order recieved");
+    let userId = req.session.user;
+    let { cart, address } = req.query;
+    let user = await Users.findById(userId);
+    let userCart = await Cart.findById(cart);
+    let { username, email } = user;
+    let { totalPrice, products } = userCart;
+    let items = [];
+    items = products;
+
     const order = new Order({
       username,
       email,
@@ -603,58 +579,76 @@ exports.orderPlace = async (req, res) => {
       shippingAddress: address,
       items,
       totalAmount: totalPrice,
-      paymentMethod:'Cod'
-    })
-    
-    await order.save()
-    await Cart.deleteOne({_id:cart})
-    for (i = 0; i < items.length; i++){
-      await Product.updateOne({_id:items[i].productId},{$inc:{quantity:-items[i].cartQty}})
+      paymentMethod: "Cod",
+    });
+
+    await order.save();
+    await Cart.deleteOne({ _id: cart });
+    for (i = 0; i < items.length; i++) {
+      await Product.updateOne(
+        { _id: items[i].productId },
+        { $inc: { quantity: -items[i].cartQty } }
+      );
     }
-    res.send('product ordered')
+    res.send("product ordered");
   } catch (error) {
     console.error(error);
-    res.status(500).send('order not placed');
+    res.status(500).send("order not placed");
   }
-}
+};
 
 exports.orderView = async (req, res) => {
   try {
     const userId = req.session.user;
 
-  
     const orders = await Order.find({ userId: userId });
 
     if (orders.length > 0) {
-      console.log('Orders are ready');
+      console.log("Orders are ready");
 
-      const items = orders.flatMap(order => order.items);
-    
+      const items = orders.flatMap((order) => order.items);
+
       const user = await Users.findById(userId);
       if (user) {
-        console.log('User is ok');
+        console.log("User is ok");
       }
 
       console.log(items);
-      
-      res.render('./Users/orderList', { items, user });
+
+      res.render("./Users/orderList", { items, user });
     } else {
-      console.log('No orders found for the user');
+      console.log("No orders found for the user");
       // Render the view with an empty array of items
-      res.render('./Users/orderList', { items: [], user });
+      res.render("./Users/orderList", { items: [], user });
     }
   } catch (error) {
-    console.error('Error retrieving orders:', error);
+    console.error("Error retrieving orders:", error);
     // Handle the error and render an error page or provide appropriate response
-    res.status(500).send('Error retrieving orders');
+    res.status(500).send("Error retrieving orders");
+  }
+};
+
+exports.searchPage = async (req, res) => {
+  res.render("./Users/search", { products: [] });
+};
+
+exports.searchProducts = async (req, res) => {
+  const text = req.body.text;
+
+  const products = await Product.find({
+    $or: [
+      { productName: { $regex: text, $options: "i" } }, // Case-insensitive search for product name
+      { description: { $regex: text, $options: "i" } }, // Case-insensitive search for product description
+    ],
+  });
+  if (products) {
+    res.render("./Users/search", { products });
   }
 };
 
 exports.user_logout = (req, res) => {
   try {
-    req.session.user = null
+    req.session.user = null;
     res.redirect("/user");
-  } catch (error) {
-
-  }
+  } catch (error) { }
 };

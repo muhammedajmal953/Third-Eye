@@ -49,10 +49,10 @@ $(function () {
 
 
 
-async function sortProducts() {
+async function sortProducts(page) {
   let sortUsed = document.getElementById('sortType').value
   try {
-    window.location.href = `/user/productList?sort=${sortUsed}`;
+    window.location.href = `/user/productList/${page}?sort=${sortUsed}`;
   } catch (error) {
     console.log("error : ", error);
   }

@@ -135,6 +135,23 @@ exports.add_catagory = async (req, res) => {
   }
 }
 
+exports.products = async (req, res) => {
+  try {
+    const totalProduct = await Product.find()
+    const curPage=req.query.page||1
+    const limit = 8
+    
+    const totalPages=Math.ceil(totalProduct.length/limit)
+    
+    const skip=(curPage-1)*limit
+
+    const product=await Product.find().skip(skip).limit(limit)
+
+    res.render("./admin/productList",{product:product,totalPages})
+  } catch (error) {
+    
+  }
+}
 
 
 //editing catagory
@@ -332,7 +349,8 @@ exports.list_products = async (req, res) => {
 
 exports.orders = async (req, res) => {
   try {
-    const orders = await Order.find()
+    const orders = await Order.find().sort({
+      odrderedDate:-1})
     if (!orders) {
       res.render('./admin/orderManage', { orders: '' })
     }

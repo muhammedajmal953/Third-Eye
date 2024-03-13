@@ -1,52 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-  <!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/account-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:57 GMT -->
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--favicon-->
-    <link rel="icon" href="/user/images/favicon-32x32.webp" type="image/webp" />
+<!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/account-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:57 GMT -->
 
-    <!-- CSS files -->
-    <link href="/user/css/bootstrap.min.css" rel="stylesheet" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="/user/cdn.jsdelivr.net/npm/bootstrap-icons%401.7.2/font/bootstrap-icons.css"
-    />
-    <!-- Plugins -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="/user/plugins/slick/slick.css"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="/user/plugins/slick/slick-theme.css"
-    />
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!--favicon-->
+  <link rel="icon" href="/user/images/favicon-32x32.webp" type="image/webp" />
 
-    <link href="/user/css/style.css" rel="stylesheet" />
-    <link href="/user/css/dark-theme.css" rel="stylesheet" />
+  <!-- CSS files -->
+  <link href="/user/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/user/cdn.jsdelivr.net/npm/bootstrap-icons%401.7.2/font/bootstrap-icons.css" />
+  <!-- Plugins -->
+  <link rel="stylesheet" type="text/css" href="/user/plugins/slick/slick.css" />
+  <link rel="stylesheet" type="text/css" href="/user/plugins/slick/slick-theme.css" />
 
-    <title>ThirdEye - eCommerce</title>
-  </head>
+  <link href="/user/css/style.css" rel="stylesheet" />
+  <link href="/user/css/dark-theme.css" rel="stylesheet" />
+
+  <title>ThirdEye - eCommerce</title>
+</head>
 
 <body>
 
   <!--page loader-->
   <div class="loader-wrapper">
-   <div class="d-flex justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
-     <div class="spinner-border text-dark" role="status">
-       <span class="visually-hidden">Loading...</span>
-     </div>
-   </div>
- </div>
-<!--end loader-->
+    <div class="d-flex justify-content-center align-items-center position-absolute top-50 start-50 translate-middle">
+      <div class="spinner-border text-dark" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
+  <!--end loader-->
 
   <!--start top header-->
   <header class="top-header">
@@ -54,29 +41,16 @@
       <a class="navbar-brand d-none d-xl-inline" href="index.html">
         <h3 class="mt-1">THIRD EYE</h3>
       </a>
-      <a
-        class="mobile-menu-btn d-inline d-xl-none"
-        href="javascript:;"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#offcanvasNavbar"
-      >
+      <a class="mobile-menu-btn d-inline d-xl-none" href="javascript:;" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasNavbar">
         <i class="bi bi-list"></i>
       </a>
-      <div
-        class="offcanvas offcanvas-start"
-        tabindex="-1"
-        id="offcanvasNavbar"
-      >
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
         <div class="offcanvas-header">
           <div class="offcanvas-logo">
             <img src="/user/images/logo.webp" class="logo-img" alt="" />
           </div>
-          <button
-            type="button"
-            class="btn-close text-reset"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body primary-menu">
           <ul class="navbar-nav justify-content-start flex-grow-1 gap-1">
@@ -84,11 +58,8 @@
               <a class="nav-link" href="/user/home">Home</a>
             </li>
             <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle dropdown-toggle-nocaret"
-                href="tv-shows.html"
-                data-bs-toggle="dropdown"
-              >
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="tv-shows.html"
+                data-bs-toggle="dropdown">
                 Categories
               </a>
               <div class="dropdown-menu dropdown-large-menu">
@@ -109,14 +80,11 @@
               </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/user/productList"> Shop </a>
+              <a class="nav-link" href="/user/productList/1"> Shop </a>
             </li>
 
             <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle dropdown-toggle-nocaret"
-                href="/user/profile"
-              >
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="/user/profile">
                 Account
               </a>
             </li>
@@ -132,29 +100,19 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="search.html"
-            ><i class="bi bi-search"></i
-          ></a>
+          <a class="nav-link" href="search.html"><i class="bi bi-search"></i></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="wishlist.html"
-            ><i class="bi bi-suit-heart"></i
-          ></a>
+          <a class="nav-link" href="wishlist.html"><i class="bi bi-suit-heart"></i></a>
         </li>
-        <li
-          class="nav-item"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasRight"
-        >
+        <li class="nav-item" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
           <a class="nav-link position-relative" href="/user/cart">
             <div class="cart-badge"></div>
             <i class="bi bi-basket2"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="account-dashboard.html"
-            ><i class="bi bi-person-circle"></i
-          ></a>
+          <a class="nav-link" href="account-dashboard.html"><i class="bi bi-person-circle"></i></a>
         </li>
         <li class="nav-item">
           <a class="btn btn-success" href="/user/logout">Logout</a>
@@ -165,144 +123,140 @@
   <!--end top header-->
 
 
-<!--start page content-->
-<div class="page-content">
+  <!--start page content-->
+  <div class="page-content">
 
 
-   <!--start breadcrumb-->
-   <div class="py-4 border-bottom">
-    <div class="container">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0"> 
-          <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-          <li class="breadcrumb-item"><a href="javascript:;">Account</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Profile</li>
-        </ol>
-      </nav>
-    </div>
-   </div>
-   <!--end breadcrumb-->
-
-
-   <!--start product details-->
-   <section class="section-padding">
-    <div class="container">
-      <div class="d-flex align-items-center px-3 py-2 border mb-4">
-        <div class="text-start">
-          <h4 class="mb-0 h4 fw-bold">Account - Edit Profile</h4>
-       </div>
+    <!--start breadcrumb-->
+    <div class="py-4 border-bottom">
+      <div class="container">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Account</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Profile</li>
+          </ol>
+        </nav>
       </div>
-      <div class="btn btn-dark btn-ecomm d-xl-none position-fixed top-50 start-0 translate-middle-y"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarFilter"><span><i class="bi bi-person me-2"></i>Account</span></div>
-       <div class="row">
+    </div>
+    <!--end breadcrumb-->
+
+
+    <!--start product details-->
+    <section class="section-padding">
+      <div class="container">
+        <div class="d-flex align-items-center px-3 py-2 border mb-4">
+          <div class="text-start">
+            <h4 class="mb-0 h4 fw-bold">Account - Edit Profile</h4>
+          </div>
+        </div>
+        <div class="btn btn-dark btn-ecomm d-xl-none position-fixed top-50 start-0 translate-middle-y"
+          data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarFilter"><span><i
+              class="bi bi-person me-2"></i>Account</span></div>
+        <div class="row">
           <div class="col-12 col-xl-3 filter-column">
-              <nav class="navbar navbar-expand-xl flex-wrap p-0">
-                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarFilter" aria-labelledby="offcanvasNavbarFilterLabel">
-                  <div class="offcanvas-header">
-                    <h5 class="offcanvas-title mb-0 fw-bold text-uppercase" id="offcanvasNavbarFilterLabel">Account</h5>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                  </div>
-                  <div class="offcanvas-body account-menu">
-                    <div class="list-group w-100 rounded-0">
-                      <a href="/user/orders" class="list-group-item"
-                        ><i class="bi bi-basket3 me-2"></i>Orders</a >
-                      <a
-                        href="/user/profile"
-                        class="list-group-item "
-                        ><i class="bi bi-person me-2"></i>Profile</a
-                      >
-                      <a
-                        href="/user/profileEdit?id=<%=user._id%>"
-                        class="list-group-item active"
-                        ><i class="bi bi-pencil me-2"></i>Edit Profile</a
-                      >
-                      <a
-                        href="/user/adresses>"
-                        class="list-group-item"
-                        ><i class="bi bi-pin-map me-2"></i>Saved Address</a
-                      >
-                      <a href="wishlist.html" class="list-group-item"
-                        ><i class="bi bi-suit-heart me-2"></i>Wishlist</a
-                      >
-                      <a
-                        href="authentication-login.html"
-                        class="list-group-item"
-                        ><i class="bi bi-power me-2"></i>Logout</a
-                      >
-                    </div>
+            <nav class="navbar navbar-expand-xl flex-wrap p-0">
+              <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarFilter"
+                aria-labelledby="offcanvasNavbarFilterLabel">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title mb-0 fw-bold text-uppercase" id="offcanvasNavbarFilterLabel">Account</h5>
+                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body account-menu">
+                  <div class="list-group w-100 rounded-0">
+                    <a href="/user/orders" class="list-group-item"><i class="bi bi-basket3 me-2"></i>Orders</a>
+                    <a href="/user/profile" class="list-group-item "><i class="bi bi-person me-2"></i>Profile</a>
+                    <a href="/user/profileEdit?id=<%=user._id%>" class="list-group-item active"><i
+                        class="bi bi-pencil me-2"></i>Edit Profile</a>
+                    <a href="/user/adresses>" class="list-group-item"><i class="bi bi-pin-map me-2"></i>Saved
+                      Address</a>
+                    <a href="wishlist.html" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Wishlist</a>
+                    <a href="authentication-login.html" class="list-group-item"><i
+                        class="bi bi-power me-2"></i>Logout</a>
                   </div>
                 </div>
+              </div>
             </nav>
           </div>
           <div class="col-12 col-xl-7">
             <div class="card rounded-0">
               <div class="card-body p-lg-5">
-                  <h5 class="mb-0 fw-bold">Edit Details</h5>
-                  <hr>
-                   <form method="post" action="/user/profileUpdate?id=<%=user._id%>" onsubmit="return validateEditUser()">
-                     <div class="row row-cols-1 g-3">
-                        <div class="col">
-                          <div class="form-floating">
-                            <input type="text" class="form-control rounded-0" id="username" name="username" value="<%=user.username%>">
-                            <label for="floatingInputName">Name</label>
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="form-floating">
-                            <input type="text" class="form-control rounded-0" id="phone" name="phone" value="<%=user.phone%>">
-                            <label for="floatingInputNumber">Mobile Number</label>
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="form-floating">
-                            <input type="text" class="form-control rounded-0" id="email" name="email" value="<%=user.email%>">
-                            <label for="floatingInputEmail">Email</label>
-                          </div>
-                        </div>
-                        
-                        <div class="col">
-                          <input type="submit" class="btn btn-dark py-3 btn-ecomm w-100" value="Save details">
-                        </div>
-                        <div class="col">
-                          <button type="button" class="btn btn-outline-dark py-3 btn-ecomm w-100" data-bs-toggle="modal" data-bs-target="#ChangePasswordModal">Change Password</button>
-                        </div>
-                        
+                <h5 class="mb-0 fw-bold">Edit Details</h5>
+                <hr>
+                <form method="post" action="/user/profileUpdate?id=<%=user._id%>" onsubmit="return validateEditUser()">
+                  <div class="row row-cols-1 g-3">
+                    <div class="col">
+                      <div class="form-floating">
+                        <input type="text" class="form-control rounded-0" id="username" name="username"
+                          value="<%=user.username%>">
+                        <label for="floatingInputName">Name</label>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-floating">
+                        <input type="text" class="form-control rounded-0" id="phone" name="phone"
+                          value="<%=user.phone%>">
+                        <label for="floatingInputNumber">Mobile Number</label>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-floating">
+                        <input type="text" class="form-control rounded-0" id="email" name="email"
+                          value="<%=user.email%>">
+                        <label for="floatingInputEmail">Email</label>
+                      </div>
+                    </div>
 
-                     </div>
-                   </form>
+                    <div class="col">
+                      <input type="submit" class="btn btn-dark py-3 btn-ecomm w-100" value="Save details">
+                    </div>
+                    <div class="col">
+                      <button type="button" class="btn btn-outline-dark py-3 btn-ecomm w-100" data-bs-toggle="modal"
+                        data-bs-target="#ChangePasswordModal">Change Password</button>
+                    </div>
+
+
+                  </div>
+                </form>
               </div>
             </div>
           </div>
-       </div><!--end row-->
-    </div>
-  </section>
-   <!--start product details-->
+        </div><!--end row-->
+      </div>
+    </section>
+    <!--start product details-->
 
 
-   <!-- Change Password Modal -->
+    <!-- Change Password Modal -->
     <div class="modal" id="ChangePasswordModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content rounded-0">
           <div class="modal-body">
             <h5 class="fw-bold mb-3">Change Password</h5>
             <hr>
-              <form  method="post" action="/user/changePassword?password=<%=user.password%>" onsubmit="return validateCheckPass()">
-                <div class="form-floating mb-3">
-                  <input type="text" class="form-control rounded-0" id="oldPassword" name="oldPassword" placeholder="Old Password">
-                  <label for="floatingInputOldPass">Old Password</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="text" class="form-control rounded-0" id="newPassword1" name="newPassword" placeholder="New Password">
-                  <label for="floatingInputNewPass">New Password</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="text" class="form-control rounded-0" id="newPassword2" placeholder="Confirm Password">
-                  <label for="floatingInputConPass">Confirm Password</label>
-                </div>
-                <div class="d-grid gap-3 w-100">
-                  <button type="submit" class="btn btn-dark py-3 btn-ecomm">Change</button>
-                  <button type="button" class="btn btn-outline-dark py-3 btn-ecomm" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                </div>
-              </form>
+            <form method="post" action="/user/changePassword?password=<%=user.password%>"
+              onsubmit="return validateCheckPass()">
+              <div class="form-floating mb-3">
+                <input type="password" class="form-control rounded-0" id="oldPassword" name="oldPassword"
+                  placeholder="Old Password">
+                <label for="floatingInputOldPass">Old Password</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="password" class="form-control rounded-0" id="newPassword1" name="newPassword"
+                  placeholder="New Password">
+                <label for="floatingInputNewPass">New Password</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="password" class="form-control rounded-0" id="newPassword2" placeholder="Confirm Password">
+                <label for="floatingInputConPass">Confirm Password</label>
+              </div>
+              <div class="d-grid gap-3 w-100">
+                <button type="submit" class="btn btn-dark py-3 btn-ecomm">Change</button>
+                <button type="button" class="btn btn-outline-dark py-3 btn-ecomm" data-bs-dismiss="modal"
+                  aria-label="Close">Cancel</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -310,7 +264,7 @@
     <!-- end Change Password Modal -->
 
 
- </div>
+  </div>
   <!--end page content-->
 
 
@@ -385,9 +339,7 @@
           <div class="text-center">
             <h5 class="fw-bold mb-3">Download Mobile App</h5>
           </div>
-          <div
-            class="app-icon d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2"
-          >
+          <div class="app-icon d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
             <div>
               <a href="javascript:;">
                 <img src="/user/images/play-store.webp" width="160" alt="" />
@@ -410,83 +362,83 @@
     <p class="mb-0 text-muted">© 2022. www.example.com | All rights reserved.</p>
   </footer>
 
-<!--Start Back To Top Button-->
+  <!--Start Back To Top Button-->
   <a href="javaScript:;" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
-<!--End Back To Top Button-->
-  
+  <!--End Back To Top Button-->
 
-   <!-- JavaScript files -->
-   <script src="/user/js/bootstrap.bundle.min.js"></script>
-    <script src="/user/js/jquery.min.js"></script>
-    <script src="/user/plugins/slick/slick.min.js"></script>
-    <script src="/user/js/main.js"></script>
-    <script src="/user/js/index.js"></script>
-    <script src="/user/js/loader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-     function validateEditUser() {
-    let username = document.getElementById('username').value.trim();
-    let phone = document.getElementById('phone').value.trim();
-    let email = document.getElementById('email').value.trim();
 
-    let nameRegex = /^[a-zA-Z]{3,20}$/;
-    let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;
-    let phoneRegex = /^\d{10}$/;
+  <!-- JavaScript files -->
+  <script src="/user/js/bootstrap.bundle.min.js"></script>
+  <script src="/user/js/jquery.min.js"></script>
+  <script src="/user/plugins/slick/slick.min.js"></script>
+  <script src="/user/js/main.js"></script>
+  <script src="/user/js/index.js"></script>
+  <script src="/user/js/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    function validateEditUser() {
+      let username = document.getElementById('username').value.trim();
+      let phone = document.getElementById('phone').value.trim();
+      let email = document.getElementById('email').value.trim();
 
-    if (!nameRegex.test(username) && username === '') {
-      Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text:'Name must filled and atleast 3 letters'
-            });  
-        
+      let nameRegex = /^[a-zA-Z]{3,20}$/;
+      let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;
+      let phoneRegex = /^(?!0)\d{10}$/;
+
+      if (!nameRegex.test(username) && username === '') {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: 'Name must filled and atleast 3 letters'
+        });
+
         return false;
-    }
-    if (!emailRegex.test(email)) {
-      Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text:'Email must be filled with a valid form'
-            });  
+      }
+      if (!emailRegex.test(email)) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: 'Email must be filled with a valid form'
+        });
         return false;
-    }
-    if (!phoneRegex.test(phone) && phone === '') {
-      Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text:'Phone must be filled with a valid form'
-            });  
+      }
+      if (!phoneRegex.test(phone)) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: 'Phone must be filled with a valid form'
+        });
         return false;
+      }
+      return true;
     }
-    return true;
-}
 
-function validateCheckPass(){
-   let oldPassword=document.getElementById('oldPassword').value
-   let newPassword1=document.getElementById('newPassword1').value
-   let newPassword2=document.getElementById('newPassword2').value
+    function validateCheckPass() {
+      let oldPassword = document.getElementById('oldPassword').value
+      let newPassword1 = document.getElementById('newPassword1').value
+      let newPassword2 = document.getElementById('newPassword2').value
 
-   let passwordRegex= /^[^\s]{8,}$/
+      let passwordRegex = /^[^\s]{8,}$/
 
-   if(!passwordRegex.test(oldPassword)){
-    alert('password must be atleast 8 characters')
-    return false
-   }
-   if(!passwordRegex.test(newPassword1)){
-    alert('new password must be atleast 8 characters')
-    return false
-   }
-   if(newPassword1!==newPassword2){
-    alert('password must be same')
-    return false
-   }
-   
-   return true
-}  
-    </script>
+      if (!passwordRegex.test(oldPassword)) {
+        alert('password must be atleast 8 characters')
+        return false
+      }
+      if (!passwordRegex.test(newPassword1)) {
+        alert('new password must be atleast 8 characters')
+        return false
+      }
+      if (newPassword1 !== newPassword2) {
+        alert('password must be same')
+        return false
+      }
+        return true
+    }  
+  </script>
 
 </body>
 
 
 <!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/account-edit-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:57 GMT -->
+
 </html>
