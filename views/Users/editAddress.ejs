@@ -325,10 +325,11 @@
           const state=document.getElementById('state').value.trim()
           const village=document.getElementById('village').value.trim()
           const city=document.getElementById('city').value.trim()
-          const pincode= document.getElementById('pincode').value.trim()
+          const pincode= document.getElementById('pincode').value
 
+          let pincodeRegex = /^(?!0)\d{6}$/;
 
-          if(house===''||state===''||village===''||city===''||pincode===''){
+          if(house===''||state===''||village===''||city===''){
             Swal.fire({
               icon: "error",
               title: "Oops...",
@@ -336,6 +337,14 @@
             });  
             return false
           }
+          if (!pincodeRegex.test(pincode)) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "enter a valid pincode"
+          });
+          return false
+        }
 
           return true
       }

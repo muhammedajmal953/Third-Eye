@@ -48,10 +48,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <input class="form-control" placeholder="Price" id="price" type="number" name="price" required>
+                            <input class="form-control" placeholder="Price" id="price" type="number" name="price"
+                                required>
                         </div>
                         <div class="mb-3">
-                            <input class="form-control" placeholder="quantity" id="quantity" type="number" name="quantity" required>
+                            <input class="form-control" placeholder="quantity" id="quantity" type="number"
+                                name="quantity" required>
                         </div>
                         <select class="form-control mb-2 dropdown has-submenu" name="catagory" required>
                             <option value="">catagory</option>
@@ -66,7 +68,7 @@
                         <div class="mb-3">
                             <div id="imageContainer"></div>
                             <input class="form-control" onchange="viewImages()" placeholder="Select image" type="file"
-                                name="images" multiple required>
+                                name="images" id="images" multiple required>
                         </div>
 
                         <div class="mb-4">
@@ -87,23 +89,36 @@
     <!-- Main Script -->
     <script src="/js/main.js?v=1.1" type="text/javascript"></script>
     <script>
-    function validateProd() {
-    const trimmedName = document.getElementById('productName').value.trim();
-    const trimmedDescription = document.getElementById('discription').value.trim();
-    const price = parseFloat(document.getElementById('price').value);
-    const quantity = parseInt(document.getElementById('quantity').value);
+        function validateProd() {
+            const trimmedName = document.getElementById('productName').value.trim();
+            const trimmedDescription = document.getElementById('discription').value.trim();
+            const price = parseFloat(document.getElementById('price').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const fileInput = document.getElementById('images').files
+            if (trimmedName.length === 0 || trimmedDescription.length === 0 || price < 0 || quantity < 0) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: 'The fields should not be empty and should not contain negative values.',
 
-    if (trimmedName.length === 0 || trimmedDescription.length === 0 || price < 0 || quantity < 0) {
-        Swal.fire({
-  icon: "error",
-  title: "Oops...",
-  text: 'The fields should not be empty and should not contain negative values.',
- 
-});
-        return false;
-    }
-    return true;
-}
+                });
+                return false;
+            }
+            for (i = 0; i < fileInput.length; i++) {
+                let fileType =fileInput[i].type
+                if (!fileType.startsWith('image/')) {
+
+                    Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: 'Select Only Image files',
+
+                });
+                return false;
+                }
+            }
+            return true;
+        }
         function viewImages() {
             let inputFiles = event.target.files
             let imageContainer = document.getElementById('imageContainer')

@@ -168,12 +168,12 @@ exports.edit_catagory = async (req, res) => {
       await sharp(imageBuffer).toFile(`./uploads/catagory/${filename}`)
     }
      
-    const existingCatagory = await Catagory.findOne({ catagoryName: req.body.catagoryName })
+    const existingCatagory = await Catagory.findOne({ catagoryName: req.body.catagoryName})
      
     const existingId=new ObjectId(req.params.id)
-    
-    if (existingCatagory&&existingCatagory._id!=req.params.id) {   
-      return res.redirect(`/admin/edit-catagory?id=${req.params.id}`)
+    const catag=await Catagory.findOne({_id:req.params.id})
+    if (existingCatagory && existingCatagory._id != req.params.id) {   
+      return  res.render('./admin/editCatagory',{message:'Name already exist',catag:catag})
     }
     // Update the category in the database
     await Catagory.findByIdAndUpdate({ _id: req.params.id }, {
@@ -368,7 +368,7 @@ exports.ordersDetails = async (req, res) => {
 
     const orderedItems = order.items
 
-    res.render('./admin/orderdetails', { orderedItems })
+    res.render('./admin/orderdetails', { orderedItems,order })
   } catch (error) {
 
   }

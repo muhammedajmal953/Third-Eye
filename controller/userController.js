@@ -220,7 +220,6 @@ exports.get_products = async (req, res) => {
     let sortCriteria = {};
 
     if (sortBy == "hiToLow") {
-      console.log("hitolow");
       sortCriteria = { price: -1 };
     } else if (sortBy == "lowToHi") {
       sortCriteria = { price: 1 };
@@ -231,7 +230,7 @@ exports.get_products = async (req, res) => {
     }
 
     const skip = (page - 1) * limit;
-     console.log(skip);
+
     const products = await Product.find()
       .sort(sortCriteria)
       .skip(skip)
@@ -271,7 +270,7 @@ exports.edit_profile = async (req, res) => {
     const user = await Users.findOne({ _id: id });
 
     if (user) {
-      return res.render("./Users/editProfile", { user ,message:''});
+      return res.render("./Users/editProfile", { user, message: '' });
     }
   } catch (error) { }
 };
@@ -281,7 +280,7 @@ exports.update_profile = async (req, res) => {
   try {
     const id = req.query.id;
     const { email, username, phone } = req.body;
-    
+
     const updates = {
       email,
       username,
@@ -301,7 +300,7 @@ exports.change_password = async (req, res) => {
 
     // Retrieve the user's current password from the database
     const user = await Users.findOne({ password });
-    console.log(user);
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -309,7 +308,7 @@ exports.change_password = async (req, res) => {
     // Compare the provided old password with the one stored in the database
     const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
     if (!isPasswordMatch) {
-      return res.render("./Users/editProfile", { user ,message:'Password changed Succesfully'});
+      return res.render("./Users/editProfile", { user, message: 'Password changed Succesfully' });
     }
 
     // Hash the new password
@@ -319,7 +318,7 @@ exports.change_password = async (req, res) => {
     await Users.updateOne({ _id: user._id }, { password: hashedNewPassword });
 
     res.redirect("/user/profile");
-    
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
@@ -350,7 +349,7 @@ exports.addAddress = async (req, res) => {
       city,
       state,
     };
-   
+
     const user = await Users.findByIdAndUpdate(
       { _id: id },
       { $addToSet: { address: address } }
@@ -557,12 +556,14 @@ exports.get_checkout = async (req, res) => {
       cart,
       products,
     });
-  } catch (error) { }
+  } catch (error) { 
+    
+  }
 };
 
 exports.orderPlace = async (req, res) => {
   try {
-    console.log("order recieved");
+
     let userId = req.session.user;
     let { cart, address } = req.query;
     let user = await Users.findById(userId);
@@ -601,10 +602,9 @@ exports.orderView = async (req, res) => {
   try {
     const userId = req.session.user;
 
-    const orders = await Order.find({ userId: userId });
+    const orders = await Order.find({ userId: userId }).sort({ odrderedDate: -1 });
 
     if (orders.length > 0) {
-      console.log("Orders are ready");
 
       const items = orders.flatMap((order) => order.items);
 
@@ -613,13 +613,11 @@ exports.orderView = async (req, res) => {
         console.log("User is ok");
       }
 
-      console.log(items);
-
       res.render("./Users/orderList", { items, user });
     } else {
       console.log("No orders found for the user");
       // Render the view with an empty array of items
-      res.render("./Users/orderList", { items: [], user });
+      res.render("./Users/orderList", { items: [], user});
     }
   } catch (error) {
     console.error("Error retrieving orders:", error);
@@ -646,6 +644,46 @@ exports.searchProducts = async (req, res) => {
   }
 };
 
+exports.cancelOrder = async (req, res) => {
+  try {
+    const { productId, cartQty } = req.query
+    const userId = req.session.user
+    const product = await Product.updateOne({ _id: productId }, { $inc: { quantity: cartQty } })
+
+    await Order.updateOne(
+      { userId: userId, 'items.productId': productId }, // Find the order with the specific product
+      { $set: { 'items.$.status': 'Cancelled' } } // Update the status of the specific item
+    );
+
+    res.status(200).json({ message: 'Order successfully cancelled.' });
+
+  } catch (error) {
+
+  }
+}
+
+exports.orderDetails = async (req, res) => {
+  try {
+    const itemId = req.query.itemId
+    console.log('id', itemId);
+    const index = req.query.index
+    console.log('index', index)
+    const order = await Order.findOne({ 'items._id': itemId })
+
+    const orderedItem = order.items.find(item => item._id.toString() === itemId);
+
+    console.log(' orderedItem:', orderedItem);
+
+    res.render('./Users/orderDetails', { order, orderedItem })
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
+
+//logout user
 exports.user_logout = (req, res) => {
   try {
     req.session.user = null;

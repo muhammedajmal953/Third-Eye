@@ -90,6 +90,14 @@ userRoutes.get('/checkout',isLoggedIn,isBlocked, userController.get_checkout)
 
 userRoutes.post('/proceedOrder', userController.orderPlace)
 
-userRoutes.get('/orders',isLoggedIn,isBlocked,userController.orderView)
+userRoutes.get('/orders', isLoggedIn, isBlocked, userController.orderView)
+
+
+userRoutes.get('/orderDetails', isLoggedIn, isBlocked, userController.orderDetails)
+
+userRoutes.post('/cancelOrder', userController.cancelOrder)
+
+
  
+
 module.exports = userRoutes; // Exporting userRoutes

@@ -206,12 +206,12 @@
                         </div>
                         <div class="d-none d-xl-block vr"></div>
                         <div class="d-grid gap-2 align-self-start align-self-xl-center">
-                          <form action="/user/deleteAddress?addressId=<%=user.address[i]._id%>"
-                            onsubmit="return  confirmDelete()" method="post">
-                            <button type="submit" class="btn btn-outline-dark px-5 btn-ecomm">
-                              Remove
-                            </button>
-                          </form>
+
+                          <button class="btn btn-outline-dark px-5 btn-ecomm"
+                            onclick=" confirmDelete('<%= user.address[i]._id %>')">
+                            Remove
+                          </button>
+
                           <a href="/user/editAddress?index=<%=i%>">
                             <button type="button" class="btn btn-outline-dark px-5 btn-ecomm" data-bs-toggle="modal"
                               data-bs-target="#EditAddress">
@@ -405,6 +405,7 @@
     <script src="/user/js/main.js"></script>
     <script src="/user/js/index.js"></script>
     <script src="/user/js/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       function validateAddress() {
@@ -412,7 +413,9 @@
         const state = document.getElementById('floatingState').value.trim()
         const village = document.getElementById('floatingLocalityTown').value.trim()
         const city = document.getElementById('floatingCity').value.trim()
-        const pincode = document.getElementById('floatingPinCode').value.trim()
+        const pincode = document.getElementById('floatingPinCode').value
+
+        let pincodeRegex = /^(?!0)\d{6}$/;
 
 
         if (house === '' || state === '' || village === '' || city === '' || pincode === '') {
@@ -423,11 +426,41 @@
           });
           return false
         }
+        if (!pincodeRegex.test(pincode)) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "enter a valid pincode"
+          });
+          return false
+        }
 
         return true
       }
 
-      
+      let confirmDelete = async (addressId) => {
+        const result = await Swal.fire({
+          title: 'Are you sure?',
+          text: "You are deleting the address.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        });
+
+        if (result.isConfirmed) {
+          const response = await axios.post(`/user/deleteAddress?addressId=${addressId}`)
+
+          if (response) {
+            window.location.reload()
+          }
+
+        }
+
+
+
+      }
     </script>
 </body>
 

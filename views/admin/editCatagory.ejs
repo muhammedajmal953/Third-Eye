@@ -35,8 +35,9 @@
     </aside>
     <main>
       <section class="content-main mt-80 mb-80">
-      
+   
         <div class="card mx-auto card-login">
+         <h3 class="text-danger"> <%=message%></h3>
           <div class="card-body">
             <h4 class="card-title mb-4">Edit Catagory</h4>
             <form
@@ -45,6 +46,7 @@
               onsubmit="return validateCat()"
               enctype="multipart/form-data"
               accept="image"
+              id="image"
             >
               <div class="mb-3">
                 <input
@@ -86,10 +88,17 @@
     <script>
       function validateCat() {
         const trimedName = document.getElementById("catagoryName").value.trim();
+        const file = document.getElementById('image').files[0]
+        let fileType = file.type
         if (trimedName === "") {
           alert("catagoryname not be empty or space");
           return false;
         }
+        if (!fileType.startsWith('image/')){
+        alert("select a image");
+        return false;
+       
+      }
         return true;
       }
 

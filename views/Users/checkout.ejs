@@ -378,7 +378,6 @@
                     const labelId = this.getAttribute('data-label-id');
                     const label = document.getElementById(labelId);
                     addressVal = label.textContent.trim(); // Get the text content of the label
-                    console.log('Label value:', addressVal);
                 }
             });
         });
@@ -395,7 +394,7 @@
                 timer: 2000  
             });
             setTimeout(function() {
-                window.location.href = '/user/productList';
+                window.location.href = '/user/productList/1';
             }, 2000);  
         }
     </script>
