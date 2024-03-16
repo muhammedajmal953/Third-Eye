@@ -49,7 +49,7 @@ $(function () {
 
 
 
-async function sortProducts(page) {
+ function sortProducts(page) {
   let sortUsed = document.getElementById('sortType').value
   try {
     window.location.href = `/user/productList/${page}?sort=${sortUsed}`;
@@ -57,3 +57,6 @@ async function sortProducts(page) {
     console.log("error : ", error);
   }
 }
+
+
+

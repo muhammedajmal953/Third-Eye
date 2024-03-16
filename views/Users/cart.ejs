@@ -172,7 +172,7 @@
                         <span class="fw-bold mb-0 h5">
                           <%= products[i].productName %>
                         </span><br>
-                        <span class="fw-bold mb-0 text-danger">Only <%= products[i].quantity %> left</span><br>
+                        <span class="fw-bold mb-0 text-danger">Only <%= productQuantity[i] %> left</span><br>
                         <span class="text-dark fw-bold">Rs-<%= products[i].price %></span>
                         <div class="input-group">
                           <div class="input-group-prepend">
@@ -180,11 +180,11 @@
                               onclick="decrimentTotal('<%=products[i]._id%>','<%=products[i].price%>', '<%= i %>');">-</button>
                           </div>
                           <input type="number" class="form-control text-center  quantity-input" readonly
-                            value="<%= products[i].cartQty %>" min="1" max="<%= products[i].quantity%>"
+                            value="<%= products[i].cartQty %>" min="1" max="<%= productQuantity[i]%>"
                             data-product-id="<%= products[i]._id %>">
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary increase-btn" type="button"
-                              onclick="incrimentTotal('<%=products[i]._id%>','<%=products[i].price%>','<%= products[i].quantity%>', '<%= i %>');">+</button>
+                              onclick="incrimentTotal('<%=products[i]._id%>','<%=products[i].price%>','<%= productQuantity[i]%>', '<%= i %>');">+</button>
                           </div>
                         </div>
                       </label>

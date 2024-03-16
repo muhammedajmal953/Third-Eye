@@ -215,7 +215,9 @@ exports.get_products = async (req, res) => {
     const totalProducts = await Product.find();
     const limit = 6;
     const totalPages = Math.ceil(totalProducts.length / limit);
+    const { category } = req.query;
 
+    console.log(category);
     // const sortBy = 'hiToLow';
     let sortCriteria = {};
 
@@ -231,6 +233,22 @@ exports.get_products = async (req, res) => {
 
     const skip = (page - 1) * limit;
 
+    if (category) {
+
+      const products = await Product.find({ catagory: category })
+        .sort(sortCriteria)
+        .skip(skip)
+        .limit(limit);
+        const totalPages = Math.ceil(products.length / limit);
+      const catagory = await Catagory.find();
+      return res.render("./Users/productsGrid", {
+        products: products,
+        catagory: catagory,
+        sortBy,
+        totalPages,
+        page
+      });
+    }
     const products = await Product.find()
       .sort(sortCriteria)
       .skip(skip)
@@ -244,9 +262,11 @@ exports.get_products = async (req, res) => {
       page
     });
   } catch (error) {
+    console.log(error);
     res.status(500).send("Oops  somthing Went Wrong...!!!");
   }
 };
+
 
 //handle user Profile View
 exports.view_profile = async (req, res) => {
@@ -475,7 +495,17 @@ exports.show_cart = async (req, res) => {
     }
 
     const products = userCart.products;
-    res.render("./Users/cart", { products, userCart });
+    const productQuantity = []
+
+    for (i = 0; i < products.length; i++) {
+      const prdct = await Product.findOne({ _id: products[i].productId })
+
+      productQuantity[i] = prdct.quantity
+    }
+
+    console.log('data', productQuantity);
+
+    res.render("./Users/cart", { products, userCart, productQuantity });
   } catch (error) { }
 };
 
@@ -556,8 +586,8 @@ exports.get_checkout = async (req, res) => {
       cart,
       products,
     });
-  } catch (error) { 
-    
+  } catch (error) {
+
   }
 };
 
@@ -617,7 +647,7 @@ exports.orderView = async (req, res) => {
     } else {
       console.log("No orders found for the user");
       // Render the view with an empty array of items
-      res.render("./Users/orderList", { items: [], user});
+      res.render("./Users/orderList", { items: [], user });
     }
   } catch (error) {
     console.error("Error retrieving orders:", error);
