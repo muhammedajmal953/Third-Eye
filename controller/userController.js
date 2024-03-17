@@ -661,17 +661,18 @@ exports.searchPage = async (req, res) => {
 };
 
 exports.searchProducts = async (req, res) => {
-  const text = req.body.text;
-
+  const text = req.body.text.trim();
+  if (text==='') {
+    return res.render("./Users/search", { products:[] });
+   }
   const products = await Product.find({
     $or: [
       { productName: { $regex: text, $options: "i" } }, // Case-insensitive search for product name
       { description: { $regex: text, $options: "i" } }, // Case-insensitive search for product description
     ],
   });
-  if (products) {
-    res.render("./Users/search", { products });
-  }
+ 
+  res.render("./Users/search", { products });
 };
 
 exports.cancelOrder = async (req, res) => {
