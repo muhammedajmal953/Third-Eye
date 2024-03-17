@@ -2,9 +2,12 @@
 const express = require('express');
 const userRoutes = express.Router(); // Creating a Router instance
 const userController = require('../controller/userController'); // Importing user controller
-const Users = require('../model/userModel'); // Importing User model
-const Catagory = require('../model/catagoryModel'); // Importing Category model
-const Product = require('../model/productModel'); // Importing Product model
+const userOrderController = require('../controller/userOrderController')
+const cartController = require('../controller/cartController'); 
+const addressController = require('../controller/addressController'); 
+const userProfileController=require('../controller/userProfileController')
+const userProductController=require('../controller/userProductController')
+
 const { isLoggedIn } = require('../middlewares/isLoggedin'); // Importing isLoggedIn middleware
 const isBlocked = require('../middlewares/isBlocked');
 
@@ -41,65 +44,62 @@ userRoutes.post('/resendOtp', userController.resendOtp)
 userRoutes.get('/home', isLoggedIn, isBlocked, userController.get_home)
 
 //Route for user shop page
-userRoutes.get('/productList/:page', isLoggedIn, isBlocked,userController.get_products)
+userRoutes.get('/productList/:page', isLoggedIn, isBlocked,userProductController.get_products)
 
-userRoutes.get('/product-search', isLoggedIn, isBlocked, userController.searchPage)
+userRoutes.get('/product-search', isLoggedIn, isBlocked,userProductController.searchPage)
 
 //router for search product
-userRoutes.post('/searchProducts',userController.searchProducts)
+userRoutes.post('/searchProducts',userProductController.searchProducts)
 // Route for viewing product details
-userRoutes.get('/product-details', isLoggedIn, isBlocked,userController.view_products);
+userRoutes.get('/product-details', isLoggedIn, isBlocked,userProductController.view_products);
 
 //Route for user profile
 
-userRoutes.get('/profile', isLoggedIn, isBlocked, userController.view_profile)
+userRoutes.get('/profile', isLoggedIn, isBlocked, userProfileController.view_profile)
 //get edit user
-userRoutes.get('/profileEdit',isLoggedIn,isBlocked,userController.edit_profile)
+userRoutes.get('/profileEdit',isLoggedIn,isBlocked,userProfileController.edit_profile)
 //save the editted profile
-userRoutes.post('/profileUpdate',userController.update_profile)
+userRoutes.post('/profileUpdate',userProfileController.update_profile)
 
-userRoutes.post("/changePassword", userController.change_password)
+userRoutes.post("/changePassword",userProfileController.change_password)
 //show addresses
-userRoutes.get('/adresses',isLoggedIn,isBlocked,userController.show_adress)
+userRoutes.get('/adresses',isLoggedIn,isBlocked,addressController.show_adress)
 //add address
-userRoutes.post('/addAdress',userController.addAddress)
+userRoutes.post('/addAdress',addressController.addAddress)
 //edit address page render
-userRoutes.get('/editAddress',userController.get_editAddress)
+userRoutes.get('/editAddress',addressController.get_editAddress)
 
-userRoutes.post('/addressEdit',userController.addressEdit)
-userRoutes.post('/deleteAddress',userController.deleteAddress)
+userRoutes.post('/addressEdit',addressController.addressEdit)
+userRoutes.post('/deleteAddress',addressController.deleteAddress)
 
 //logout user
 userRoutes.get('/logout', userController.user_logout)
 
 //show Cart
-userRoutes.get('/cart',isLoggedIn,isBlocked, userController.show_cart)
+userRoutes.get('/cart',isLoggedIn,isBlocked, cartController.show_cart)
 
-userRoutes.post('/addToCart', userController.addToCart)
-
-
-userRoutes.post('/removeCart', userController.removeCart)
-
-userRoutes.post('/totalIncrement', userController.totalIncrement)
-
-userRoutes.post('/totalDecrement', userController.totalDecrement)
+userRoutes.post('/addToCart', cartController.addToCart)
 
 
-userRoutes.get('/checkout',isLoggedIn,isBlocked, userController.get_checkout)
+userRoutes.post('/removeCart', cartController.removeCart)
+
+userRoutes.post('/totalIncrement', cartController.totalIncrement)
+
+userRoutes.post('/totalDecrement', cartController.totalDecrement)
 
 
-userRoutes.post('/proceedOrder', userController.orderPlace)
-
-userRoutes.get('/orders', isLoggedIn, isBlocked, userController.orderView)
+userRoutes.get('/checkout',isLoggedIn,isBlocked, userOrderController.get_checkout)
 
 
-userRoutes.get('/orderDetails', isLoggedIn, isBlocked, userController.orderDetails)
+userRoutes.post('/proceedOrder', userOrderController.orderPlace)
 
-userRoutes.post('/cancelOrder', userController.cancelOrder)
-
-
+userRoutes.get('/orders', isLoggedIn, isBlocked, userOrderController.orderView)
 
 
- 
+userRoutes.get('/orderDetails', isLoggedIn, isBlocked, userOrderController.orderDetails)
+
+userRoutes.post('/cancelOrder', userOrderController.cancelOrder)
+
+
 
 module.exports = userRoutes; // Exporting userRoutes
