@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
-const Catagory = require("../model/catagoryModel");
-const Product = require("../model/productModel");
-const Users = require("../model/userModel");
-const { generateOtp } = require("../services/generateOtp");
-const otpModel = require("../model/otpModel");
-const sendMail = require("../services/emailSender");
+const Catagory = require("../../model/catagoryModel");
+const Product = require("../../model/productModel");
+const Users = require("../../model/userModel");
+const { generateOtp } = require("../../services/generateOtp");
+const otpModel = require("../../model/otpModel");
+const sendMail = require("../../services/emailSender");
 const bcrypt = require("bcrypt");
+const { name } = require("ejs");
 
 
 let globalEmail;
@@ -20,7 +21,7 @@ exports.landing = async (req, res) => {
       return res.redirect("/user/home");
     }
     const catagory = await Catagory.find().limit(5);
-    const product = await Product.find();
+    const product = await Product.find().limit(5);
     // Rendering user home page and passing retrieved categories and products to the view
     res.render("./Users/landing", { catagory: catagory, product: product });
   } catch (error) {
@@ -31,10 +32,12 @@ exports.landing = async (req, res) => {
 
 exports.get_login = (req, res) => {
   try {
+    const message = req.query.message
+
     if (req.session.user) {
       return res.redirect("/user/home");
     }
-    return res.render("./Users/userLogin", { message: "" });
+    return res.render("./Users/userLogin", { message });
   } catch (error) {
     console.error("Error rendering login page:", error);
     res.status(500).send("Internal Server Error");
@@ -50,6 +53,7 @@ exports.user_login = async (req, res) => {
     // Extract email and password from the request body
     const { loginEmail, loginPassword } = req.body;
 
+    
     // Find user data based on provided email and password
     const userData = await Users.findOne({
       email: loginEmail,
@@ -76,13 +80,14 @@ exports.user_login = async (req, res) => {
           req.session.user = userData._id;
           res.redirect("/user/home");
         } else {
+
           // Redirect to login page with an alert for invalid credentials
-          res.redirect("/user/login");
+          res.redirect("/user/login?message=incorrect password");
         }
       });
     } else {
       // Redirect to login page with an alert for invalid credentials
-      res.redirect("/user/login");
+      res.redirect("/user/login?message=incorrect email or password");
       res.status(400).json({ error: "Invalid credentials" });
     }
   } catch (error) {
@@ -95,7 +100,7 @@ exports.user_login = async (req, res) => {
 exports.google_login = async (req, res) => {
   try {
     res.redirect("/user/home");
-  } catch (error) { 
+  } catch (error) {
 
   }
 };
@@ -146,6 +151,7 @@ exports.verifyEmail = async (req, res) => {
   const userOtp = req.body.otp;
   const parsedotp = toString(userOtp);
   try {
+   
     const savedOtp = await otpModel.findOne({
       email: globalEmail,
       otp: userOtp,
@@ -156,6 +162,9 @@ exports.verifyEmail = async (req, res) => {
     }
 
     if (userOtp === savedOtp.otp) {
+      if (req.session.forgot) {
+         return res.render('Users/newPassword')
+      }
       const userSave = new Users({
         username: globalUsername,
         email: globalEmail,
@@ -186,15 +195,71 @@ exports.resendOtp = async (req, res) => {
   } catch { }
 };
 
+//forgot password
+
+exports.forgotPassword = (req, res) => {
+  try {
+    let message=req.query.message
+    res.render('Users/ForgotPassword',{message})
+
+  } catch (error) {
+    
+    console.log(error);
+    
+  }
+}
+
+
+
+exports.forgotOtp = async (req, res) => {
+  const email = req.body.email
+  const user = await Users.find({ email: email })
+  
+  if (!user) {
+   
+   return res.redirect('/user/forgotPassword?message=enter a valid email')
+  }
+  globalEmail = email
+  OTP = generateOtp();
+    console.log(OTP);
+
+    sendMail(email, OTP);
+
+    const otpStore = new otpModel({
+      email: email,
+      otp: OTP,
+    });
+
+    await otpStore.save();
+  req.session.forgot=1
+  res.render('Users/otpVerification',{message:''})
+}
+
+exports.newPassword = async (req, res) => {
+  try {
+    let password = req.body.password
+    let newPassword = await bcrypt.hash(password, 10);
+  
+    await Users.updateOne({ email: globalEmail }, { $set: { password:newPassword } })
+    await otpModel.deleteOne({ email: globalEmail });
+    globalEmail=null
+    res.redirect('/user/login?message=password changed successfully')
+  } catch (error) {
+    
+  }
+}
+
 exports.get_home = async (req, res) => {
   try {
     // Retrieving categories and products from the database
     const catagory = await Catagory.find();
-    const product = await Product.find().limit(5);
+    const product = await Product.find().limit(6);
     // Rendering user home page and passing retrieved categories and products to the view
     res.render("./Users/home", { catagory: catagory, product: product });
   } catch (error) { }
 };
+
+
 
 //logout user
 exports.user_logout = (req, res) => {

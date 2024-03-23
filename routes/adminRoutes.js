@@ -1,6 +1,9 @@
 const express=require('express')
-const adminControler=require('../controller/adminController')
-const Users = require('../model/userModel');
+const adminControler=require('../controller/admincontrollers/adminController')
+const catagoryController=require('../controller/admincontrollers/catagoryController')
+const productController = require('../controller/admincontrollers/productController')
+const orderManageController = require('../controller/admincontrollers/orderManageController')
+
 const {upload,uploadProduct} = require('../middlewares/uploadImage');
 const Catagory = require('../model/catagoryModel');
 const Product = require('../model/productModel');
@@ -34,20 +37,20 @@ adminRoutes.get('/add-catagory',isAdminLoggedIn,async (req,res)=>{
     res.render("./admin/addCatagory",{message:''})
 })
 
-adminRoutes.post('/add-catagory',upload.single('image'),adminControler.add_catagory)
+adminRoutes.post('/add-catagory',upload.single('image'),catagoryController.add_catagory)
 
 adminRoutes.get('/edit-catagory',isAdminLoggedIn,async (req,res)=>{
     const id = req.query.id
     const catag=await Catagory.findOne({_id:id})
     res.render('./admin/editCatagory',{message:'',catag:catag})
 })
-adminRoutes.post('/edit-catagory/:id',upload.single('image'),adminControler.edit_catagory)
+adminRoutes.post('/edit-catagory/:id',upload.single('image'),catagoryController.edit_catagory)
 
  
-adminRoutes.post('/remove-catagory',adminControler.remove_catagory)
+adminRoutes.post('/remove-catagory',catagoryController.remove_catagory)
 
 
-adminRoutes.post('/unRemove-catagory',adminControler.unRemove_catagory)
+adminRoutes.post('/unRemove-catagory',catagoryController.unRemove_catagory)
 
 adminRoutes.get('/unlisted-catagory',isAdminLoggedIn,async (req,res)=>{
     const catagory=await Catagory.find()
@@ -55,7 +58,7 @@ adminRoutes.get('/unlisted-catagory',isAdminLoggedIn,async (req,res)=>{
     res.render("./admin/removedCatagory",{catagory:catagory})
 }) 
 
-adminRoutes.get('/products',isAdminLoggedIn,adminControler.products)
+adminRoutes.get('/products',isAdminLoggedIn,productController.products)
 
 
 adminRoutes.get('/add-product',isAdminLoggedIn,async (req,res)=>{
@@ -80,20 +83,20 @@ adminRoutes.get('/unListedProducts',isAdminLoggedIn,async (req,res)=>{
 
 
 
-adminRoutes.post('/add-product',uploadProduct.array('images',5),adminControler.add_products)
+adminRoutes.post('/add-product',uploadProduct.array('images',5),productController.add_products)
 
 
-adminRoutes.post('/edit-product/:id',uploadProduct.array('images',5),adminControler.edit_products)
+adminRoutes.post('/edit-product/:id',uploadProduct.array('images',5),productController.edit_products)
 
-adminRoutes.post('/unlist-product',adminControler.unlist_product)
+adminRoutes.post('/unlist-product',productController.unlist_product)
 
-adminRoutes.post('/list-product',adminControler.list_products)
+adminRoutes.post('/list-product',productController.list_products)
 
-adminRoutes.get('/orders',isAdminLoggedIn, adminControler.orders)
+adminRoutes.get('/orders',isAdminLoggedIn, orderManageController.orders)
 
-adminRoutes.get('/viewOrder', isAdminLoggedIn, adminControler.ordersDetails)
+adminRoutes.get('/viewOrder', isAdminLoggedIn, orderManageController.ordersDetails)
 
-adminRoutes.post('/orderStatus',adminControler.change_status)
+adminRoutes.post('/orderStatus',orderManageController.change_status)
 
 adminRoutes.get('/logout',adminControler.admin_logout)
 

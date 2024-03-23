@@ -1,6 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="light-theme">
 
+
+<!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:26 GMT -->
 
 <head>
     <!-- Required meta tags -->
@@ -16,7 +18,6 @@
     <!-- Plugins -->
     <link rel="stylesheet" type="text/css" href="/user/plugins/slick/slick.css" />
     <link rel="stylesheet" type="text/css" href="/user/plugins/slick/slick-theme.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <link href="/user/css/style.css" rel="stylesheet">
     <link href="/user/css/dark-theme.css" rel="stylesheet">
@@ -90,12 +91,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/user/productList/1"> Shop </a>
                         </li>
-
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="/user/profile">
                                 Account
                             </a>
-                        </li>
+                        </li>>
 
                     </ul>
                 </div>
@@ -122,154 +122,51 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/user/wallet"><i class="bi bi-wallet"></i></a>
-
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-success" href="/user/logout">Logout</a>
                 </li>
             </ul>
         </nav>
     </header>
     <!--end top header-->
-
-
-
-    <!--start page content-->
     <div class="page-content">
-
-
         <!--start breadcrumb-->
         <div class="py-4 border-bottom">
             <div class="container">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:;">checkout</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Address</li>
+                        <li class="breadcrumb-item"><a href="javascript:;">Pages</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Thank You</li>
                     </ol>
                 </nav>
             </div>
         </div>
         <!--end breadcrumb-->
 
-
         <!--start product details-->
         <section class="section-padding">
             <div class="container">
-                <div class="d-flex align-items-center px-3 py-2 border mb-4">
-                    <div class="text-start">
-                        <h4 class="mb-0 h4 fw-bold">Select Delivery Address</h4>
-                    </div>
+
+                <div class="separator mb-3">
+                    <div class="line"></div>
+                    <h1><i class="bi bi-check"></i>
+                    </h1>
+                    <h3 class="mb-0 h3 fw-bold">Thank You!</h3>
+                    <div class="line"></div>
                 </div>
-                <div class="row g-4">
-                    <div class="col-12 col-lg-8 col-xl-8">
 
-                        <h6 class="fw-bold mb-3 py-2 px-3 bg-light">Default Address</h6>
-                        <div class="card rounded-0 mb-3">
-                            <%for(i=0;i<addresses.length;i++){%>
-                                <div class="card-body">
-                                    <div class="d-flex flex-column flex-xl-row gap-3">
-                                        <div class="address-info form-check flex-grow-1">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                id="addressRadio<%= i %>" data-label-id="addressLabel<%= i %>">
-                                            <label class="form-check-label" for="addressRadio<%= i %>"
-                                                id="addressLabel<%= i %>">
-                                                <span class="fw-bold mb-0 h5">
-                                                    <%=user.userName%><br>
-                                                        <%=addresses[i].houseName%> , <br>
-                                                            <%=addresses[i].village%> , <%=addresses[i].pincode%>,<br>
-                                                                    <%=addresses[i].city%> , <%=addresses[i].state%>
-                                                                            ,<br>Mobile: <span
-                                                                                class="text-dark fw-bold">+91-
-                                                                                <%=user.phone%>
-                                                                            </span>
-                                                </span>
-                                            </label>
-                                        </div>
-                                        <div class="d-none d-xl-block vr"></div>
-                                        <!-- <div class="d-grid gap-2 align-self-start align-self-xl-center">
-                                            <button type="button"
-                                                class="btn btn-outline-dark px-5 btn-ecomm">Remove</button>
-                                            <button type="button" class="btn btn-outline-dark px-5 btn-ecomm"
-                                                data-bs-toggle="modal" data-bs-target="#EditAddress">Edit</button>
-                                        </div> -->
-                                    </div>
-                                </div>
-                                <%}%>
-                        </div>
-
-
-                    </div>
-                    <div class="col-12 col-lg-4 col-xl-4">
-                        <div class="card rounded-0 mb-3">
-                            <div class="card-body">
-                                <h5 class="fw-bold mb-4">Order Summary</h5>
-                                <div class="hstack align-items-center justify-content-between">
-                                    <p class="mb-0">Bag Total</p>
-                                    <p class="mb-0">
-                                        <%=cart.totalPrice%>
-                                    </p>
-                                </div>
-                                <hr>
-                                <div class="hstack align-items-center justify-content-between">
-                                    <p class="mb-0">Bag discount</p>
-                                    <p class="mb-0 text-success">0</p>
-                                </div>
-                                <hr>
-                                <div class="hstack align-items-center justify-content-between">
-                                    <p class="mb-0">Delivery</p>
-                                    <p class="mb-0"></p>
-                                </div>
-                                <hr>
-                                <div class="hstack align-items-center justify-content-between fw-bold text-content">
-                                    <p class="mb-0">Total Amount</p>
-                                    <p class="mb-0">
-                                        <%=cart.totalPrice%>
-                                    </p>
-                                </div>
-                                <div class="mb-3 mt-4">
-                                    <h6 class="fw-bold mb-3">Payment Options</h6>
-                                    <!-- Payment Option Checkbox -->
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="paymentOption" value="Cod"
-                                            id="paymentOption1">
-                                        <label class="form-check-label" for="paymentOption1">
-                                            Cash on Delivery
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="paymentOption" value="paypal"
-                                            id="paymentOption2">
-                                        <label class="form-check-label" for="paymentOption2">
-                                            Online payment (Paypal)
-                                        </label>
-                                    </div>
-                                    <!-- Add more payment options here -->
-                                </div>
-                                <div class="d-grid mt-4">
-                                    <button type="button" onclick="proceedOrder('<%=cart._id%>')"
-                                        class="btn btn-dark btn-ecomm py-3 px-5">Continue</button> </a>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div><!--end row-->
+                <div class="border p-4 text-center w-100">
+                    <h5 class="fw-bold mb-2">Thank You for Choosing Us us.</h5>
+                    <p class="mb-0">We have recived your order. The product will delivers as soon as possible. you can
+                        see your orders in order page</p>
+                </div>
 
             </div>
         </section>
         <!--start product details-->
-
-
-
-
     </div>
-    <!--end page content-->
-
-
     <!--start footer-->
     <section class="footer-section bg-section-2 section-padding">
-        <div class="container">
+        <div class="container ">
             <div class="row row-cols-1 row-cols-lg-4 g-4">
                 <div class="col">
                     <div class="footer-widget-6">
@@ -278,11 +175,10 @@
                         <p class="mb-2">Founded in 2023, Visionary Optics is a leading e-commerce platform specializing
                             in eyewear.
                             With a mission to provide stylish and high-quality eyewear to customers worldwide, Visionary
-                            Optics offers
-                            a diverse range of products, including prescription glasses, sunglasses, and contact lenses.
+                            Optics offers a diverse range of products, including prescription glasses, sunglasses, and
+                            contact lenses.
                             Through innovative technology and a user-friendly interface, customers can easily browse and
-                            purchase
-                            eyewear tailored to their preferences and vision needs.
+                            purchase eyewear tailored to their preferences and vision needs.
                         </p>
                     </div>
                 </div>
@@ -293,8 +189,6 @@
                             <li><a href="">Sunglass</a></li>
                             <li><a href="">Computerglass</a></li>
                             <li><a href="">Fancy frames</a></li>
-
-
                         </ul>
                     </div>
                 </div>
@@ -358,10 +252,11 @@
     </section>
     <!--end footer-->
 
-
     <footer class="footer-strip text-center py-3 bg-section-2 border-top positon-absolute bottom-0">
-        <p class="mb-0 text-muted">© 2022. www.example.com | All rights reserved.</p>
+        <p class="mb-0 text-muted">© 2023. www.thirdeye.com | All rights reserved.</p>
     </footer>
+
+
 
 
 
@@ -371,6 +266,7 @@
 
 
     <!-- JavaScript files -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/user/js/bootstrap.bundle.min.js"></script>
     <script src="/user/js/jquery.min.js"></script>
     <script src="/user/plugins/slick/slick.min.js"></script>
@@ -379,58 +275,6 @@
     <script src="/user/js/loader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script
-        src="https://www.paypal.com/sdk/js?client-id=ATpuNHOEtRVax61QzNFVF5u7vPgFAyXYWb4E-HXTfdzihCTe47VCFKiJj9a1Spg_26NmVceHFoQXpp_2"></script>
-
-
-    <script>
-        let addressVal
-        document.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.addEventListener('change', function () {
-                if (this.checked) {
-                    const labelId = this.getAttribute('data-label-id');
-                    const label = document.getElementById(labelId);
-                    addressVal = label.textContent.trim(); // Get the text content of the label
-                }
-            });
-        });
-
-        async function proceedOrder(cart) {
-            var selectedOption = document.querySelector('input[name="paymentOption"]:checked');
-            var paymentMethod = selectedOption.value;
-
-
-            const response = await axios.post(`/user/proceedOrder?cart=${cart}&address=${addressVal}&paymentMethod=${paymentMethod}`)
-            console.log(response.data);
-            if (response.data === 'your order throug Cash on delivery') {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Order Placed!',
-                    text: response.data,
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-                setTimeout(function () {
-                    window.location.href = '/user/productList/1';
-                }, 2000);
-            } else if (response.data. redirectUrl){
-                window.location.href=response.data. redirectUrl
-            }
-           else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Order cannott plassed!',
-                    text: 'please try again.',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-            }
-        }
-    </script>
 </body>
-
-
-
-<!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/address.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:55 GMT -->
 
 </html>
