@@ -1,5 +1,6 @@
+const { OrderedBulkOperation } = require("mongodb");
 const Admin = require("../../model/adminModel");
-
+const Order = require("../../model/orderModel");
 const Users = require("../../model/userModel");
 
 // Render login page
@@ -37,19 +38,36 @@ exports.admin_login = async (req, res) => {
 
 //dash board rendering
 
-exports.getDashoard = async (req, res) => {
+exports.getDashboard = async (req, res) => {
   try {
     const users = await Users.find();
-    res.render("./admin/index", { users: users });
-  } catch (error) {}
+    const data = await Order.find({}, { totalAmount: 1, odrderedDate: 1 });
+    const labels = data.map((item) => item.odrderedDate);
+    const amounts = data.map((item) => item.totalAmount);
+    const chartData = {
+      labels: labels,
+      datasets: [
+        {
+          label: "Total Amount",
+          data: amounts,
+        },
+      ],
+    };
+
+    res.render("./admin/index", { users: users, chartData: chartData });
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Internal Server Error');
+  }
 };
+
 
 //userlist rendering
 exports.userList = async (req, res) => {
   try {
     const users = await Users.find();
     res.render("./admin/customers-details", { users: users });
-  } catch (error) {}
+  } catch (error) { }
 };
 
 //block user
@@ -63,7 +81,7 @@ exports.user_block = async (req, res) => {
       }
     );
     res.redirect("/admin/customers");
-  } catch {}
+  } catch { }
 };
 
 //unblock user
@@ -78,14 +96,15 @@ exports.user_unblock = async (req, res) => {
       }
     );
     res.redirect("/admin/customers");
-  } catch {}
+  } catch { }
 };
 
 // adminLogout handling
 exports.admin_logout = (req, res) => {
   try {
-   
- delete req.session.admin; 
+    delete req.session.admin;
     res.redirect("/admin");
-  } catch (error) {}
+  } catch (error) { }
 };
+
+

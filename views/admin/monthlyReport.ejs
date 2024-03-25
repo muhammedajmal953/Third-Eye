@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Admin-ThirdEye</title>
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="" />
+  <meta property="og:type" content="" />
+  <meta property="og:url" content="" />
+  <meta property="og:image" content="" />
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/favicon.svg" />
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Template CSS -->
+  <link href="/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <main>
+    <section class="content-main mt-80 mb-80">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-10">
+            <div class="card">
+              <div class="card-header">
+                monthly Sales Report
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Sl.no</th>
+                        <th>User Name</th>
+                        <th>Address</th>
+                        <th>Date</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Weekly sales report data will be dynamically inserted here -->
+                     <% for (let i=0;i<formattedOrders.length;i++) {%>
+                        <tr>
+                          <td><%=i+1%></td>
+                          <td><%=formattedOrders[i].username%></td>
+                          <td><%=formattedOrders[i].shippingAddress%></td>
+                          <td><%=formattedOrders[i].odrderedDate%></td>
+                          <td><%=formattedOrders[i].productName%></td>
+                          <td><%=formattedOrders[i].price%></td>
+                          <td><%=formattedOrders[i].quantity%></td>
+                          <td><%=formattedOrders[i].quantity*formattedOrders[i].price%></td>
+                        </tr>
+                      <% } %>
+                      <tr>
+                        <td>Total sales</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><%=totalSales%></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="card-footer text-right">
+              <form action="/admin/monthlyDownload" method="post">  <button type="submit" class="btn btn-primary">Download</button></form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="/js/vendors/jquery-3.6.0.min.js"></script>
+  <script src="/js/vendors/bootstrap.bundle.min.js"></script>
+  <script src="/js/vendors/jquery.fullscreen.min.js"></script>
+  <!-- Main Script -->
+  <script src="/js/main.js?v=1.1" type="text/javascript"></script>
+</body>
+
+</html>
