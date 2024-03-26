@@ -27,7 +27,7 @@
           <div class="col-md-10">
             <div class="card">
               <div class="card-header">
-                Daily Sales Report
+                Custom Sales Report
               </div>
               <div class="card-body">
                 <div class="table-responsive">
@@ -73,7 +73,7 @@
                 </div>
               </div>
               <div class="card-footer text-right">
-              <form action="/admin/dailyDownload" method="post">  <button type="submit" class="btn btn-primary">Download</button></form>
+              <form action="/admin/customDownload?customDate=<%=date%>" method="post">  <button type="submit" class="btn btn-primary">Download</button></form>
               </div>
             </div>
           </div>

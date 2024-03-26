@@ -101,10 +101,14 @@ adminRoutes.post('/orderStatus', orderManageController.change_status)
 adminRoutes.get('/weeklyReport', isAdminLoggedIn, orderManageController.weeklyReport)
 adminRoutes.get('/dailyReport', isAdminLoggedIn, orderManageController.dailyReport)
 adminRoutes.get('/monthlyReport', isAdminLoggedIn, orderManageController.monthlyReport)
+adminRoutes.get('/yearlyReport', isAdminLoggedIn, orderManageController.yearlyReport)
+adminRoutes.post('/customReport', isAdminLoggedIn, orderManageController.customReport)
 
 adminRoutes.post('/weeklyDownload', orderManageController.weeklyDownloads)
 adminRoutes.post('/dailyDownload', orderManageController.dailyDownloads)
 adminRoutes.post('/monthlyDownload', orderManageController.monthlyDownloads)
+adminRoutes.post('/customDownload', orderManageController.customDownloads)
+adminRoutes.post('/yearlyDownload', orderManageController.customDownloads)
 
 
 adminRoutes.get('/logout', adminControler.admin_logout)
