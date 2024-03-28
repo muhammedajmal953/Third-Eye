@@ -7,12 +7,16 @@ const otpModel = require("../../model/otpModel");
 const sendMail = require("../../services/emailSender");
 const bcrypt = require("bcrypt");
 const { name } = require("ejs");
+const generateRandomString = require("../../services/generateShortId");
+const Wallet = require("../../model/walletModel");
+const Referal = require("../../model/referalModel")
 
 
 let globalEmail;
 let globalPhone;
 let globalUsername;
 let globalPassword;
+let globalShortId;
 
 //handling landing page
 exports.landing = async (req, res) => {
@@ -45,7 +49,13 @@ exports.get_login = (req, res) => {
 };
 
 exports.get_signup = (req, res) => {
-  res.render("./Users/userSignUp", { message: "" }); // Rendering user signup page
+  let referalId = req.query.referalId
+
+  if (!referalId) {
+    return res.render("./Users/userSignUp", { message: "", referalId: '' })
+
+  }
+  res.render("./Users/userSignUp", { message: "", referalId }); // Rendering user signup page
 };
 
 exports.user_login = async (req, res) => {
@@ -53,7 +63,7 @@ exports.user_login = async (req, res) => {
     // Extract email and password from the request body
     const { loginEmail, loginPassword } = req.body;
 
-    
+
     // Find user data based on provided email and password
     const userData = await Users.findOne({
       email: loginEmail,
@@ -108,6 +118,7 @@ exports.google_login = async (req, res) => {
 //User registration handling
 exports.user_SignUp = async (req, res) => {
   try {
+    const referalId = req.query.referalId
     const { email, username, password, phone } = req.body;
     //checking existing user
     const existingUser = await Users.findOne({ email });
@@ -121,11 +132,12 @@ exports.user_SignUp = async (req, res) => {
     bcrypt.hash(password, 10, (err, hash) => {
       globalPassword = hash;
     });
-
+    let shortId = generateRandomString()
     globalEmail = email;
     globalPhone = phone;
     globalUsername = username;
-
+    globalShortId = shortId
+    req.session.referalId = referalId
     OTP = generateOtp();
     console.log(OTP);
 
@@ -150,8 +162,12 @@ exports.user_SignUp = async (req, res) => {
 exports.verifyEmail = async (req, res) => {
   const userOtp = req.body.otp;
   const parsedotp = toString(userOtp);
+  const referals = await Referal.find()
+
+  const referal = referals[0]
+
   try {
-   
+
     const savedOtp = await otpModel.findOne({
       email: globalEmail,
       otp: userOtp,
@@ -161,21 +177,54 @@ exports.verifyEmail = async (req, res) => {
       return res.render("./Users/otpVerification", { message: "wrong otp" });
     }
 
+
+
+
+
     if (userOtp === savedOtp.otp) {
       if (req.session.forgot) {
-         return res.render('Users/newPassword')
+        return res.render('Users/newPassword')
       }
+
+
+
+
+
+
+
       const userSave = new Users({
         username: globalUsername,
         email: globalEmail,
         phone: globalPhone,
         password: globalPassword,
+        shortId: globalShortId,
         isBlocked: false,
       });
 
       await userSave.save();
+
+
+
+
+      if (req.session.referalId) {
+        const user = await Users.findOne({ shortId: req.session.referalId })
+        if (user) {
+          await Wallet.updateOne({ userId: user._id }, { $inc: { balance: referal.referalOffer } })
+
+          const newUser = await Users.findOne({ shortId: globalShortId })
+          if (newUser) {
+            let wallet = new Wallet({
+              userId: newUser._id,
+              balance: referal.referedOffer
+            })
+            await wallet.save()
+          }
+        }
+      }
+
     }
-    res.render("./Users/userSignUp", { message: "email verified" });
+
+    res.render("./Users/userSignUp", { message: "email verified" ,referalId:''});
 
     await otpModel.deleteOne({ email: globalEmail, otp: userOtp });
   } catch (error) {
@@ -199,13 +248,13 @@ exports.resendOtp = async (req, res) => {
 
 exports.forgotPassword = (req, res) => {
   try {
-    let message=req.query.message
-    res.render('Users/ForgotPassword',{message})
+    let message = req.query.message
+    res.render('Users/ForgotPassword', { message })
 
   } catch (error) {
-    
+
     console.log(error);
-    
+
   }
 }
 
@@ -214,38 +263,38 @@ exports.forgotPassword = (req, res) => {
 exports.forgotOtp = async (req, res) => {
   const email = req.body.email
   const user = await Users.find({ email: email })
-  
+
   if (!user) {
-   
-   return res.redirect('/user/forgotPassword?message=enter a valid email')
+
+    return res.redirect('/user/forgotPassword?message=enter a valid email')
   }
   globalEmail = email
   OTP = generateOtp();
-    console.log(OTP);
+  console.log(OTP);
 
-    sendMail(email, OTP);
+  sendMail(email, OTP);
 
-    const otpStore = new otpModel({
-      email: email,
-      otp: OTP,
-    });
+  const otpStore = new otpModel({
+    email: email,
+    otp: OTP,
+  });
 
-    await otpStore.save();
-  req.session.forgot=1
-  res.render('Users/otpVerification',{message:''})
+  await otpStore.save();
+  req.session.forgot = 1
+  res.render('Users/otpVerification', { message: '' })
 }
 
 exports.newPassword = async (req, res) => {
   try {
     let password = req.body.password
     let newPassword = await bcrypt.hash(password, 10);
-  
-    await Users.updateOne({ email: globalEmail }, { $set: { password:newPassword } })
+
+    await Users.updateOne({ email: globalEmail }, { $set: { password: newPassword } })
     await otpModel.deleteOne({ email: globalEmail });
-    globalEmail=null
+    globalEmail = null
     res.redirect('/user/login?message=password changed successfully')
   } catch (error) {
-    
+
   }
 }
 
@@ -254,6 +303,7 @@ exports.get_home = async (req, res) => {
     // Retrieving categories and products from the database
     const catagory = await Catagory.find();
     const product = await Product.find().limit(6);
+
     // Rendering user home page and passing retrieved categories and products to the view
     res.render("./Users/home", { catagory: catagory, product: product });
   } catch (error) { }

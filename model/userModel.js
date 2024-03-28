@@ -15,7 +15,7 @@ const UsersSchema = mongoose.Schema({
     pincode:{type:Number}  
   }],
   phone: { type: Number },
-  gender: String,
+  shortId: String,
   isBlocked: Boolean,
 });
 

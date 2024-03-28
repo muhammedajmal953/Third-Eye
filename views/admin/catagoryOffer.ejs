@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Admin-ThirdEye</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/favicon.svg" />
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="" class="brand-wrap">
+                <h1 class="h1">Third Eye</h1>
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"><i
+                        class="text-muted material-icons md-menu_open"></i></button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/dashboard">
+                        <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/products">
+                        <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/orders">
+                        <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/referalOffer">
+                        <i class="icon material-icons md-store"></i>
+                        <span class="text">Referal Offer</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/catagory">
+                        <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Catagory</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="page-transactions-1.html">
+                        <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Offers</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="/admin/catagoryOffer"> Catagory Offer</a>
+                        <a href="/admin/productOffer">Product Offer</a>
+                    </div>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="/admin/customers">
+                        <i class="icon material-icons md-person"></i>
+                        <span class="text">Customers</span>
+                    </a>
+
+                </li>
+
+            </ul>
+            <hr />
+
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+
+            </div>
+            <div class="col-nav">
+                <ul class="nav">
+                    <li class="nav-item ">
+                        <a href="/admin/logout" class="btn btn-success text-dark">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <h1>Catagory Offer</h1>
+
+        <table class="table table-hover mt-3">
+            <thead class="table-dark ">
+                <tr>
+                    <th>Sl.no</th>
+                    <th>Refered offer</th>
+                    <th>Referal offer</th>
+                    <th>validity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i=0; i < catagoryOffer.length; i++) {%>
+
+                    <tr>
+                        <td>
+                            <%=i+1%>
+                        </td>
+                        <td>
+                            <%= catagoryOffer[i].catagoryId.catagoryName %>
+                        </td>
+                        <td>
+                            <%=catagoryOffer[i].offer %>
+                        </td>
+                        <td>
+                            <%= catagoryOffer[i].validity %>
+                        </td>
+                        <td class="d-flex">
+
+                            <form action="/admin/deleteReferal?id=<%=catagoryOffer[i]._id%>" class="m-1" method="post">
+                                <input type="submit" class="btn btn-warning " value="Delete">
+                            </form>
+
+                        </td>
+                    </tr>
+                    <% } %>
+            </tbody>
+        </table>
+
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#addOfferModal">Add Offer</button>
+
+
+        <div class="modal fade" id="addOfferModal" tabindex="-1" role="dialog" aria-labelledby="addOfferModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addOfferModalLabel">Add Offer</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="offerForm" method="post" action="/admin/saveCatagoryOffer">
+                            <div class="form-group">
+                                <label for="categoryType">Category Type:</label>
+                                <select class="form-control" id="categoryType" name="categoryType" required>
+                                    <% for(i=0;i<catagories.length;i++) {%>
+                                        <%if(catagories[i].isActive) {%>
+                                            <option value="<%=catagories[i]._id%>"><%=catagories[i].catagoryName%></option>
+                                        <%}%>
+                                    <%}%>
+                                </select>
+                                <div class="invalid-feedback">Please select a category type.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="referredOffer">Enter the % of offer:</label>
+                                <input type="number" class="form-control" id="referredOffer" name="catagoryOffer"
+                                    min="1" required>
+                                <div class="invalid-feedback"> Offer must be a positive number.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="validity">Validity:</label>
+                                <input type="date" class="form-control" id="validity" name="validity" required>
+                                <div class="invalid-feedback">Please provide a validity date.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Offer</button>
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </main>
+    <script src="/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/js/vendors/select2.min.js"></script>
+    <script src="/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="/js/vendors/chart.js"></script>
+    <!-- Main Script -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/js/main.js?v=1.1" type="text/javascript"></script>
+    <script src="/js/custom-chart.js" type="text/javascript"></script>
+</body>
+
+</html>

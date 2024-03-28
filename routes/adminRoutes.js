@@ -3,6 +3,7 @@ const adminControler = require('../controller/admincontrollers/adminController')
 const catagoryController = require('../controller/admincontrollers/catagoryController')
 const productController = require('../controller/admincontrollers/productController')
 const orderManageController = require('../controller/admincontrollers/orderManageController')
+const offerManage = require('../controller/admincontrollers/offerManagement')
 
 const { upload, uploadProduct } = require('../middlewares/uploadImage');
 const Catagory = require('../model/catagoryModel');
@@ -104,11 +105,23 @@ adminRoutes.get('/monthlyReport', isAdminLoggedIn, orderManageController.monthly
 adminRoutes.get('/yearlyReport', isAdminLoggedIn, orderManageController.yearlyReport)
 adminRoutes.post('/customReport', isAdminLoggedIn, orderManageController.customReport)
 
+
+
 adminRoutes.post('/weeklyDownload', orderManageController.weeklyDownloads)
 adminRoutes.post('/dailyDownload', orderManageController.dailyDownloads)
 adminRoutes.post('/monthlyDownload', orderManageController.monthlyDownloads)
 adminRoutes.post('/customDownload', orderManageController.customDownloads)
 adminRoutes.post('/yearlyDownload', orderManageController.customDownloads)
+
+
+adminRoutes.get('/referalOffer', isAdminLoggedIn, offerManage.referal)
+adminRoutes.post('/saveReferal',offerManage.saveReferal)
+adminRoutes.post('/deleteReferal',offerManage.deleteReferal)
+
+
+adminRoutes.get('/catagoryOffer', isAdminLoggedIn, offerManage.catagoryOffer)
+adminRoutes.post('/saveCatagoryOffer',offerManage.saveCatagoryOffer)
+
 
 
 adminRoutes.get('/logout', adminControler.admin_logout)

@@ -15,7 +15,7 @@
 
 <body>
   <div class="login-container">
-    <form class="login-form" method="POST" action="/user/signup" onsubmit="return validateSignupForm()">
+    <form class="login-form" method="POST" action="/user/signup?referalId=<%=referalId%>" onsubmit="return validateSignupForm()">
       <h1>Welcome</h1>
       <%if(message) { %>
         <p style="color: red">
