@@ -50,6 +50,29 @@ exports.orderPlace = async (req, res) => {
     let { totalPrice, products } = userCart;
     let items = products;
     console.log(paymentMethod);
+    
+    console.log(items);
+
+
+    if (req.session.couponRate) {
+      let couponRate = req.session.couponRate
+      
+
+      totalPrice -=(totalPrice*couponRate/100)
+
+
+     items.forEach(item => {
+       item.price-=(item.price*couponRate/100)
+     });
+     
+      
+     
+      delete req.session.couponRate
+    }
+
+    
+    
+
     if (paymentMethod === 'paypal') {
       let totalAmount = totalPrice.toFixed(2); // Format total amount for PayPal payment
       let amount = totalAmount.toString();

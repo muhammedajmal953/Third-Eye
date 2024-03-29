@@ -11,7 +11,7 @@ const generateRandomString = require("../../services/generateShortId");
 const Wallet = require("../../model/walletModel");
 const Referal = require("../../model/referalModel");
 const CatagoryOffer = require("../../model/offerModel");
-const ProductOffer=require("../../model/productOfferModel")
+const ProductOffer = require("../../model/productOfferModel")
 
 let globalEmail;
 let globalPhone;
@@ -306,16 +306,16 @@ exports.get_home = async (req, res) => {
     const products = await Product.find({ isListed: true }).limit(6)
     const productOffer = await ProductOffer.find()
     const catagoryOffer = await CatagoryOffer.find()
-    
+
     for (let product of products) {
       for (item of productOffer) {
         if (product.productName === item.productName) {
-          product.pOffer=item.offer
+          product.pOffer = item.offer
         }
       }
       for (item of catagoryOffer) {
         if (product.catagory === item.catagoryName) {
-          product.cOffer=item.offer
+          product.cOffer = item.offer
         }
       }
     }
@@ -343,11 +343,11 @@ exports.get_home = async (req, res) => {
     //     }
     //   }
     // ])
-   
+
     // Rendering user home page and passing retrieved categories and products to the view
 
     res.render("./Users/home", { catagory: catagory, product: products });
-  } catch (error) { 
+  } catch (error) {
     console.log(error);
   }
 };

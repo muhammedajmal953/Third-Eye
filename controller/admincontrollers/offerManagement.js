@@ -1,4 +1,5 @@
 const Catagory = require("../../model/catagoryModel")
+const Coupon = require("../../model/couponModel")
 const CatagoryOffer = require("../../model/offerModel")
 const Product = require("../../model/productModel")
 const ProductOffer = require("../../model/productOfferModel")
@@ -41,7 +42,7 @@ exports.deleteReferal = async (req, res) => {
 
 exports.catagoryOffer = async (req, res) => {
     try {
-        const catagories = await Catagory.find({isActive:true})
+        const catagories = await Catagory.find({ isActive: true })
 
         const catagoryOffer = await CatagoryOffer.find()
 
@@ -72,7 +73,7 @@ exports.saveCatagoryOffer = async (req, res) => {
 }
 exports.deleteCatagoryOffer = async (req, res) => {
     try {
-        let id = req.query.id       
+        let id = req.query.id
         await CatagoryOffer.deleteOne({ _id: id })
         res.redirect('/admin/catagoryOffer')
     } catch (error) {
@@ -112,12 +113,49 @@ exports.saveProductOffer = async (req, res) => {
 
     }
 }
+
+
+
 exports.deleteProductOffer = async (req, res) => {
     try {
-        let id = req.query.id       
+        let id = req.query.id
         await ProductOffer.deleteOne({ _id: id })
         res.redirect('/admin/productOffer')
     } catch (error) {
 
     }
+}
+
+
+
+exports.coupon = async (req, res) => {
+    try {
+        const coupons = await Coupon.find()
+        if (!coupons) {
+            return res.render('admin/coupon', { coupons: [] })
+        }
+        res.render('admin/coupons', { coupons })
+    } catch (error) {
+
+    }
+}
+
+exports.saveCoupon = async (req, res) => {
+    const { code, couponDiscount, validity } = req.body
+
+    const coupon = new Coupon({
+        code,
+        offer: couponDiscount,
+        validity
+    })
+
+    coupon.save()
+
+    res.redirect('/admin/coupons')
+}
+
+exports.deleteCoupon = async (req, res) => {
+    let id = req.query.id
+    await Coupon.deleteOne({ _id: id })
+    res.redirect('/admin/coupons')
 }

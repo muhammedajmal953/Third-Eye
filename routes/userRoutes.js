@@ -125,6 +125,9 @@ userRoutes.post('/walletRecharge', userProfileController.walletRecharge)
 userRoutes.get('/updateWallet', isLoggedIn, isBlocked, userProfileController.updateWallet)
 
 
+userRoutes.post('/applyCoupon',cartController.applyCoupon)
+
+
 
 
 

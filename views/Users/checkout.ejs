@@ -179,7 +179,7 @@
                                                         <%=addresses[i].houseName%> , <br>
                                                             <%=addresses[i].village%> , <%=addresses[i].pincode%>,<br>
                                                                     <%=addresses[i].city%> , <%=addresses[i].state%>
-                                                                            ,<br>Mobile: <span
+                                                                            ,Mobile: <span
                                                                                 class="text-dark fw-bold">+91-
                                                                                 <%=user.phone%>
                                                                             </span>
@@ -206,8 +206,8 @@
                                 <h5 class="fw-bold mb-4">Order Summary</h5>
                                 <div class="hstack align-items-center justify-content-between">
                                     <p class="mb-0">Bag Total</p>
-                                    <p class="mb-0">
-                                        <%=cart.totalPrice%>
+                                    <p class="mb-0" id="totalPrice">
+                                        $ <%=cart.totalPrice%>
                                     </p>
                                 </div>
                                 <hr>
@@ -223,8 +223,8 @@
                                 <hr>
                                 <div class="hstack align-items-center justify-content-between fw-bold text-content">
                                     <p class="mb-0">Total Amount</p>
-                                    <p class="mb-0">
-                                        <%=cart.totalPrice%>
+                                    <p class="mb-0" id="discountAmount">
+                                        $ <%=cart.totalPrice%>
                                     </p>
                                 </div>
                                 <div class="mb-3 mt-4">
@@ -246,14 +246,28 @@
                                     </div>
                                     <!-- Add more payment options here -->
                                 </div>
+                                <!-- Coupon Form Field -->
+                                <div class="mb-3">
+                                    <h6 class="fw-bold mb-3">Apply Coupon</h6>
+
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Enter coupon code"
+                                            aria-label="Coupon Code" aria-describedby="apply-coupon-button"
+                                            id="couponCode">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            onclick="applyCoupon('<%=cart.totalPrice%>')" id="">Apply</button>
+                                    </div>
+
+                                </div>
+                                <!-- End Coupon Form Field -->
                                 <div class="d-grid mt-4">
                                     <button type="button" onclick="proceedOrder('<%=cart._id%>')"
-                                        class="btn btn-dark btn-ecomm py-3 px-5">Continue</button> </a>
+                                        class="btn btn-dark btn-ecomm py-3 px-5">Continue</button>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
                 </div><!--end row-->
 
             </div>
@@ -399,6 +413,17 @@
             var selectedOption = document.querySelector('input[name="paymentOption"]:checked');
             var paymentMethod = selectedOption.value;
 
+            if (!addressVal || !paymentMethod) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error!',
+                    text: 'Please select both address and payment option.',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                return;
+            }
+
 
             const response = await axios.post(`/user/proceedOrder?cart=${cart}&address=${addressVal}&paymentMethod=${paymentMethod}`)
             console.log(response.data);
@@ -413,10 +438,10 @@
                 setTimeout(function () {
                     window.location.href = '/user/productList/1';
                 }, 2000);
-            } else if (response.data. redirectUrl){
-                window.location.href=response.data. redirectUrl
+            } else if (response.data.redirectUrl) {
+                window.location.href = response.data.redirectUrl
             }
-           else {
+            else {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Order cannott plassed!',
@@ -425,6 +450,50 @@
                     timer: 2000
                 });
             }
+        }
+
+
+
+
+        async function applyCoupon(totalPrice) {
+            const couponCode = document.getElementById('couponCode').value
+
+            console.log(totalPrice);
+            console.log(couponCode)
+
+
+
+            if (totalPrice < 75) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sorry!',
+                    text: 'Order must be over $75 to Apply coupon!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                return;
+            }
+            const response = await axios.post(`/user/applyCoupon`, { totalPrice, couponCode });
+
+            if (response.data === 'No coupon found') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sorry!',
+                    text: 'No coupon found in that code',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                return;
+            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Coupon appied!',
+                text: 'coupon Applied',
+                showConfirmButton: false,
+                timer: 2000
+            });
+            console.log(response.data);
+            document.getElementById('discountAmount').innerText=response.data
         }
     </script>
 </body>

@@ -1,4 +1,4 @@
-const { OrderedBulkOperation } = require("mongodb");
+const Product = require("../../model/productModel");
 const Admin = require("../../model/adminModel");
 const Order = require("../../model/orderModel");
 const Users = require("../../model/userModel");
@@ -44,6 +44,8 @@ exports.getDashboard = async (req, res) => {
     const data = await Order.find({}, { totalAmount: 1, odrderedDate: 1 });
     const labels = data.map((item) => item.odrderedDate);
     const amounts = data.map((item) => item.totalAmount);
+    const productsCount = await Product.countDocuments();
+
     const chartData = {
       labels: labels,
       datasets: [
@@ -54,20 +56,32 @@ exports.getDashboard = async (req, res) => {
       ],
     };
 
-    res.render("./admin/index", { users: users, chartData: chartData });
+    let totalOrder = 0;
+    let orders = await Order.find();
+    for (let order of orders) {
+      totalOrder += order.items.length;
+    }
+    let revenue = amounts.reduce((acc, cur) => (acc += cur));
+
+    res.render("admin/index", {
+      users: users,
+      chartData: chartData,
+      productsCount,
+      totalOrder,
+      revenue
+    });
   } catch (error) {
-    console.error('Error fetching data:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error fetching data:", error);
+    res.status(500).send("Internal Server Error");
   }
 };
-
 
 //userlist rendering
 exports.userList = async (req, res) => {
   try {
     const users = await Users.find();
     res.render("./admin/customers-details", { users: users });
-  } catch (error) { }
+  } catch (error) {}
 };
 
 //block user
@@ -81,7 +95,7 @@ exports.user_block = async (req, res) => {
       }
     );
     res.redirect("/admin/customers");
-  } catch { }
+  } catch {}
 };
 
 //unblock user
@@ -96,7 +110,7 @@ exports.user_unblock = async (req, res) => {
       }
     );
     res.redirect("/admin/customers");
-  } catch { }
+  } catch {}
 };
 
 // adminLogout handling
@@ -104,7 +118,5 @@ exports.admin_logout = (req, res) => {
   try {
     delete req.session.admin;
     res.redirect("/admin");
-  } catch (error) { }
+  } catch (error) {}
 };
-
-

@@ -2,7 +2,7 @@ const Cart = require("../../model/cartModel");
 const Product = require("../../model/productModel");
 const CatagoryOffer = require("../../model/offerModel");
 const ProductOffer = require("../../model/productOfferModel")
-
+const Coupon = require("../../model/couponModel")
 
 
 //handling add to cart
@@ -12,7 +12,7 @@ exports.addToCart = async (req, res) => {
     let { productId } = req.query;
 
     const product = await Product.findOne({ _id: productId });
-    let { productName, price, quantity,catagory } = product;
+    let { productName, price, quantity, catagory } = product;
     let imageUrl = product.images[0];
     let cart = await Cart.findOne({ userId });
     let cartQty = 1;
@@ -144,6 +144,10 @@ exports.totalIncrement = async (req, res) => {
   }
 };
 
+
+
+
+
 exports.totalDecrement = async (req, res) => {
   try {
     console.log("accessed decrement");
@@ -162,3 +166,35 @@ exports.totalDecrement = async (req, res) => {
     res.status(500).send("Internal server error.");
   }
 };
+
+
+
+
+
+
+exports.applyCoupon = async (req, res) => {
+  let { totalPrice, couponCode } = req.body
+
+  const coupon = await Coupon.findOne({ code: couponCode })
+
+  if (!coupon) {
+    return res.json('No coupon found')
+  }
+
+
+
+  let price = Number(totalPrice)
+  let couponOffer = parseFloat(coupon.offer)
+
+  console.log(couponOffer);
+
+  let discountPrice = 0
+  discountPrice = Math.floor(price - (price * couponOffer / 100))
+
+  console.log(discountPrice);
+  req.session.couponRate = couponOffer
+
+
+  res.json(discountPrice)
+
+}

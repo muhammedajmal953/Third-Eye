@@ -80,5 +80,7 @@ exports.deleteAddress = async (req, res) => {
       { $pull: { address: { _id: addressId } } }
     );
     res.redirect("/user/adresses");
-  } catch (error) { }
+  } catch (error) { 
+    
+  }
 };
