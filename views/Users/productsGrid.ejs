@@ -170,45 +170,45 @@
                       <div class="card-header d-none d-xl-block bg-transparent">
                         <h5 class="mb-0 fw-bold">Filters</h5>
                       </div>
-                     <form action="" method="get">
-                      <div class="card-body">
-                        <h6 class="p-1 fw-bold bg-light">Categories</h6>
-                        <div class="categories">
-                          <div class="categories-wrapper height-1 p-1">
-                            <%for(i=0;i<catagory.length;i++){%>
-                              <%if(catagory[i].isActive===true){%>
-                                <div class="form-check">
-                                  <input class="form-check-input" name="category" type="checkbox" value="<%=catagory[i].catagoryName%>"
-                                    id="chekCate1">
-                                  <label class="form-check-label" for="chekCate1">
-                                    <span>
-                                      <%=catagory[i].catagoryName%>
-                                    </span>
-                                  </label>
-                                </div>
-                                <%}%>
+                      <form action="" method="get">
+                        <div class="card-body">
+                          <h6 class="p-1 fw-bold bg-light">Categories</h6>
+                          <div class="categories">
+                            <div class="categories-wrapper height-1 p-1">
+                              <%for(i=0;i<catagory.length;i++){%>
+                                <%if(catagory[i].isActive===true){%>
+                                  <div class="form-check">
+                                    <input class="form-check-input" name="category" type="checkbox"
+                                      value="<%=catagory[i].catagoryName%>" id="chekCate1">
+                                    <label class="form-check-label" for="chekCate1">
+                                      <span>
+                                        <%=catagory[i].catagoryName%>
+                                      </span>
+                                    </label>
+                                  </div>
                                   <%}%>
-                          </div>
-                        </div>
-                        <hr>
-
-                        <hr>
-                        <div class="Price">
-                          <!-- <h6 class="p-1 fw-bold bg-light">Price</h6> -->
-                          <div class="Price-wrapper p-1">
-                            <div class="input-group">
-                              <!-- <input type="text" name="minPrice" class="form-control rounded-0" placeholder="$10"> -->
-                              <span class="input-group-text bg-section-1 border-0">-</span>
-                              <!-- <input type="text" name="maxPrice" class="form-control rounded-0" placeholder="$10000"> -->
-                              <button type="submit" class="btn btn-outline-dark rounded-0 ms-2"
-                               >Apply<i class="bi bi-chevron-right"></i></button>
+                                    <%}%>
                             </div>
                           </div>
+                          <hr>
+
+                          <hr>
+                          <div class="Price">
+                            <!-- <h6 class="p-1 fw-bold bg-light">Price</h6> -->
+                            <div class="Price-wrapper p-1">
+                              <div class="input-group">
+                                <!-- <input type="text" name="minPrice" class="form-control rounded-0" placeholder="$10"> -->
+                                <span class="input-group-text bg-section-1 border-0">-</span>
+                                <!-- <input type="text" name="maxPrice" class="form-control rounded-0" placeholder="$10000"> -->
+                                <button type="submit" class="btn btn-outline-dark rounded-0 ms-2">Apply<i
+                                    class="bi bi-chevron-right"></i></button>
+                              </div>
+                            </div>
+                          </div>
+
+
                         </div>
-
-
-                      </div>
-                     </form>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -261,10 +261,21 @@
                               <%=products[i].catagory%>
                             </p>
                             <div class="product-price d-flex align-items-center gap-2 mt-2">
-                              <div class="h6 fw-bold">Rs-<%=products[i].price%>
-                              </div>
-                              <!-- <div class="h6 fw-light text-muted text-decoration-line-through">$2089</div>
-                          <div class="h6 fw-bold text-danger">(70% off)</div> -->
+                              <%let offerToApply=(products[i].pOffer && products[i].pOffer> products[i].cOffer) ?
+                                products[i].pOffer : products[i].cOffer;
+                                %>
+                                <% if (offerToApply) { %>
+                                  <div class="h6 fw-bold">
+                                    $<%=Math.floor(products[i].price-(products[i].price*offerToApply /100))%>
+                                  </div>
+                                  <div class="h6 fw-light text-muted text-decoration-line-through">$
+                                    <%=products[i].price%>
+                                  </div>
+                                  <div class="h6 fw-bold text-danger">(<%=offerToApply%>% off)</div>
+                                  <% }else{ %>
+                                    <div class="h6 fw-bold">$ <%=products[i].price%>
+                                    </div>
+                                    <%}%>
                             </div>
                           </div>
                         </div>
@@ -416,7 +427,7 @@
   <script src="/user/js/loader.js"></script>
 
 
-  
+
 </body>
 
 

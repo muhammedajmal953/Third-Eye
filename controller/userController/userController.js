@@ -9,8 +9,9 @@ const bcrypt = require("bcrypt");
 const { name } = require("ejs");
 const generateRandomString = require("../../services/generateShortId");
 const Wallet = require("../../model/walletModel");
-const Referal = require("../../model/referalModel")
-
+const Referal = require("../../model/referalModel");
+const CatagoryOffer = require("../../model/offerModel");
+const ProductOffer=require("../../model/productOfferModel")
 
 let globalEmail;
 let globalPhone;
@@ -224,7 +225,7 @@ exports.verifyEmail = async (req, res) => {
 
     }
 
-    res.render("./Users/userSignUp", { message: "email verified" ,referalId:''});
+    res.render("./Users/userSignUp", { message: "email verified", referalId: '' });
 
     await otpModel.deleteOne({ email: globalEmail, otp: userOtp });
   } catch (error) {
@@ -302,11 +303,53 @@ exports.get_home = async (req, res) => {
   try {
     // Retrieving categories and products from the database
     const catagory = await Catagory.find();
-    const product = await Product.find().limit(6);
-
+    const products = await Product.find({ isListed: true }).limit(6)
+    const productOffer = await ProductOffer.find()
+    const catagoryOffer = await CatagoryOffer.find()
+    
+    for (let product of products) {
+      for (item of productOffer) {
+        if (product.productName === item.productName) {
+          product.pOffer=item.offer
+        }
+      }
+      for (item of catagoryOffer) {
+        if (product.catagory === item.catagoryName) {
+          product.cOffer=item.offer
+        }
+      }
+    }
+    // const product = await Product.aggregate([
+    //   {
+    //     $match: { isListed: true }
+    //   },
+    //   {
+    //     $limit: 6
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'ProductOffer',
+    //       localField: 'productName',
+    //       foreignField: 'productName',
+    //       as: 'productOffer'
+    //     }
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'CatagoryOffer',
+    //       localField: 'catagoryName',
+    //       foreignField: 'catagoryName',
+    //       as: 'catagoryOffer'
+    //     }
+    //   }
+    // ])
+   
     // Rendering user home page and passing retrieved categories and products to the view
-    res.render("./Users/home", { catagory: catagory, product: product });
-  } catch (error) { }
+
+    res.render("./Users/home", { catagory: catagory, product: products });
+  } catch (error) { 
+    console.log(error);
+  }
 };
 
 

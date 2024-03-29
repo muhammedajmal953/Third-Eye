@@ -117,7 +117,7 @@ userRoutes.post('/returnOrder', userOrderController.returnOrder)
 userRoutes.get('/successOrder', isLoggedIn, isBlocked, userOrderController.successOrder)
 
 //user wallet
-userRoutes.get('/wallet', userProfileController.wallet)
+userRoutes.get('/wallet',isLoggedIn, isBlocked, userProfileController.wallet)
 
 //recharge wallet
 userRoutes.post('/walletRecharge', userProfileController.walletRecharge)

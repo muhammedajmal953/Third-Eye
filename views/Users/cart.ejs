@@ -163,43 +163,63 @@
         <div class="row g-4">
           <div class="col-12 col-lg-8 col-xl-8">
             <h6 class="fw-bold mb-3 py-2 px-3 bg-light">Products</h6>
-            <% for (let i=0; i < products.length; i++) { %>
-              <div class="card rounded-0 mb-3">
-                <div class="card-body">
-                  <div class="d-flex flex-column flex-xl-row gap-3">
-                    <div class="address-info form-check flex-grow-1">
-                      <img src="/products/<%= products[i].imageUrl %>" width="150px" height="150px">
-                      <label class="form-check-label" for="flexRadioDefault1">
-                        <span class="fw-bold mb-0 h5">
-                          <%= products[i].productName %>
-                        </span><br>
-                        <span class="fw-bold mb-0 text-danger">Only <%= productQuantity[i] %> left</span><br>
-                        <span class="text-dark fw-bold">Rs-<%= products[i].price %></span>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary decrease-btn" type="button"
-                              onclick="decrimentTotal('<%=products[i]._id%>','<%=products[i].price%>', '<%= i %>');">-</button>
+            <% let sumOfDiscount=0,diffrence=0 %>
+              <% for (let i=0; i < products.length; i++) { %>
+                <div class="card rounded-0 mb-3">
+                  <div class="card-body">
+                    <div class="d-flex flex-column flex-xl-row gap-3">
+                      <div class="address-info form-check flex-grow-1">
+                        <img src="/products/<%= products[i].imageUrl %>" width="150px" height="150px">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                          <span class="fw-bold mb-0 h5">
+                            <%= products[i].productName %>
+                          </span><br>
+                          <span class="fw-bold mb-0 text-danger">Only <%= productQuantity[i] %> left</span><br>
+                          <div class="product-price d-flex align-items-center gap-2 mt-2">
+                            <%let offerToApply=(products[i].pOffer && products[i].pOffer> products[i].cOffer) ?
+                              products[i].pOffer : products[i].cOffer;
+                              %>
+                              <% if (offerToApply) { %>
+                                <div class="h6 fw-bold">
+                                  $<%=Math.floor(products[i].price-(products[i].price*offerToApply /100))%>
+                                    <%diffrence=products[i].price-Math.floor(products[i].price-(products[i].price*offerToApply
+                                      /100))%>
+                                      <% sumOfDiscount+=diffrence %>
+                                </div>
+                                <div class="h6 fw-light text-muted text-decoration-line-through">$
+                                  <%=products[i].price%>
+                                </div>
+                                <div class="h6 fw-bold text-danger">(<%=offerToApply%>% off)</div>
+                                <% }else{ %>
+                                  <div class="h6 fw-bold">$ <%=products[i].price%>
+                                  </div>
+                                  <%}%>
                           </div>
-                          <input type="number" class="form-control text-center  quantity-input" readonly
-                            value="<%= products[i].cartQty %>" min="1" max="<%= productQuantity[i]%>"
-                            data-product-id="<%= products[i]._id %>">
-                          <div class="input-group-append">
-                            <button class="btn btn-outline-secondary increase-btn" type="button"
-                              onclick="incrimentTotal('<%=products[i]._id%>','<%=products[i].price%>','<%= productQuantity[i]%>', '<%= i %>');">+</button>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <button class="btn btn-outline-secondary decrease-btn" type="button"
+                                onclick="decrimentTotal('<%=products[i]._id%>','<%=products[i].price%>', '<%= i %>');">-</button>
+                            </div>
+                            <input type="number" class="form-control text-center  quantity-input" readonly
+                              value="<%= products[i].cartQty %>" min="1" max="<%= productQuantity[i]%>"
+                              data-product-id="<%= products[i]._id %>">
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-secondary increase-btn" type="button"
+                                onclick="incrimentTotal('<%=products[i]._id%>','<%=products[i].price%>','<%= productQuantity[i]%>', '<%= i %>');">+</button>
+                            </div>
                           </div>
-                        </div>
-                      </label>
-                    </div>
-                    <div class="d-none d-xl-block vr"></div>
-                    <div class="d-grid gap-2 align-self-start align-self-xl-center">
-                      <button type="button"
-                        onclick="removeCart('<%=products[i]._id%>','<%=products[i].price%>','<%=products[i].cartQty%>')"
-                        class="btn btn-outline-dark px-5 btn-ecomm remove-btn">Remove</button>
+                        </label>
+                      </div>
+                      <div class="d-none d-xl-block vr"></div>
+                      <div class="d-grid gap-2 align-self-start align-self-xl-center">
+                        <button type="button"
+                          onclick="removeCart('<%=products[i]._id%>','<%=products[i].price%>','<%=products[i].cartQty%>')"
+                          class="btn btn-outline-dark px-5 btn-ecomm remove-btn">Remove</button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <% } %>
+                <% } %>
           </div>
           <div class="card rounded-0">
             <div class="card-body">
@@ -221,7 +241,9 @@
               <hr>
               <div class="hstack align-items-center justify-content-between">
                 <p class="mb-0">Bag discount</p>
-                <p class="mb-0 text-success">- 0</p>
+                <p class="mb-0 text-success">
+                
+                </p>
               </div>
               <hr>
               <div class="hstack align-items-center justify-content-between">
@@ -244,9 +266,9 @@
 
         </div>
       </div><!--end row-->
-
+    </section>
   </div>
-  </section>
+
   <!--start product details-->
 
 
@@ -371,7 +393,7 @@
   async function incrimentTotal(indexId, price, max, i) {
 
     try {
-      console.log(max);
+
 
       if ((Number(document.querySelectorAll('.quantity-input')[i].value) + 1) <= max) {
         const response = await axios.post(`/user/totalIncrement?indexId=${indexId}&price=${price}`)
@@ -448,9 +470,9 @@
     }
   }
 
-async function checkOut (){
-  
-}
+  async function checkOut() {
+
+  }
 </script>
 <!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/address.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:55 GMT -->
 

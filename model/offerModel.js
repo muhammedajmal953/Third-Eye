@@ -1,8 +1,8 @@
-const { ObjectId } = require("mongodb");
+
 const mongoose = require("mongoose");
 
 const catagoryOfferSchema = mongoose.Schema({
-    catagoryId: { type:ObjectId ,ref:'Catagory'},
+    catagoryName: String,
     offer: Number,
     validity: Date
 })

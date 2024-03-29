@@ -121,8 +121,12 @@ adminRoutes.post('/deleteReferal',offerManage.deleteReferal)
 
 adminRoutes.get('/catagoryOffer', isAdminLoggedIn, offerManage.catagoryOffer)
 adminRoutes.post('/saveCatagoryOffer',offerManage.saveCatagoryOffer)
+adminRoutes.post('/deleteCatagoryOffer',offerManage.deleteCatagoryOffer)
 
 
+adminRoutes.get('/productOffer', isAdminLoggedIn, offerManage.productOffer)
+adminRoutes.post('/saveProductOffer',offerManage.saveProductOffer)
+adminRoutes.post('/deleteProductOffer',offerManage.deleteProductOffer)
 
 adminRoutes.get('/logout', adminControler.admin_logout)
 

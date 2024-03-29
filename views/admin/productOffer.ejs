@@ -99,7 +99,7 @@
                 </ul>
             </div>
         </header>
-        <h1>Catagory Offer</h1>
+        <h1>Product Offer</h1>
 
         <table class="table table-hover mt-3">
             <thead class="table-dark ">
@@ -112,24 +112,23 @@
                 </tr>
             </thead>
             <tbody>
-                <% for (let i=0; i < catagoryOffer.length; i++) {%>
-
+                <% for (let i=0; i < productOffer.length; i++) {%>
                     <tr>
                         <td>
                             <%=i+1%>
                         </td>
                         <td>
-                            <%= catagoryOffer[i].catagoryName %>
+                            <%= productOffer[i].productName %>
                         </td>
                         <td>
-                            <%=catagoryOffer[i].offer %>
+                            <%=productOffer[i].offer %>
                         </td>
                         <td>
-                            <%= catagoryOffer[i].validity %>
+                            <%= productOffer[i].validity %>
                         </td>
                         <td class="d-flex">
 
-                            <form action="/admin/deleteCatagoryOffer?id=<%=catagoryOffer[i]._id%>" class="m-1" method="post">
+                            <form action="/admin/deleteProductOffer?id=<%=productOffer[i]._id%>" class="m-1" method="post">
                                 <input type="submit" class="btn btn-warning " value="Delete">
                             </form>
 
@@ -153,13 +152,13 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="offerForm" method="post" action="/admin/saveCatagoryOffer">
+                        <form id="offerForm" method="post" action="/admin/saveProductOffer">
                             <div class="form-group">
-                                <label for="categoryType">Category Type:</label>
-                                <select class="form-control" id="categoryType" name="categoryType" required>
-                                    <% for(i=0;i<catagories.length;i++) {%>
-                                        <%if(catagories[i].isActive) {%>
-                                            <option value="<%=catagories[i].catagoryName%>"><%=catagories[i].catagoryName%></option>
+                                <label for="categoryType">Product Type:</label>
+                                <select class="form-control" id="categoryType" name="productName" required>
+                                    <% for(i=0;i<products.length;i++) {%>
+                                        <%if(products[i].isListed) {%>
+                                            <option value="<%=products[i].productName%>"><%=products[i].productName%></option>
                                         <%}%>
                                     <%}%>
                                 </select>
@@ -167,7 +166,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="referredOffer">Enter the % of offer:</label>
-                                <input type="number" class="form-control" id="referredOffer" name="catagoryOffer"
+                                <input type="number" class="form-control" id="referredOffer" name="productOffer"
                                     min="1" required>
                                 <div class="invalid-feedback"> Offer must be a positive number.</div>
                             </div>

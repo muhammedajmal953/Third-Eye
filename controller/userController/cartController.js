@@ -1,5 +1,7 @@
 const Cart = require("../../model/cartModel");
 const Product = require("../../model/productModel");
+const CatagoryOffer = require("../../model/offerModel");
+const ProductOffer = require("../../model/productOfferModel")
 
 
 
@@ -10,7 +12,7 @@ exports.addToCart = async (req, res) => {
     let { productId } = req.query;
 
     const product = await Product.findOne({ _id: productId });
-    let { productName, price, quantity } = product;
+    let { productName, price, quantity,catagory } = product;
     let imageUrl = product.images[0];
     let cart = await Cart.findOne({ userId });
     let cartQty = 1;
@@ -30,6 +32,7 @@ exports.addToCart = async (req, res) => {
           quantity,
           cartQty,
           imageUrl,
+          catagory
         });
         cart.totalPrice = cartTotal + price;
         cart = await cart.save();
@@ -46,6 +49,7 @@ exports.addToCart = async (req, res) => {
             quantity,
             cartQty,
             imageUrl,
+            catagory
           },
         ],
         totalPrice: price,
@@ -62,7 +66,8 @@ exports.addToCart = async (req, res) => {
 exports.show_cart = async (req, res) => {
   try {
     const userId = req.session.user;
-
+    const productOffer = await ProductOffer.find()
+    const catagoryOffer = await CatagoryOffer.find()
     const userCart = await Cart.findOne({ userId: userId });
     if (!userCart) {
       return res.render("./Users/cart", { products: "", userCart: "" });
@@ -77,7 +82,18 @@ exports.show_cart = async (req, res) => {
       productQuantity[i] = prdct.quantity
     }
 
-    console.log('data', productQuantity);
+    for (let product of products) {
+      for (item of productOffer) {
+        if (product.productName === item.productName) {
+          product.pOffer = item.offer
+        }
+      }
+      for (item of catagoryOffer) {
+        if (product.catagory === item.catagoryName) {
+          product.cOffer = item.offer
+        }
+      }
+    }
 
     res.render("./Users/cart", { products, userCart, productQuantity });
   } catch (error) { }

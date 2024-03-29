@@ -1,6 +1,8 @@
 const Catagory = require("../../model/catagoryModel");
 const Product = require("../../model/productModel");
 const Wishlist = require("../../model/wishlistModel");
+const CatagoryOffer = require("../../model/offerModel");
+const ProductOffer = require("../../model/productOfferModel")
 
 //handling Shop page rendering
 exports.get_products = async (req, res) => {
@@ -11,7 +13,8 @@ exports.get_products = async (req, res) => {
     const limit = 6;
     const totalPages = Math.ceil(totalProducts.length / limit);
     const { category } = req.query;
-
+    const productOffer = await ProductOffer.find()
+    const catagoryOffer = await CatagoryOffer.find()
     // const sortBy = 'hiToLow';
     let sortCriteria = {};
 
@@ -33,8 +36,21 @@ exports.get_products = async (req, res) => {
         quantity: { $gt: 0 },
       })
         .sort(sortCriteria)
-        .skip(skip)
-        .limit(limit);
+
+      //find offer
+      for (let product of products) {
+        for (item of productOffer) {
+          if (product.productName === item.productName) {
+            product.pOffer = item.offer
+          }
+        }
+        for (item of catagoryOffer) {
+          if (product.catagory === item.catagoryName) {
+            product.cOffer = item.offer
+          }
+        }
+      }
+
       const totalPages = Math.ceil(products.length / limit);
       const catagory = await Catagory.find();
       return res.render("./Users/productsGrid", {
@@ -49,6 +65,18 @@ exports.get_products = async (req, res) => {
       .sort(sortCriteria)
       .skip(skip)
       .limit(limit);
+    for (let product of products) {
+      for (item of productOffer) {
+        if (product.productName === item.productName) {
+          product.pOffer = item.offer
+        }
+      }
+      for (item of catagoryOffer) {
+        if (product.catagory === item.catagoryName) {
+          product.cOffer = item.offer||0
+        }
+      }
+    }
     const catagory = await Catagory.find();
     res.render("./Users/productsGrid", {
       products: products,
@@ -67,6 +95,22 @@ exports.view_products = async (req, res) => {
   try {
     const id = req.query.id;
     const product = await Product.findOne({ _id: id });
+    const productOffer = await ProductOffer.find()
+    const catagoryOffer = await CatagoryOffer.find()
+
+
+    for (item of productOffer) {
+      if (product.productName === item.productName) {
+        product.pOffer = item.offer
+      }
+    }
+    for (item of catagoryOffer) {
+      if (product.catagory === item.catagoryName) {
+        product.cOffer = item.offer
+      }
+    }
+
+
     res.render("./Users/ProductDetails", { product });
   } catch (error) {
     res.status(500).send("Error occurred while fetching product details.");
@@ -115,9 +159,12 @@ exports.addToWishlist = async (req, res) => {
 
 exports.show_wishlist = async (req, res) => {
   const userId = req.session.user
-
+  const productOffer = await ProductOffer.find()
+  const catagoryOffer = await CatagoryOffer.find()
   const wishList = await Wishlist.findOne({ userId: userId })
   const productIds = wishList.producIds
+
+
 
   const products = []
   for (i = 0; i < productIds.length; i++) {
@@ -125,6 +172,21 @@ exports.show_wishlist = async (req, res) => {
     products.push(product)
   }
 
+
+
+
+  for (let product of products) {
+    for (item of productOffer) {
+      if (product.productName === item.productName) {
+        product.pOffer = item.offer
+      }
+    }
+    for (item of catagoryOffer) {
+      if (product.catagory === item.catagoryName) {
+        product.cOffer = item.offer
+      }
+    }
+  }
   res.render('./Users/wishlist', { products })
 }
 
@@ -134,7 +196,7 @@ exports.wishlistRemove = async (req, res) => {
   const userId = req.session.user
   try {
     const remove = await Wishlist.updateOne({ userId: userId }, { $pull: { producIds: productId } })
-    
+
     res.json('success')
   } catch (error) {
 
