@@ -215,23 +215,23 @@
                       </h5>
                       <div class="mt-3 hstack gap-2">
                         <% if (items[i].status==='Pending' ) { %>
-                          <button type="button" class="btn btn-sm border rounded-0 bg-primary">
+                          <button type="button" class="btn btn-sm border rounded-0 bg-primary text-light">
                             <%= items[i].status %>
                           </button>
                           <% } else if (items[i].status==='Shipped' ) { %>
-                            <button type="button" class="btn btn-sm border rounded-0 bg-warning">
+                            <button type="button" class="btn btn-sm border rounded-0 bg-warning text-light">
                               <%= items[i].status %>
                             </button>
                             <% } else if (items[i].status==='Delivered' ) { %>
-                              <button type="button" class="btn btn-sm border rounded-0 bg-success">
+                              <button type="button" class="btn btn-sm border rounded-0 bg-success text-light">
                                 <%= items[i].status %>
                               </button>
                               <% } else if (items[i].status==='Cancelled' ) { %>
-                                <button type="button" class="btn btn-sm border rounded-0 bg-danger">
+                                <button type="button" class="btn btn-sm border rounded-0 bg-dange text-lightr">
                                   <%= items[i].status %>
                                 </button>
                                 <% } else if (items[i].status==='Returned' ) { %>
-                                  <button type="button" class="btn btn-sm border rounded-0 bg-danger">
+                                  <button type="button" class="btn btn-sm border rounded-0 bg-danger text-light">
                                     <%= items[i].status %>
                                   </button>
                                   <% } %>

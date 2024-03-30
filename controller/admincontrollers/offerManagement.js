@@ -85,7 +85,7 @@ exports.deleteCatagoryOffer = async (req, res) => {
 exports.productOffer = async (req, res) => {
     try {
         const products = await Product.find()
-        console.log(products);
+       
         const productOffer = await ProductOffer.find()
 
         res.render('admin/productOffer', { products, productOffer })

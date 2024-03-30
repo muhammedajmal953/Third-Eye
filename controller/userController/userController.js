@@ -303,7 +303,7 @@ exports.get_home = async (req, res) => {
   try {
     // Retrieving categories and products from the database
     const catagory = await Catagory.find();
-    const products = await Product.find({ isListed: true }).limit(6)
+    const products = await Product.find({ isListed: true }).limit(5)
     const productOffer = await ProductOffer.find()
     const catagoryOffer = await CatagoryOffer.find()
 
@@ -319,32 +319,7 @@ exports.get_home = async (req, res) => {
         }
       }
     }
-    // const product = await Product.aggregate([
-    //   {
-    //     $match: { isListed: true }
-    //   },
-    //   {
-    //     $limit: 6
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: 'ProductOffer',
-    //       localField: 'productName',
-    //       foreignField: 'productName',
-    //       as: 'productOffer'
-    //     }
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: 'CatagoryOffer',
-    //       localField: 'catagoryName',
-    //       foreignField: 'catagoryName',
-    //       as: 'catagoryOffer'
-    //     }
-    //   }
-    // ])
-
-    // Rendering user home page and passing retrieved categories and products to the view
+    
 
     res.render("./Users/home", { catagory: catagory, product: products });
   } catch (error) {

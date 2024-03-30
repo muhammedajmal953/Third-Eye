@@ -102,7 +102,7 @@ userRoutes.post('/totalDecrement', cartController.totalDecrement)
 userRoutes.get('/checkout', isLoggedIn, isBlocked, userOrderController.get_checkout)
 
 
-userRoutes.post('/proceedOrder', userOrderController.orderPlace)
+userRoutes.post('/proceedOrder',isLoggedIn, isBlocked,  userOrderController.orderPlace)
 
 userRoutes.get('/orders', isLoggedIn, isBlocked, userOrderController.orderView)
 

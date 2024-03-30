@@ -194,7 +194,7 @@ exports.applyCoupon = async (req, res) => {
   console.log(discountPrice);
   req.session.couponRate = couponOffer
 
-
+ 
   res.json(discountPrice)
 
 }

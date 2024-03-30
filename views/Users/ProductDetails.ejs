@@ -95,7 +95,7 @@
                             <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="/user/profile">
                                 Account
                             </a>
-                        </li>>
+                        </li>
 
                     </ul>
                 </div>
@@ -137,19 +137,21 @@
                 </ol>
             </nav>
         </div>
-        <div class="row g-3 mb-5 ms-5">
+        <div class="row  mb-5 ms-5">
             <div class="col-lg-6">
                 <div class="wrap-modal-slider">
                     <div class="slider-for">
                         <div>
-                            <img src="/products/<%=product.images[0]%>" alt="" height="400px" width="500px" class="img-fluid zoom">
+                            <img src="/products/<%=product.images[0]%>" alt="" height="300px" width="500px"
+                                id="mainImage" class="img-fluid zoom  border border-grey">
                         </div>
                     </div>
-                    <div class="slider-nav mt-3">
+                    <div class="slider-nav mt-3 ">
 
                         <%for(i=1;i<product.images.length;i++){%>
-                            <div>
-                                <img src="/products/<%=product.images[i]%>" alt="" width="100px" class="img-fluid zoom">
+                            <div onclick="showImage('<%=product.images[i]%>')">
+                                <img src="/products/<%=product.images[i]%>" alt="" width="100px"
+                                    class="img-fluid zoom  border border-primary">
                             </div>
                             <%}%>
                     </div>
@@ -359,6 +361,11 @@
                     icon: "success"
                 });
             }
+        }
+
+        function showImage(img) {
+            let mainImage = document.getElementById('mainImage')
+            mainImage.src = `/products/${img}`
         }
     </script>
 

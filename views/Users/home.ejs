@@ -215,23 +215,21 @@
                             </div>
                             <div class="product-price d-flex align-items-center gap-2 mt-2">
 
-                              <%let offerToApply=(product[i].pOffer && product[i].pOffer> product[i].cOffer) ?
-                                product[i].pOffer : product[i].cOffer;%>
+                              <%let offerToApply=(product[i].pOffer> product[i].cOffer) ?
+                                product[i].pOffer : product[i].cOffer%>
                                 <% if (offerToApply) { %>
                                   <div class="h6 fw-bold">
-                                    $<%=Math.floor(product[i].price-(product[i].price*product[i].pOffer /100))%></div>
+                                    $<%=Math.floor(product[i].price-(product[i].price*offerToApply/100))%></div>
                                   <div class="h6 fw-light text-muted text-decoration-line-through">$
                                     <%=product[i].price%>
                                   </div>
-                                  <div class="h6 fw-bold text-danger">(<%=product[i].pOffer%>% off)</div>
+                                  <div class="h6 fw-bold text-danger">(<%=offerToApply%> % off)</div>
                                   <% } else{%>
                                     <div class="h6 fw-bold">$<%=Math.floor(product[i].price)%>
                                     </div>
                                     <%}%>
                             </div>
-                            <!-- <p class="mb-0 h6 fw-bold product-price">
-                              $
-                            </p> -->
+
 
                           </div>
                         </div>

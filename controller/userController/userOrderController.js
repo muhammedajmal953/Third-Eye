@@ -58,11 +58,11 @@ exports.orderPlace = async (req, res) => {
       let couponRate = req.session.couponRate
       
 
-      totalPrice -=(totalPrice*couponRate/100)
+      totalPrice =Math.floor(totalPrice-(totalPrice*couponRate/100))
 
 
      items.forEach(item => {
-       item.price-=(item.price*couponRate/100)
+       item.price=Math.floor(item.price-(item.price*couponRate/100))
      });
      
       
