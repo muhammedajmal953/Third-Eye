@@ -200,6 +200,7 @@
 
 
                     </div>
+                  
                     <div class="col-12 col-lg-4 col-xl-4">
                         <div class="card rounded-0 mb-3">
                             <div class="card-body">
@@ -267,7 +268,22 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="col-4">
+                        <h4>Coupons Available</h4>
+                        <table class="table">
+                            <tr>
+                                <th>Coupon Code</th>
+                                <th>offer</th>
+                            </tr>
+                           <% for(let coupon of coupons) {%>
+                            <tr>
+                               
+                                <td><%=coupon.code %></td>
+                                <td>For <%=coupon.offer %>% off</td>
+                            </tr>
+                            <% } %>
+                        </table>
+                    </div>
                 </div><!--end row-->
 
             </div>

@@ -309,16 +309,8 @@
             const response = await axios.post(`/user/walletRecharge?amount=${money}`)
 
             if (response.data.redirectUrl) {
-                window.location.href = response.data.redirectUrl
-                
+                window.location.href = response.data.redirectUrl   
             }
-            Swal.fire({
-                icon: 'success',
-                title: 'Coupon appied!',
-                text: 'coupon Applied',
-                showConfirmButton: false,
-                timer: 2000
-            });
         }
     </script>
 </body>

@@ -5,6 +5,7 @@ const Product = require("../../model/productModel");
 const Users = require("../../model/userModel");
 const paypal = require('paypal-rest-sdk');
 const Wallet = require("../../model/walletModel");
+const Coupon = require("../../model/couponModel")
 
 
 paypal.configure({
@@ -22,11 +23,18 @@ exports.get_checkout = async (req, res) => {
     const addresses = user.address;
     const cart = await Cart.findOne({ userId: userId });
     const products = cart.produts;
+    const today = new Date()
+    const coupons = await Coupon.find({ validity: { $gte: today } })
+
+
+
+
     res.render("./Users/checkout", {
       user,
       addresses,
       cart,
       products,
+      coupons
     });
   } catch (error) {
 
@@ -50,28 +58,28 @@ exports.orderPlace = async (req, res) => {
     let { totalPrice, products } = userCart;
     let items = products;
     console.log(paymentMethod);
-    
+
     console.log(items);
 
 
-    if (req.session.couponRate&&req.query.coupon) {
+    if (req.session.couponRate && req.query.coupon) {
       let couponRate = req.session.couponRate
-      
-
-      totalPrice =Math.floor(totalPrice-(totalPrice*couponRate/100))
 
 
-     items.forEach(item => {
-       item.price=Math.floor(item.price-(item.price*couponRate/100))
-     });
-     
-      
-     
+      totalPrice = Math.floor(totalPrice - (totalPrice * couponRate / 100))
+
+
+      items.forEach(item => {
+        item.price = Math.floor(item.price - (item.price * couponRate / 100))
+      });
+
+
+
       delete req.session.couponRate
     }
 
-    
-    
+
+
 
     if (paymentMethod === 'paypal') {
       let totalAmount = totalPrice.toFixed(2); // Format total amount for PayPal payment
@@ -154,7 +162,7 @@ exports.successOrder = async (req, res) => {
   let cart = req.query.cart
   // Fetch user and cart details from the database
   let userCart = await Cart.findById(cart);
-  let {products} = userCart;
+  let { products } = userCart;
   let items = products;
   const payerId = req.query.PayerID;
   const paymentId = req.query.paymentId;
@@ -163,7 +171,7 @@ exports.successOrder = async (req, res) => {
     payer_id: payerId
   };
 
-  paypal.payment.execute(paymentId, execute_payment_json,async function (error, payment) {
+  paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
     if (error) {
       console.error(error.response);
       throw error;
@@ -177,10 +185,10 @@ exports.successOrder = async (req, res) => {
         totalAmount: orderData.totalAmount,
         paymentMethod: orderData.paymentMethod,
         paymentId: paymentId
-    
-      }) 
+
+      })
       await order.save()
-    
+
       delete req.session.orderData
       await Cart.deleteOne({ _id: cart });
       for (let i = 0; i < items.length; i++) {
@@ -189,12 +197,12 @@ exports.successOrder = async (req, res) => {
           { $inc: { quantity: -items[i].cartQty } }
         );
       }
-    
+
       res.render('Users/successOrder')
     }
   })
 
- 
+
 }
 
 exports.orderView = async (req, res) => {
@@ -204,13 +212,13 @@ exports.orderView = async (req, res) => {
     const orders = await Order.find({ userId: userId }).sort({ odrderedDate: -1 });
     const user = await Users.findById(userId);
     if (!orders) {
-      res.render("./Users/orderList", { items:{}, user});
-     }
+      res.render("./Users/orderList", { items: {}, user });
+    }
     if (orders.length > 0) {
 
       const items = orders.flatMap((order) => order.items);
 
-      
+
       if (user) {
         console.log("User is ok");
       }
@@ -237,7 +245,7 @@ exports.cancelOrder = async (req, res) => {
     console.log(itemsId);
 
     await Order.updateOne(
-      { userId: userId, 'items._id': itemsId }, 
+      { userId: userId, 'items._id': itemsId },
       { $set: { 'items.$.status': 'Cancelled' } } // Update the status of the specific item
     );
     const product = await Product.updateOne({ _id: productId }, { $inc: { quantity: cartQty } })
@@ -275,7 +283,7 @@ exports.returnOrder = async (req, res) => {
     await Product.findOneAndUpdate({ _id: productId }, { $inc: { quantity: cartQty } });
 
     await Order.updateOne(
-      { userId: userId, 'items._id': itemId }, 
+      { userId: userId, 'items._id': itemId },
       { $set: { 'items.$.status': 'Returned' } }
     );
 
@@ -291,7 +299,7 @@ exports.orderDetails = async (req, res) => {
     const itemId = req.query.itemId
 
     const index = req.query.index
-  
+
     const order = await Order.findOne({ 'items._id': itemId })
 
     const orderedItem = order.items.find(item => item._id.toString() === itemId);

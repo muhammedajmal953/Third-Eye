@@ -184,16 +184,17 @@
                                   $<%=Math.floor(products[i].price-(products[i].price*offerToApply /100))%>
                                 </div>
                                 <%diffrence=products[i].price-Math.floor(products[i].price-(products[i].price*offerToApply
-                                      /100))%>
-                                      <% sumOfDiscount+=diffrence %>
-                                <div class="h6 fw-light text-muted text-decoration-line-through" id="originalPrice">$
-                                  <%=products[i].price%>
-                                </div>
-                                <div class="h6 fw-bold text-danger">(<%=offerToApply%>% off)</div>
-                                <% }else{ %>
-                                  <div class="h6 fw-bold" >$ <%=products[i].price%>
-                                  </div>
-                                  <%}%>
+                                  /100))%>
+                                  <% sumOfDiscount+=diffrence %>
+                                    <div class="h6 fw-light text-muted text-decoration-line-through" id="originalPrice">
+                                      $
+                                      <%=products[i].price%>
+                                    </div>
+                                    <div class="h6 fw-bold text-danger">(<%=offerToApply%>% off)</div>
+                                    <% }else{ %>
+                                      <div class="h6 fw-bold">$ <%=products[i].price%>
+                                      </div>
+                                      <%}%>
                           </div>
                           <div class="input-group">
                             <div class="input-group-prepend">
@@ -227,43 +228,44 @@
             </div>
           </div>
 
-        </div>
-        <div class="col-12 col-lg-4 col-xl-4">
-          <div class="card rounded-0 mb-3">
-            <div class="card-body">
-              <h5 class="fw-bold mb-4">Order Summary</h5>
-              <div class="hstack align-items-center justify-content-between">
-                <p class="mb-0">Bag Total</p>
-                <p class="mb-0" id="bagTotal">
-                  <%=userCart.totalPrice%>
-                </p>
-              </div>
-              <hr>
-              <div class="hstack align-items-center justify-content-between">
-                <p class="mb-0">Bag discount</p>
-                <p class="mb-0 text-success" id="totalDiscount">
-                
-                </p>
-              </div>
-              <hr>
-              <div class="hstack align-items-center justify-content-between">
-                <p class="mb-0">Delivery</p>
-                <p class="mb-0">0</p>
-              </div>
-              <hr>
-              <div class="hstack align-items-center justify-content-between fw-bold text-content">
-                <p class="mb-0">Total Amount</p>
-                <p class="mb-0" id="total">
-                  <%=userCart.totalPrice%>
-                </p>
-              </div>
-              <div class="d-grid mt-4">
-                <a href="/user/checkout"><button type="button" class="btn btn-dark btn-ecomm py-3 px-5">Place
-                    Order</button></a>
+
+          <div class="col-12 col-lg-4 col-xl-4">
+            <div class="card rounded-0 mb-3">
+              <div class="card-body">
+                <h5 class="fw-bold mb-4">Order Summary</h5>
+                <div class="hstack align-items-center justify-content-between">
+                  <p class="mb-0">Bag Total</p>
+                  <p class="mb-0" id="bagTotal">
+                    <%=userCart.totalPrice%>
+                  </p>
+                </div>
+                <hr>
+                <div class="hstack align-items-center justify-content-between">
+                  <p class="mb-0">Bag discount</p>
+                  <p class="mb-0 text-success" id="totalDiscount">
+
+                  </p>
+                </div>
+                <hr>
+                <div class="hstack align-items-center justify-content-between">
+                  <p class="mb-0">Delivery</p>
+                  <p class="mb-0">0</p>
+                </div>
+                <hr>
+                <div class="hstack align-items-center justify-content-between fw-bold text-content">
+                  <p class="mb-0">Total Amount</p>
+                  <p class="mb-0" id="total">
+                    <%=userCart.totalPrice%>
+                  </p>
+                </div>
+                <div class="d-grid mt-4">
+                  <a href="/user/checkout"><button type="button" class="btn btn-dark btn-ecomm py-3 px-5">Place
+                      Order</button></a>
+                </div>
               </div>
             </div>
-          </div>
 
+          </div>
         </div>
       </div><!--end row-->
     </section>
@@ -470,16 +472,16 @@
     }
   }
 
- function offer() {
-   let discount=document.getElementById('offer').value
-   let cartQty=document.getElementById('cartQty').value
-   let price=document.getElementById('originalPrice').value
-   let sum=0
-   console.log(discount,cartQty,price);
-   sum=(price-discount)*price
-  
-   let BagDiscount=document.getElementById('totalDiscount')
-   BagDiscount.innerHTML=sum
+  function offer() {
+    let discount = document.getElementById('offer').value
+    let cartQty = document.getElementById('cartQty').value
+    let price = document.getElementById('originalPrice').value
+    let sum = 0
+    console.log(discount, cartQty, price);
+    sum = (price - discount) * price
+
+    let BagDiscount = document.getElementById('totalDiscount')
+    BagDiscount.innerHTML = sum
   }
   offer()
 </script>
