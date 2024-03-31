@@ -303,7 +303,7 @@ exports.get_home = async (req, res) => {
   try {
     // Retrieving categories and products from the database
     const catagory = await Catagory.find();
-    const products = await Product.find({ isListed: true }).limit(5)
+    const products = await Product.find({ isListed: true }).limit(4)
     const productOffer = await ProductOffer.find()
     const catagoryOffer = await CatagoryOffer.find()
 

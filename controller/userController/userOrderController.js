@@ -54,7 +54,7 @@ exports.orderPlace = async (req, res) => {
     console.log(items);
 
 
-    if (req.session.couponRate) {
+    if (req.session.couponRate&&req.query.coupon) {
       let couponRate = req.session.couponRate
       
 
@@ -156,30 +156,45 @@ exports.successOrder = async (req, res) => {
   let userCart = await Cart.findById(cart);
   let {products} = userCart;
   let items = products;
+  const payerId = req.query.PayerID;
+  const paymentId = req.query.paymentId;
 
-  let order = new Order({
-    userId: orderData.userId,
-    username: orderData.username,
-    email: orderData.email,
-    shippingAddress: orderData.shippingAddress,
-    items: orderData.items,
-    totalAmount: orderData.totalAmount,
-    paymentMethod: orderData.paymentMethod,
-    paymentId: orderData.paymentId
+  const execute_payment_json = {
+    payer_id: payerId
+  };
 
-  }) 
-  await order.save()
+  paypal.payment.execute(paymentId, execute_payment_json,async function (error, payment) {
+    if (error) {
+      console.error(error.response);
+      throw error;
+    } else {
+      let order = new Order({
+        userId: orderData.userId,
+        username: orderData.username,
+        email: orderData.email,
+        shippingAddress: orderData.shippingAddress,
+        items: orderData.items,
+        totalAmount: orderData.totalAmount,
+        paymentMethod: orderData.paymentMethod,
+        paymentId: paymentId
+    
+      }) 
+      await order.save()
+    
+      delete req.session.orderData
+      await Cart.deleteOne({ _id: cart });
+      for (let i = 0; i < items.length; i++) {
+        await Product.updateOne(
+          { _id: items[i].productId },
+          { $inc: { quantity: -items[i].cartQty } }
+        );
+      }
+    
+      res.render('Users/successOrder')
+    }
+  })
 
-  delete req.session.orderData
-  await Cart.deleteOne({ _id: cart });
-  for (let i = 0; i < items.length; i++) {
-    await Product.updateOne(
-      { _id: items[i].productId },
-      { $inc: { quantity: -items[i].cartQty } }
-    );
-  }
-
-  res.render('Users/successOrder')
+ 
 }
 
 exports.orderView = async (req, res) => {

@@ -243,7 +243,7 @@
                     <div class="d-grid align-self-start align-self-xl-center">
                       <a href="/user/orderDetails?itemId=<%=items[i]._id%>&index=<%= i %>"> <button type="button"
                           class="btn btn-outline-dark btn-ecomm">View Details</button></a>
-                      <% if (items[i].status==='Cancelled' ||'Delivered' ) { %>
+                      <% if (items[i].status==='Cancelled'|| items[i].status==='Delivered' || items[i].status==='Returned') { %>
                         <button type="button" id="cancelBtn" class="btn btn-danger mt-2 invisible"
                           onclick="cancelOrder('<%=items[i].productId%>','<%=items[i].cartQty%>',)">Cancel
                           Order</button>

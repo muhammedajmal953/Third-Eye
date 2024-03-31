@@ -412,6 +412,7 @@
         async function proceedOrder(cart) {
             var selectedOption = document.querySelector('input[name="paymentOption"]:checked');
             var paymentMethod = selectedOption.value;
+            var coupon=document.getElementById('couponCode').value
 
             if (!addressVal || !paymentMethod) {
                 Swal.fire({
@@ -425,7 +426,7 @@
             }
 
 
-            const response = await axios.post(`/user/proceedOrder?cart=${cart}&address=${addressVal}&paymentMethod=${paymentMethod}`)
+            const response = await axios.post(`/user/proceedOrder?cart=${cart}&address=${addressVal}&paymentMethod=${paymentMethod}&coupon=${coupon}`)
             console.log(response.data);
             if (response.data === 'your order throug Cash on delivery') {
                 Swal.fire({

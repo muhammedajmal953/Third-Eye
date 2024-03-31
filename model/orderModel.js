@@ -21,7 +21,8 @@ const orderSchema = mongoose.Schema({
     }],
     paymentMethod: String,
     totalAmount: Number,
-    deleveredAt: Date
+    deleveredAt: Date,
+    paymentId:String
 })
 
 const Order=mongoose.model('Order',orderSchema)

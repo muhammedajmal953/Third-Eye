@@ -136,16 +136,32 @@ exports.walletRecharge = async (req, res) => {
 exports.updateWallet = async (req, res) => {
   let amount = req.query.amount
   let userId = req.session.user
-  let wallet = await Wallet.findOne({ userId: userId })
-  if (!wallet) {
-    const newWallet =new Wallet({
-      userId: userId,
-      balance:amount
-    })
-    await newWallet.save()
-    return res.redirect(`/user/wallet`)
-  }
+  const paymentId = req.query.paymentId;
+  const payerId = req.query.PayerID;
+  
 
-    await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount } })
-    return res.redirect(`/user/wallet`) 
+  const execute_payment_json = {
+    payer_id: payerId
+  };
+
+  paypal.payment.execute(paymentId, execute_payment_json,async function (error, payment) {
+    if (error) {
+      console.error(error.response);
+      throw error;
+    } else {
+      let wallet = await Wallet.findOne({ userId: userId })
+      if (!wallet) {
+        const newWallet =new Wallet({
+          userId: userId,
+          balance:amount
+        })
+        await newWallet.save()
+        return res.redirect(`/user/wallet`)
+      }
+       console.log(paymentId);
+    
+        await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount } })
+        return res.redirect(`/user/wallet`) 
+    }
+  })
 }
