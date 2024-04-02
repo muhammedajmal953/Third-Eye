@@ -142,6 +142,19 @@ exports.coupon = async (req, res) => {
 
 exports.saveCoupon = async (req, res) => {
     const { code, couponDiscount, validity } = req.body
+    const today=new Date()
+
+    const existing = await Coupon.findOne({ code: code })
+    
+    if (existing) {
+        return res.send('the coupon name is already exists')
+    }
+
+    if (couponDiscount > 100) {
+        return res.send('the offer must be below 100')
+    }
+
+
 
     const coupon = new Coupon({
         code,
