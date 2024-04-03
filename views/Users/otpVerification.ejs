@@ -9,12 +9,13 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <style>
-#resend{
-   visibility: hidden;
-}
-#timer{
-    color: darkgreen;
-}
+    #resend {
+        visibility: hidden;
+    }
+
+    #timer {
+        color: darkgreen;
+    }
 </style>
 
 <body>
@@ -23,25 +24,25 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
-                    <% if (message) { %>
-                      <h3 class="text-danger"><%=message%></h3>
-                    <% } %>
+                    <h3 class="text-danger" id="warning"></h3>
+
                     <div class="card-header">
                         OTP Verification
                     </div>
                     <div class="card-body">
-                        <form method="post" action="/user/verify-email">
+                        <form method="" action="">
                             <div class="form-group">
                                 <label for="otpInput">Enter OTP</label>
                                 <input type="text" name="otp" class="form-control" id="otpInput"
                                     placeholder="Enter OTP">
                             </div>
-                            <button type="submit" class="btn btn-primary">Verify OTP</button>
+                            <button type="button" onclick="otpVerification()" class="btn btn-primary">Verify
+                                OTP</button>
                         </form>
                         <div id="timer"></div>
                         <form action="/user/resendOtp" method="post">
                             <input type="submit" value="resend" id="resend">
-                            
+
                         </form>
                     </div>
                 </div>
@@ -53,6 +54,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script>
         // JavaScript code to update the timer
         function resendTimer() {
@@ -81,6 +84,33 @@
 
         // Call the function to start the timer
         resendTimer();
+
+
+        async function otpVerification() {
+            try {
+                let otp = document.getElementById('otpInput').value
+
+                const response = await axios.post('/user/verify-email', { otp })
+
+                if (response.data === 'Otp Is Wrong') {
+                    let warning = document.querySelector('#warning')
+
+                    warning.innerHTML = response.data
+
+                }
+                if(response.data==='success'){
+                    window.location.href='/user/login?message=email verified'
+                }
+
+                if(response.data==='forgot'){
+                    window.location.href='/user/newPassword'
+                }
+
+
+            } catch (error) {
+                  console.log(error);
+            }
+        }
     </script>
     </script>
 </body>

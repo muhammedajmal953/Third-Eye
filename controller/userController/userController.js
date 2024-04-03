@@ -50,7 +50,7 @@ exports.get_login = (req, res) => {
 };
 
 exports.get_signup = (req, res) => {
-  let referalId = req.query.referalId
+  let referalId = req.query.referalId||''
 
   if (!referalId) {
     return res.render("./Users/userSignUp", { message: "", referalId: '' })
@@ -162,7 +162,7 @@ exports.user_SignUp = async (req, res) => {
 //check otp is correct then save the user data
 exports.verifyEmail = async (req, res) => {
   const userOtp = req.body.otp;
-  const parsedotp = toString(userOtp);
+
   const referals = await Referal.find()
 
   const referal = referals[0]
@@ -175,16 +175,12 @@ exports.verifyEmail = async (req, res) => {
     });
 
     if (!savedOtp) {
-      return res.render("./Users/otpVerification", { message: "wrong otp" });
+      return res.json('Otp Is Wrong');
     }
-
-
-
-
 
     if (userOtp === savedOtp.otp) {
       if (req.session.forgot) {
-        return res.render('Users/newPassword')
+        return res.json('forgot')
       }
 
 
@@ -225,7 +221,7 @@ exports.verifyEmail = async (req, res) => {
 
     }
 
-    res.render("./Users/userSignUp", { message: "email verified", referalId: '' });
+    res.json('success')
 
     await otpModel.deleteOne({ email: globalEmail, otp: userOtp });
   } catch (error) {
@@ -233,6 +229,8 @@ exports.verifyEmail = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+
 
 exports.resendOtp = async (req, res) => {
   try {

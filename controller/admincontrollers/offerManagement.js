@@ -11,6 +11,7 @@ exports.referal = async (req, res) => {
     if (!referal) {
         res.render('admin/referalOffer', { referal: [] })
     }
+    
     res.render('admin/referalOffer', { referal })
 }
 
@@ -22,7 +23,7 @@ exports.saveReferal = async (req, res) => {
 
     const referal = new Referal({
         referalOffer: referralOffer,
-        referedOffer: referredOffer,
+        referedOffer: referredOffer, 
         Validity: newDate
     })
     referal.save()
@@ -146,16 +147,7 @@ exports.saveCoupon = async (req, res) => {
 
     const existing = await Coupon.findOne({ code: code })
     
-    if (existing) {
-        return res.send('the coupon name is already exists')
-    }
-
-    if (couponDiscount > 100) {
-        return res.send('the offer must be below 100')
-    }
-
-
-
+  
     const coupon = new Coupon({
         code,
         offer: couponDiscount,

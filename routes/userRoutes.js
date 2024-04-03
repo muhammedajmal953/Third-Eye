@@ -125,6 +125,11 @@ userRoutes.post('/walletRecharge', userProfileController.walletRecharge)
 userRoutes.get('/updateWallet', isLoggedIn, isBlocked, userProfileController.updateWallet)
 
 
+userRoutes.get('/newPassword', (reeq, res) => {
+    res.render('Users/newPassword')
+})
+
+
 userRoutes.post('/applyCoupon',cartController.applyCoupon)
 
 

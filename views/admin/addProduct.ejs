@@ -17,6 +17,35 @@
     <link href="/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
 </head>
 
+<style>
+    .imageContainerItem {
+        position: relative;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .deleteButton {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: red;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+    }
+
+    .deleteButton:hover {
+        background-color: darkred;
+    }
+</style>
+
 <body>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
@@ -89,12 +118,58 @@
     <!-- Main Script -->
     <script src="/js/main.js?v=1.1" type="text/javascript"></script>
     <script>
+        let selectedFiles = [];
+
+        function viewImages() {
+            let inputFiles = document.getElementById('images').files;
+            let imageContainer = document.getElementById('imageContainer');
+
+            // Clear previous previews
+            imageContainer.innerHTML = '';
+
+            for (let i = 0; i < inputFiles.length; i++) {
+                const img = document.createElement('img');
+                img.className = "ImagePreview";
+                img.style.height = '100px';
+                img.style.width = '100px';
+                img.src = URL.createObjectURL(inputFiles[i]);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.innerHTML = '&times;'; // Use 'x' as delete button
+                deleteButton.className = 'deleteButton'; // Add a class for styling
+                deleteButton.addEventListener('click', function () {
+                    img.remove();
+                    deleteButton.remove();
+                   
+                    selectedFiles = selectedFiles.filter(file => file !== inputFiles[i]);
+                });
+
+                const containerDiv = document.createElement('div');
+                containerDiv.className = 'imageContainerItem'; // Add a class for styling
+                containerDiv.appendChild(img);
+                containerDiv.appendChild(deleteButton);
+
+                imageContainer.appendChild(containerDiv);
+
+                // Add the file to the selected files array
+                selectedFiles.push(inputFiles[i]);
+            }
+        }
         function validateProd() {
             const trimmedName = document.getElementById('productName').value.trim();
             const trimmedDescription = document.getElementById('discription').value.trim();
             const price = parseFloat(document.getElementById('price').value);
             const quantity = parseInt(document.getElementById('quantity').value);
-            const fileInput = document.getElementById('images').files
+            const fileInput = document.getElementById('images')
+
+            const fileList = new DataTransfer();
+            for (let i = 0; i < selectedFiles.length; i++) {
+                fileList.items.add(selectedFiles[i]);
+            }
+            fileInput.files = fileList.files;
+
+
+
             if (trimmedName.length === 0 || trimmedDescription.length === 0 || price < 0 || quantity < 0) {
                 Swal.fire({
                     icon: "error",
@@ -105,32 +180,20 @@
                 return false;
             }
             for (i = 0; i < fileInput.length; i++) {
-                let fileType =fileInput[i].type
+                let fileType = fileInput[i].type
                 if (!fileType.startsWith('image/')) {
 
                     Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: 'Select Only Image files',
+                        icon: "error",
+                        title: "Oops...",
+                        text: 'Select Only Image files',
 
-                });
-                return false;
+                    });
+                    return false;
                 }
             }
-            return true;
-        }
-        function viewImages() {
-            let inputFiles = event.target.files
-            let imageContainer = document.getElementById('imageContainer')
-
-            for (i = 0; i < inputFiles.length; i++) {
-                const img = document.createElement('img')
-                img.className = "ImagePreview"
-                img.style.height = '100px'
-                img.style.width = '100px'
-                img.src = URL.createObjectURL(inputFiles[i])
-                imageContainer.appendChild(img)
-            }
+            
+            return true
         }
     </script>
 </body>
