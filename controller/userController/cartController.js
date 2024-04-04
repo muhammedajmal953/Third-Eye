@@ -198,3 +198,12 @@ exports.applyCoupon = async (req, res) => {
   res.json(discountPrice)
 
 }
+
+
+exports.removeCoupon = async (req, res) => {
+  const totalPrice = req.body.totalPrice
+  
+  delete req.session.couponRate
+
+  res.json(totalPrice)
+}

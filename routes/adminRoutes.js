@@ -133,6 +133,8 @@ adminRoutes.get('/coupons', isAdminLoggedIn, offerManage.coupon)
 adminRoutes.post('/saveCoupon', offerManage.saveCoupon) 
 adminRoutes.post('/deleteCoupon', offerManage.deleteCoupon)
 
+adminRoutes.post('/approveReturn',orderManageController.approveReturn)
+
 
 adminRoutes.get('/logout', adminControler.admin_logout)
 

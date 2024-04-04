@@ -266,9 +266,9 @@
                     const response = await axios.post(`/user/returnOrder?productId=${productId}&cartQty=${cartQty}&itemId=${itemId}`)
                     if (response.data) {
                         Swal.fire(
-                            'Returned!',
+                            'Waiting!',
                             `Product will be returned. Reason: ${reason}`,
-                            'success'
+                            'Waiting'
                         )
                         setTimeout(() => {
                             window.location.href='/user/orders'

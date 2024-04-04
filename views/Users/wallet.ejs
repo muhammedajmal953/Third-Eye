@@ -163,8 +163,8 @@
         <!--end wallet details-->
 
         <!--start add wallet money-->
-        <section class="section-padding">
-            <div class="container">
+        <section class="section-padding  d-inline">
+            <div class="container ">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card">
@@ -188,6 +188,34 @@
             </div>
         </section>
         <!--end add wallet money-->
+        <!-- Add this section where you want the wallet history to appear -->
+        <section class="section-padding ">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Wallet History</h5>
+                                <ul class="list-group">
+
+                                  <% for(let status of wallet.history){ %>
+
+                                    <li class="list-group-item">
+                                        <strong>Date:</strong><%=status.date.toDateString()%>
+                                        <br>
+                                        <strong>Status:</strong><%=status.status%><br>
+
+                                        <strong>payementId:</strong><%=status.paymentId%> <br>
+                                    </li>
+                                  <% } %>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
 
     </div>
@@ -309,7 +337,7 @@
             const response = await axios.post(`/user/walletRecharge?amount=${money}`)
 
             if (response.data.redirectUrl) {
-                window.location.href = response.data.redirectUrl   
+                window.location.href = response.data.redirectUrl
             }
         }
     </script>

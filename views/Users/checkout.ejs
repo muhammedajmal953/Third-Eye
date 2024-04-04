@@ -200,7 +200,7 @@
 
 
                     </div>
-                  
+
                     <div class="col-12 col-lg-4 col-xl-4">
                         <div class="card rounded-0 mb-3">
                             <div class="card-body">
@@ -256,7 +256,11 @@
                                             aria-label="Coupon Code" aria-describedby="apply-coupon-button"
                                             id="couponCode">
                                         <button class="btn btn-outline-secondary" type="button"
-                                            onclick="applyCoupon('<%=cart.totalPrice%>')" id="">Apply</button>
+                                            onclick="applyCoupon('<%=cart.totalPrice%>')"
+                                            id="applyCoupon">Apply</button>
+                                        <button class="btn btn-outline-secondary" style="visibility: hidden"
+                                            type="button" onclick="removeCoupon('<%=cart.totalPrice%>')"
+                                            id="removeCoupon">Remove</button>
                                     </div>
 
                                 </div>
@@ -275,13 +279,15 @@
                                 <th>Coupon Code</th>
                                 <th>offer</th>
                             </tr>
-                           <% for(let coupon of coupons) {%>
-                            <tr>
-                               
-                                <td><%=coupon.code %></td>
-                                <td>For <%=coupon.offer %>% off</td>
-                            </tr>
-                            <% } %>
+                            <% for(let coupon of coupons) {%>
+                                <tr>
+
+                                    <td>
+                                        <%=coupon.code %>
+                                    </td>
+                                    <td>For <%=coupon.offer %>% off</td>
+                                </tr>
+                                <% } %>
                         </table>
                     </div>
                 </div><!--end row-->
@@ -428,7 +434,7 @@
         async function proceedOrder(cart) {
             var selectedOption = document.querySelector('input[name="paymentOption"]:checked');
             var paymentMethod = selectedOption.value;
-            var coupon=document.getElementById('couponCode').value
+            var coupon = document.getElementById('couponCode').value
 
             if (!addressVal || !paymentMethod) {
                 Swal.fire({
@@ -475,10 +481,6 @@
         async function applyCoupon(totalPrice) {
             const couponCode = document.getElementById('couponCode').value
 
-            console.log(totalPrice);
-            console.log(couponCode)
-
-
 
             if (totalPrice < 75) {
                 Swal.fire({
@@ -509,8 +511,35 @@
                 showConfirmButton: false,
                 timer: 2000
             });
-            console.log(response.data);
-            document.getElementById('discountAmount').innerText=response.data
+            document.getElementById('applyCoupon').style.visibility = 'hidden'
+            document.getElementById('removeCoupon').style.visibility = 'visible'
+            document.getElementById('discountAmount').innerText = response.data
+
+        }
+
+
+        async function removeCoupon(totalPrice) {
+            try {
+                const response = await axios.post('/user/removeCoupon', { totalPrice })
+
+                if (response.data) {
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Coupon removed!',
+                        text: 'coupon removed',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    document.getElementById('applyCoupon').style.visibility = 'visible'
+                    document.getElementById('removeCoupon').style.visibility = 'hidden'
+                    document.getElementById('discountAmount').innerText = response.data
+                    let coupon = document.getElementById('couponCode')
+                    coupon.value = ''
+                }
+            } catch (error) {
+                console.error('Error removing coupon:', error);
+            }
         }
     </script>
 </body>

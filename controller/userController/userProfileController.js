@@ -153,14 +153,15 @@ exports.updateWallet = async (req, res) => {
       if (!wallet) {
         const newWallet =new Wallet({
           userId: userId,
-          balance:amount
+          balance: amount,
+          history:[{status:`$${amount} Added through paypal`, PaymentId:`${paymentId}`,date:Date.now()}]
         })
         await newWallet.save()
         return res.redirect(`/user/wallet`)
       }
        console.log(paymentId);
     
-        await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount } })
+      await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount }, $push: { history: [{ status: `$${amount} Added through paypal`, paymentId: `${paymentId}`, date: Date.now() }] }  })
         return res.redirect(`/user/wallet`) 
     }
   })

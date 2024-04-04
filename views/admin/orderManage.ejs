@@ -168,7 +168,7 @@
                                                 <%=orders[i].status%>
                                             </span></td>
                                         <td>
-                                            <%=orders[i].odrderedDate%>
+                                            <%=orders[i].odrderedDate.toDateString()%>
                                         </td>
                                         <td class="text-end">
                                             <a href="/admin/viewOrder?orderId=<%=orders[i]._id%>"

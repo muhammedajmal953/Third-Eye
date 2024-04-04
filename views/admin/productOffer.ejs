@@ -125,7 +125,7 @@
                             <%=productOffer[i].offer %>
                         </td>
                         <td>
-                            <%= productOffer[i].validity %>
+                            <%= productOffer[i].validity.toDateString() %>
                         </td>
                         <td class="d-flex">
 
@@ -171,7 +171,7 @@
                             <div class="form-group">
                                 <label for="referredOffer">Enter the % of offer:</label>
                                 <input type="number" class="form-control" id="referredOffer" name="productOffer" min="1"
-                                    required>
+                                  max="100"  required>
                                 <div class="invalid-feedback"> Offer must be a positive number.</div>
                             </div>
                             <div class="form-group">

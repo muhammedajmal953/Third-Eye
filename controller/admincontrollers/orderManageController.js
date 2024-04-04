@@ -1,5 +1,7 @@
 const Order = require("../../model/orderModel");
 const PDFDocument = require('pdfkit-table');
+const Wallet = require("../../model/walletModel");
+const Product = require("../../model/productModel");
 
 exports.orders = async (req, res) => {
   try {
@@ -394,7 +396,7 @@ exports.customReport = async (req, res) => {
     let totalSales = 0
     if (!sales || sales.length === 0) {
       // Render the view with an empty array if there are no sales
-      return res.render('admin/customReport', { formattedOrders: [], totalSales,date });
+      return res.render('admin/customReport', { formattedOrders: [], totalSales, date });
     }
 
     // Iterate over each order document
@@ -418,7 +420,7 @@ exports.customReport = async (req, res) => {
     });
     console.log(totalSales);
     // Render the view with the formatted data
-    res.render('admin/customReport', { formattedOrders, totalSales ,date});
+    res.render('admin/customReport', { formattedOrders, totalSales, date });
   } catch (error) {
     // Handle errors
     console.error(error);
@@ -438,7 +440,7 @@ exports.customDownloads = async (req, res) => {
       odrderedDate: { $gte: date, $lt: nextDay }
     });
     const doc = new PDFDocument();
-    let printDate=date.toDateString()
+    let printDate = date.toDateString()
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${printDate}_report.pdf"`);
 
@@ -493,8 +495,8 @@ exports.customDownloads = async (req, res) => {
 exports.yearlyReport = async (req, res) => {
   try {
     const today = new Date();
-    const firstDayOfYear = new Date(today.getFullYear(), 0, 1); 
-    const lastDayOfYear = new Date(today.getFullYear(), 11, 31); 
+    const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
+    const lastDayOfYear = new Date(today.getFullYear(), 11, 31);
     console.log(firstDayOfYear);
     console.log(lastDayOfYear);
     // Query orders within the specified date range
@@ -542,15 +544,15 @@ exports.yearlyReport = async (req, res) => {
 exports.yearlyDownloads = async (req, res) => {
   try {
     const today = new Date();
-    const firstDayOfYear = new Date(today.getFullYear(), 1, 1); 
-    const lastDayOfYear = new Date(today.getFullYear(), 11, 31); 
+    const firstDayOfYear = new Date(today.getFullYear(), 1, 1);
+    const lastDayOfYear = new Date(today.getFullYear(), 11, 31);
     console.log(firstDayOfYear);
     console.log(lastDayOfYear);
     // Query orders within the specified date range
     const sales = await Order.find({
       odrderedDate: { $gte: firstDayOfYear, $lte: lastDayOfYear }
     });
-    const doc = new PDFDocument();     
+    const doc = new PDFDocument();
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename="yearly_sales_report.pdf"');
@@ -600,5 +602,43 @@ exports.yearlyDownloads = async (req, res) => {
     // Handle errors
     console.error(error);
     res.status(500).send('Internal Server Error');
+  }
+}
+
+
+
+exports.approveReturn = async (req, res) => {
+  try {
+    const { productId, cartQty, itemId, userId } = req.body
+    
+    console.log(req.body);
+    const product = await Product.findOne({ _id: productId });
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    const amount = product.price * cartQty;
+
+  let wallet = await Wallet.findOne({ userId: userId });
+  if (!wallet) {
+    wallet = new Wallet({
+      userId: userId,
+      balance: amount,
+      history: [{ status: `$${amount} Credited for Return `, date: Date.now(), paymentId: productId }]
+    });
+    await wallet.save();
+  } else {
+
+    await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount }, $push: { history: { status: `$${amount} Credited for Return `, date: Date.now(), paymentId: productId } } })
+  }
+  await Product.findOneAndUpdate({ _id: productId }, { $inc: { quantity: cartQty } });
+
+  await Order.updateOne(
+    { userId: userId, 'items._id': itemId },
+    { $set: { 'items.$.status': 'Returned' } }
+  );
+
+  res.json('success');
+  } catch (error) {
+    
   }
 }

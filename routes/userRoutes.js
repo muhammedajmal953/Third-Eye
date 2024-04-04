@@ -131,6 +131,7 @@ userRoutes.get('/newPassword', (reeq, res) => {
 
 
 userRoutes.post('/applyCoupon',cartController.applyCoupon)
+userRoutes.post('/removeCoupon',cartController.removeCoupon)
 
 
 

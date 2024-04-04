@@ -106,14 +106,17 @@
             <div class="content-header">
                 <div>
                     <h2 class="content-title card-title">Order detail</h2>
-                    <p>Details for Order ID: <%=order._id%></p>
+                    <p>Details for Order ID: <%=order._id%>
+                    </p>
                 </div>
             </div>
             <div class="card">
                 <header class="card-header">
                     <div class="row align-items-center">
                         <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
-                            <span> <i class="material-icons md-calendar_today"></i> <b><%=order.odrderedDate%></b>
+                            <span> <i class="material-icons md-calendar_today"></i> <b>
+                                    <%=order.odrderedDate.toDateString()%>
+                                </b>
                             </span> <br />
                             <small class="text-muted">Order ID: <%=order._id%></small>
                         </div>
@@ -132,8 +135,10 @@
                                         Customer
                                     </h6>
                                     <p class="mb-1">
-                                       <b><%=order.username%></b> <br />
-                                            <%=order.shippingAddress%> <br />
+                                        <b>
+                                            <%=order.username%>
+                                        </b> <br />
+                                        <%=order.shippingAddress%> <br />
                                     </p>
                                 </div>
                             </article>
@@ -182,18 +187,53 @@
                                                     <%=orderedItems[i].price*orderedItems[i].cartQty%>
                                                 </td>
                                                 <td id="statusRow">
-                                                    <%=orderedItems[i].status%>
+                                                    <% switch (orderedItems[i].status) { case 'Pending' : %>
+                                                        <h6 class="text-dark">
+                                                            <%= orderedItems[i].status %>
+                                                        </h6>
+                                                        <% break; case 'Shipped' : %>
+                                                            <h6 class="text-primary">
+                                                                <%= orderedItems[i].status %>
+                                                            </h6>
+                                                            <% break; case 'Delivered' : %>
+                                                                <h6 class="text-success">
+                                                                    <%= orderedItems[i].status %>
+                                                                </h6>
+                                                                <% break; case 'Cancelled' : case 'Returned' : %>
+                                                                    <h6 class="text-danger">
+                                                                        <%= orderedItems[i].status %>
+                                                                    </h6>
+                                                                    <% break; default: %>
+                                                                        <h6>
+                                                                            <%= orderedItems[i].status %>
+                                                                        </h6>
+                                                                        <% } %>
+
+
                                                 </td>
                                                 <td class="text-end">
-                                                    <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200"
-                                                        id="orderChange"
-                                                        onchange="orderStatus('<%=orderedItems[i]._id%>')">
-                                                        <option>Pending</option>
-                                                        <option>Shipped</option>
-                                                        <option>Delivered</option>
-                                                        <option>Cancelled</option>
-                                                        
-                                                    </select>
+                                                    <% if(orderedItems[i].status!=='Waiting for Return Confirmation' &&
+                                                        orderedItems[i].status!=='Returned' &&
+                                                        orderedItems[i].status!=='Cancelled' ) {%>
+                                                        <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200"
+                                                            id="orderChange"
+                                                            onchange="orderStatus('<%=orderedItems[i]._id%>')">
+                                                            <option>Pending</option>
+                                                            <option>Shipped</option>
+                                                            <option>Delivered</option>
+                                                            <option>Cancelled</option>
+
+                                                        </select>
+
+                                                        <% }else
+                                                            if(orderedItems[i].status==='Waiting for Return Confirmation'
+                                                            ){%>
+                                                            <button class="btn btn-success"
+                                                                onclick="approve('<%=orderedItems[i].productId%>','<%=orderedItems[i].cartQty%>','<%=orderedItems[i]._id%>','<%=order.userId%>')">Approve</button>
+                                                            <button class="btn btn-danger">Decline</button>
+                                                            <% } %>
+
+
                                                 </td>
 
                                             </tr>
@@ -245,6 +285,22 @@
                 showConfirmButton: false,
                 timer: 1500
             });
+
+        }
+        async function approve(productId, cartQty, itemId, userId) {
+            const response = await axios.post('/admin/approveReturn', { productId, cartQty, itemId, userId })
+            if (response.data === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Coupon appied!',
+                    text: 'coupon Applied',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                setTimeout(() => {
+                window.location.reload()
+                }, 2000);
+            }
 
         }
     </script>

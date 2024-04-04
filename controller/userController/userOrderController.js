@@ -268,26 +268,21 @@ exports.returnOrder = async (req, res) => {
     }
     const amount = product.price * cartQty;
 
-    let wallet = await Wallet.findOne({ userId: userId });
-    if (!wallet) {
-      wallet = new Wallet({
-        userId: userId,
-        balance: amount
-      });
-      await wallet.save();
-    } else {
-
-      wallet.balance += amount;
-      await wallet.save();
+    let returnDetails = {
+      amount,
+      userId,
+      productId,
+      itemId
     }
-    await Product.findOneAndUpdate({ _id: productId }, { $inc: { quantity: cartQty } });
+    req.session.returnDetails = returnDetails
+
 
     await Order.updateOne(
-      { userId: userId, 'items._id': itemId },
-      { $set: { 'items.$.status': 'Returned' } }
-    );
+        { userId: userId, 'items._id': itemId },
+        { $set: { 'items.$.status': 'Waiting for Return Confirmation' } }
+      );
+    res.json('Return is Waiting for confirmation')
 
-    res.json('success');
   } catch (error) {
     console.error('Error in returning order:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -303,6 +298,7 @@ exports.orderDetails = async (req, res) => {
     const order = await Order.findOne({ 'items._id': itemId })
 
     const orderedItem = order.items.find(item => item._id.toString() === itemId);
+
 
     res.render('./Users/orderDetails', { order, orderedItem })
   } catch (error) {
