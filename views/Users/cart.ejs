@@ -236,26 +236,27 @@
                 <div class="hstack align-items-center justify-content-between">
                   <p class="mb-0">Bag Total</p>
                   <p class="mb-0" id="bagTotal">
-                    <%=userCart.totalPrice%>
+                    $ <%=userCart.totalPrice%>
                   </p>
                 </div>
                 <hr>
                 <div class="hstack align-items-center justify-content-between">
                   <p class="mb-0">Bag discount</p>
                   <p class="mb-0 text-success" id="totalDiscount">
-
                   </p>
                 </div>
                 <hr>
                 <div class="hstack align-items-center justify-content-between">
-                  <p class="mb-0">Delivery</p>
-                  <p class="mb-0">0</p>
+                  <p class="mb-0">Delivery(<%=totalProducts%> items)</p>
+                  <p class="mb-0" id="shipping">
+                    $ <%=totalProducts*2%>
+                  </p>
                 </div>
                 <hr>
                 <div class="hstack align-items-center justify-content-between fw-bold text-content">
                   <p class="mb-0">Total Amount</p>
                   <p class="mb-0" id="total">
-                    <%=userCart.totalPrice%>
+                    $ <%=userCart.totalPrice+(totalProducts*2)%>
                   </p>
                 </div>
                 <div class="d-grid mt-4">
@@ -400,9 +401,17 @@
       if ((Number(document.querySelectorAll('.quantity-input')[i].value) + 1) <= max) {
         const response = await axios.post(`/user/totalIncrement?indexId=${indexId}&price=${price}`)
 
-        let totalprice = response.data
-        let upadateTotal = document.getElementById('total').innerHTML = totalprice
-        let updateCartTotal = document.getElementById('bagTotal').innerHTML = totalprice
+        let data = response.data
+
+        let upadateTotal = document.getElementById('bagTotal').innerHTML = data.totalPrice
+        let upgradeShipping = document.getElementById('shipping').innerHTML = data.totalProducts * 2
+        let updateCartTotal = document.getElementById('total').innerHTML = (data.totalProducts * 2) + (data.totalPrice)
+      }else{
+        Swal.fire({
+          icon: 'warning',
+          title: 'Reached Maximum Quantity'
+        });
+
       }
       changeQuantity(document.querySelectorAll('.increase-btn')[i], 1);
     } catch (error) {
@@ -415,10 +424,17 @@
     try {
       if ((Number(document.querySelectorAll('.quantity-input')[i].value) - 1) > 0) {
         const response = await axios.post(`/user/totalDecrement?indexId=${indexId}&price=${price}`);
-        let totalprice = response.data
+        let data = response.data
 
-        let upadateTotal = document.getElementById('total').innerHTML = totalprice
-        let updateCartTotal = document.getElementById('bagTotal').innerHTML = totalprice
+        let upadateTotal = document.getElementById('bagTotal').innerHTML = data.totalPrice
+        let upgradeShipping = document.getElementById('shipping').innerHTML = data.totalProducts * 2
+        let updateCartTotal = document.getElementById('total').innerHTML = (data.totalProducts * 2) + (data.totalPrice)
+      }else {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Quantity Must be one'
+        });
+
       }
       changeQuantity(document.querySelectorAll('.decrease-btn')[i], -1);
     } catch (error) {
@@ -472,18 +488,6 @@
     }
   }
 
-  function offer() {
-    let discount = document.getElementById('offer').value
-    let cartQty = document.getElementById('cartQty').value
-    let price = document.getElementById('originalPrice').value
-    let sum = 0
-    console.log(discount, cartQty, price);
-    sum = (price - discount) * price
-
-    let BagDiscount = document.getElementById('totalDiscount')
-    BagDiscount.innerHTML = sum
-  }
-  offer()
 </script>
 <!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/address.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:55 GMT -->
 

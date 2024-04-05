@@ -75,11 +75,13 @@ exports.show_cart = async (req, res) => {
 
     const products = userCart.products;
     const productQuantity = []
+    let totalProducts=0
 
     for (i = 0; i < products.length; i++) {
       const prdct = await Product.findOne({ _id: products[i].productId })
 
       productQuantity[i] = prdct.quantity
+      totalProducts+=products[i].cartQty
     }
 
     for (let product of products) {
@@ -94,8 +96,8 @@ exports.show_cart = async (req, res) => {
         }
       }
     }
-
-    res.render("./Users/cart", { products, userCart, productQuantity });
+    
+    res.render("./Users/cart", { products, userCart, productQuantity ,totalProducts});
   } catch (error) { }
 };
 
@@ -137,7 +139,15 @@ exports.totalIncrement = async (req, res) => {
     );
     const cart = await Cart.findOne({ "products._id": indexId });
     let totalPrice = cart.totalPrice;
-    res.status(200).json(totalPrice);
+
+    const products = cart.products
+    
+    let totalProducts=products.reduce((acc,cur)=>acc+=cur.cartQty,0)
+    let data = {
+      totalPrice,
+      totalProducts
+    }
+    res.status(200).json(data);
   } catch (error) {
     console.error("Error incrementing product quantity in cart:", error);
     res.status(500).send("Internal server error.");
@@ -160,7 +170,15 @@ exports.totalDecrement = async (req, res) => {
     );
     const cart = await Cart.findOne({ "products._id": indexId });
     let totalPrice = cart.totalPrice;
-    res.status(200).json(totalPrice);
+
+    const products = cart.products
+    
+    let totalProducts=products.reduce((acc,cur)=>acc+=cur.cartQty,0)
+    let data = {
+      totalPrice,
+      totalProducts
+    }
+    res.status(200).json(data);
   } catch (error) {
     console.error("Error incrementing product quantity in cart:", error);
     res.status(500).send("Internal server error.");

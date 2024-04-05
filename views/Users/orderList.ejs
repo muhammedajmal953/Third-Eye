@@ -214,7 +214,7 @@
                         <%=items[i].productName%>
                       </h5>
                       <div class="mt-3 hstack gap-2">
-                        <% if (items[i].status==='Pending' ) { %>
+                        <% if (items[i].status==='Odered' ) { %>
                           <button type="button" class="btn btn-sm border rounded-0 bg-primary text-light">
                             <%= items[i].status %>
                           </button>
@@ -227,26 +227,37 @@
                                 <%= items[i].status %>
                               </button>
                               <% } else if (items[i].status==='Cancelled' ) { %>
-                                <button type="button" class="btn btn-sm border rounded-0 bg-dange text-lightr">
+                                <button type="button" class="btn btn-sm border rounded-0 bg-danger text-lightr">
                                   <%= items[i].status %>
                                 </button>
                                 <% } else if (items[i].status==='Returned' ) { %>
                                   <button type="button" class="btn btn-sm border rounded-0 bg-danger text-light">
                                     <%= items[i].status %>
                                   </button>
-                                  <% } %>
+                                  <% } else if (items[i].status==='Pending Payment' ) { %>
+                                   <h6 class="text-danger"> <%= items[i].status %></h6>
+                                      <% } else{%>
+                                        <h6 class="text-danger"> <%= items[i].status %></h6>
+                                      <% } %>
+                                  
                                     <button type="button" class="btn btn-sm border rounded-0">Qty <%=items[i].cartQty%>
                                     </button>
                       </div>
                     </div>
                     <div class="d-none d-xl-block vr"></div>
+
+                    
                     <div class="d-grid align-self-start align-self-xl-center">
                       <a href="/user/orderDetails?itemId=<%=items[i]._id%>&index=<%= i %>"> <button type="button"
                           class="btn btn-outline-dark btn-ecomm">View Details</button></a>
-                      <% if (items[i].status==='Cancelled'|| items[i].status==='Delivered' || items[i].status==='Returned') { %>
+
+                      <% if (items[i].status==='Cancelled'|| items[i].status==='Delivered' || items[i].status==='Returned'||items[i].status==='Waiting for Return Confirmation') { %>
+                        
                         <button type="button" id="cancelBtn" class="btn btn-danger mt-2 invisible"
                           onclick="cancelOrder('<%=items[i].productId%>','<%=items[i].cartQty%>',)">Cancel
                           Order</button>
+
+
                         <% } else {%>
                           <button type="button" id="cancelBtn" class="btn btn-danger mt-2"
                             onclick="cancelOrder('<%=items[i].productId%>','<%=items[i].cartQty%>','<%=items[i]._id%>')">Cancel

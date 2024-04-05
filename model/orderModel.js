@@ -17,7 +17,7 @@ const orderSchema = mongoose.Schema({
         price: Number,
         cartQty: Number,
         imageUrl: String,
-        status: { type: String, default: 'Pending' }
+        status: { type: String, default: 'Odered' }
     }],
     paymentMethod: String,
     totalAmount: Number,

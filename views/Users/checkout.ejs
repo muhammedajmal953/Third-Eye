@@ -266,7 +266,7 @@
                                 </div>
                                 <!-- End Coupon Form Field -->
                                 <div class="d-grid mt-4">
-                                    <button type="button" onclick="proceedOrder('<%=cart._id%>')"
+                                    <button type="button" onclick="proceedOrder('<%=cart._id%>','<%=cart.totalPrice%>')"
                                         class="btn btn-dark btn-ecomm py-3 px-5">Continue</button>
                                 </div>
                             </div>
@@ -431,7 +431,7 @@
             });
         });
 
-        async function proceedOrder(cart) {
+        async function proceedOrder(cart,total) {
             var selectedOption = document.querySelector('input[name="paymentOption"]:checked');
             var paymentMethod = selectedOption.value;
             var coupon = document.getElementById('couponCode').value
@@ -441,6 +441,17 @@
                     icon: 'error',
                     title: 'Validation Error!',
                     text: 'Please select both address and payment option.',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                return;
+            }
+
+            if(total>100&&paymentMethod==='Cod'){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'COD not allowed over $100!',
+                    text: 'Please select another payment option.',
                     showConfirmButton: false,
                     timer: 2000
                 });

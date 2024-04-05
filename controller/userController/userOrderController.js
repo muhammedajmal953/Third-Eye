@@ -1,4 +1,4 @@
-const { response } = require("express");
+
 const Cart = require("../../model/cartModel");
 const Order = require("../../model/orderModel");
 const Product = require("../../model/productModel");
@@ -6,7 +6,7 @@ const Users = require("../../model/userModel");
 const paypal = require('paypal-rest-sdk');
 const Wallet = require("../../model/walletModel");
 const Coupon = require("../../model/couponModel")
-
+const PDFDocument = require('pdfkit-table');
 
 paypal.configure({
   'mode': 'sandbox',
@@ -92,7 +92,7 @@ exports.orderPlace = async (req, res) => {
         },
         "redirect_urls": {
           "return_url": `http://localhost:5000/user/successOrder?cart=${cart}`, // Your success URL
-          "cancel_url": 'http://localhost:5000/cancel'    // Your cancel URL
+          "cancel_url": `http://localhost:5000/user/cancelledPayment?cart=${cart}`    // Your cancel URL
         },
         "transactions": [{
           "amount": {
@@ -278,9 +278,9 @@ exports.returnOrder = async (req, res) => {
 
 
     await Order.updateOne(
-        { userId: userId, 'items._id': itemId },
-        { $set: { 'items.$.status': 'Waiting for Return Confirmation' } }
-      );
+      { userId: userId, 'items._id': itemId },
+      { $set: { 'items.$.status': 'Waiting for Return Confirmation' } }
+    );
     res.json('Return is Waiting for confirmation')
 
   } catch (error) {
@@ -304,4 +304,70 @@ exports.orderDetails = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+}
+
+
+exports.invoiceDownload = async (req, res) => {
+  try {
+    const { productId, cartQty, itemId, cartPrice} = req.query
+
+    const doc = new PDFDocument();
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename="invoice.pdf"');
+
+    doc.pipe(res);
+
+    doc.fontSize(12).text('Monthly Sales Report', { align: 'center' }).moveDown();
+    const tableHeaders = ["User's Name", 'Phone', 'Order Date', 'Product Name', 'Quantity', 'Price', 'total'];
+
+    let downloadDetails = []
+
+
+    let totalAmount = 0
+
+    const product = await Product.findOne({ _id: productId })
+
+    const order = await Order.findOne({ 'items._id': itemId })
+  
+    const user = await Users.findOne({ _id: req.session.user })
+
+   
+
+    const { productName, price } = product
+  
+    const orderedDate = order.odrderedDate
+
+    const { username, phone } = user
+    let discount = (price -cartPrice) * cartQty
+
+    let InvoiceDetails = [
+      username,
+      phone,
+      orderedDate.toDateString(),
+      productName,
+      cartQty,
+      price,
+      cartQty * price
+    ]
+
+    downloadDetails.push(InvoiceDetails)
+
+    downloadDetails.push(['Discount', '', '', '', '', '', discount])
+
+    downloadDetails.push(['Total Amount', '', '', '', '', '', cartQty * cartPrice])
+
+    const tableOptions = {
+      headers: tableHeaders,
+      rows: downloadDetails
+    };
+
+    doc.table(tableOptions);
+
+    doc.end();
+   
+  } catch (error) {
+    console.log('Error while download',error);
+  }
+
 }

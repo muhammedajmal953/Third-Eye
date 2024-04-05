@@ -7,6 +7,7 @@ const cartController = require('../controller/userController/cartController');
 const addressController = require('../controller/userController/addressController');
 const userProfileController = require('../controller/userController/userProfileController')
 const userProductController = require('../controller/userController/userProductController')
+const cancelledPaymentController = require('../controller/userController/cancelledPaymentController')
 
 const { isLoggedIn } = require('../middlewares/isLoggedin'); // Importing isLoggedIn middleware
 const isBlocked = require('../middlewares/isBlocked');
@@ -125,7 +126,7 @@ userRoutes.post('/walletRecharge', userProfileController.walletRecharge)
 userRoutes.get('/updateWallet', isLoggedIn, isBlocked, userProfileController.updateWallet)
 
 
-userRoutes.get('/newPassword', (reeq, res) => {
+userRoutes.get('/newPassword', (req, res) => {
     res.render('Users/newPassword')
 })
 
@@ -134,6 +135,9 @@ userRoutes.post('/applyCoupon',cartController.applyCoupon)
 userRoutes.post('/removeCoupon',cartController.removeCoupon)
 
 
+userRoutes.get('/cancelledPayment',cancelledPaymentController.cancelledPayment)
+
+userRoutes.post('/invoiceDownload',userOrderController.invoiceDownload)
 
 
 

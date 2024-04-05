@@ -159,36 +159,43 @@
                                 <img src="/products/<%= orderedItem.imageUrl %>" width="120" alt="Product Image">
                             </div>
                             <div class="product-info flex-grow-1">
-                                <h5 class="fw-bold mb-1"><%= orderedItem.productName %></h5>
+                                <h5 class="fw-bold mb-1">
+                                    <%= orderedItem.productName %>
+                                </h5>
                                 <div class="mt-3 hstack gap-2">
                                     <!-- Product status -->
-                                    <% if (orderedItem.status==='Pending' ) { %>
+                                    <% if (orderedItem.status==='Odered' ) { %>
                                         <button type="button" class="btn btn-sm border rounded-0 bg-primary text-light">
-                                          <%= orderedItem.status %>
+                                            <%= orderedItem.status %>
                                         </button>
                                         <% } else if (orderedItem.status==='Shipped' ) { %>
-                                          <button type="button" class="btn btn-sm border rounded-0 bg-warning text-light">
-                                            <%= orderedItem.status %>
-                                          </button>
-                                          <% } else if (orderedItem.status==='Delivered' ) { %>
-                                            <button type="button" class="btn btn-sm border rounded-0 bg-success text-light">
-                                              <%= orderedItem.status %>
-                                            </button>
-                                            <% } else if (orderedItem.status==='Cancelled' ) { %>
-                                              <button type="button" class="btn btn-sm border rounded-0 bg-danger text-light">
+                                            <button type="button"
+                                                class="btn btn-sm border rounded-0 bg-warning text-light">
                                                 <%= orderedItem.status %>
-                                              </button>
-                                              <% } else if (orderedItem.status==='Returned' ) { %>
-                                                <button type="button" class="btn btn-sm border rounded-0 bg-danger text-light">
-                                                  <%= orderedItem.status %>
+                                            </button>
+                                            <% } else if (orderedItem.status==='Delivered' ) { %>
+                                                <button type="button"
+                                                    class="btn btn-sm border rounded-0 bg-success text-light">
+                                                    <%= orderedItem.status %>
                                                 </button>
-                                                <% } %>
-                                                 
-                                    <!-- Quantity -->
-                                    <button type="button" class="btn btn-sm border rounded-0">Qty:<%=
-                                            orderedItem.cartQty %></button>
-                                    <h6>Price:<%= orderedItem.price %>
-                                    </h6>
+                                                <% } else if (orderedItem.status==='Cancelled' ) { %>
+                                                    <button type="button"
+                                                        class="btn btn-sm border rounded-0 bg-danger text-light">
+                                                        <%= orderedItem.status %>
+                                                    </button>
+                                                    <% } else if (orderedItem.status==='Returned' ) { %>
+                                                        <button type="button"
+                                                            class="btn btn-sm border rounded-0 bg-danger text-light">
+                                                            <%= orderedItem.status %>
+                                                        </button>
+                                                        <% } %>
+
+                                                            <!-- Quantity -->
+                                                            <button type="button"
+                                                                class="btn btn-sm border rounded-0">Qty:<%=
+                                                                    orderedItem.cartQty %></button>
+                                                            <h6>Price:<%= orderedItem.price %>
+                                                            </h6>
                                 </div>
                             </div>
                         </div>
@@ -217,7 +224,7 @@
                             <p>Order ID: <span id="order-id">
                                     <%= orderedItem._id %>
                                 </span></p>
-                            <p>Product Total Price: Rs-<span id="total-price">
+                            <p>Product Total Price: $-<span id="total-price">
                                     <%= orderedItem.price*orderedItem.cartQty %>
                                 </span></p>
                             <p>Ordered Address: <span id="order-time">
@@ -227,6 +234,17 @@
                                 <button type="button" id="cancelBtn" class="btn btn-danger mt-2 "
                                     onclick="returnOrder('<%=orderedItem.productId%>','<%=orderedItem.cartQty%>','<%=orderedItem._id%>')">return
                                     Order</button>
+        
+
+                                <form class="d-inline" action="/user/invoiceDownload?productId=<%=orderedItem.productId%>&cartQty=<%=orderedItem.cartQty%>&itemId=<%=orderedItem._id%>&cartPrice=<%=orderedItem.price%>" method="post">
+                                    <button class="btn btn-grey border-dark" type="submit">
+                                        Invoice Download
+                                    </button>
+
+                                </form>
+                                <% } %>
+                                <% if (orderedItem.status==='Pending Payment' ) { %>
+                                    <button class="btn border-success text-success">Make payment</button>
                                 <% } %>
 
                         </div>
@@ -252,7 +270,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        async function returnOrder(productId, cartQty,itemId) {
+        async function returnOrder(productId, cartQty, itemId) {
             Swal.fire({
                 title: 'Return Product',
                 input: 'text',
@@ -271,7 +289,7 @@
                             'Waiting'
                         )
                         setTimeout(() => {
-                            window.location.href='/user/orders'
+                            window.location.href = '/user/orders'
                         }, 2000);
                     }
                 },

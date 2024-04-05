@@ -187,7 +187,7 @@
                                                     <%=orderedItems[i].price*orderedItems[i].cartQty%>
                                                 </td>
                                                 <td id="statusRow">
-                                                    <% switch (orderedItems[i].status) { case 'Pending' : %>
+                                                    <% switch (orderedItems[i].status) { case 'Odered' : %>
                                                         <h6 class="text-dark">
                                                             <%= orderedItems[i].status %>
                                                         </h6>
@@ -218,7 +218,7 @@
                                                         <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200"
                                                             id="orderChange"
                                                             onchange="orderStatus('<%=orderedItems[i]._id%>')">
-                                                            <option>Pending</option>
+                                                            <option>Odered</option>
                                                             <option>Shipped</option>
                                                             <option>Delivered</option>
                                                             <option>Cancelled</option>
@@ -292,8 +292,8 @@
             if (response.data === 'success') {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Coupon appied!',
-                    text: 'coupon Applied',
+                    title: 'return approved!',
+                    text: 'Approved',
                     showConfirmButton: false,
                     timer: 2000
                 });
