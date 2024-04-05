@@ -84,7 +84,7 @@ exports.orderPlace = async (req, res) => {
     if (paymentMethod === 'paypal') {
       let totalAmount = totalPrice.toFixed(2); // Format total amount for PayPal payment
       let amount = totalAmount.toString();
-
+      
       const paypalPayment = {
         "intent": "sale",
         "payer": {

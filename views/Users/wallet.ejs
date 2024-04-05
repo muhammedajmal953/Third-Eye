@@ -198,16 +198,19 @@
                                 <h5 class="card-title">Wallet History</h5>
                                 <ul class="list-group">
 
-                                  <% for(let status of wallet.history){ %>
+                                    <% for(let status of wallet.history){ %>
 
-                                    <li class="list-group-item">
-                                        <strong>Date:</strong><%=status.date.toDateString()%>
-                                        <br>
-                                        <strong>Status:</strong><%=status.status%><br>
+                                        <li class="list-group-item">
+                                            <strong>Date:</strong>
+                                            <%=status.date.toDateString()%>
+                                                <br>
+                                                <strong>Status:</strong>
+                                                <%=status.status%><br>
 
-                                        <strong>payementId:</strong><%=status.paymentId%> <br>
-                                    </li>
-                                  <% } %>
+                                                    <strong>payementId:</strong>
+                                                    <%=status.paymentId%> <br>
+                                        </li>
+                                        <% } %>
 
                                 </ul>
                             </div>
@@ -333,11 +336,18 @@
     <script>
         async function validateWallet() {
             const money = document.getElementById('amount').value
+            if (!money) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Enter a amount to recharge'
+                })
+            }
+            else {
+                const response = await axios.post(`/user/walletRecharge?amount=${money}`)
 
-            const response = await axios.post(`/user/walletRecharge?amount=${money}`)
-
-            if (response.data.redirectUrl) {
-                window.location.href = response.data.redirectUrl
+                if (response.data.redirectUrl) {
+                    window.location.href = response.data.redirectUrl
+                }
             }
         }
     </script>

@@ -70,7 +70,7 @@ exports.show_cart = async (req, res) => {
     const catagoryOffer = await CatagoryOffer.find()
     const userCart = await Cart.findOne({ userId: userId });
     if (!userCart) {
-      return res.render("./Users/cart", { products: "", userCart: "" });
+      return res.render("./Users/cart", { products: "", userCart: "",totalProducts:0, productQuantity:0 });
     }
 
     const products = userCart.products;

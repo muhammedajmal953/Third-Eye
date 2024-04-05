@@ -213,8 +213,13 @@
                     </div>
                 </div>
             </div>
-
-            <canvas id="chart" width="400" height="400"></canvas>
+            <select class="select form-select-lg lg-3 mb-3" id="chartData" onchange="changeFilter()"
+                aria-label=".form-select-lg example" >
+                <option value="weekly">weekly</option>
+                <option value="monthly">monthly</option>
+                <option value="yearly">yearly</option>
+            </select>
+            <canvas id="chart" width="300" height="300"></canvas>
         </section>
     </main>
 
@@ -237,27 +242,68 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
 
     <script>
-        var ctx = document.getElementById('chart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+         let myChart
+        function changeFilter() {
+            let filter = document.getElementById('chartData').value
+            let labels
+            let values
+
+            if (filter === 'yearly') {
+                const yearString = '<%- JSON.stringify(yearData) %>';
+                const yearData = JSON.parse(yearString)
+
+                labels = Object.keys(yearData);
+                values = Object.values(yearData)
+
+            } else if (filter === 'monthly') {
+                const monthlyString = '<%- JSON.stringify(monthlyDataLastYear) %>';
+                const monthlyDataLastYear = JSON.parse(monthlyString)
+
+                labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                values = Object.values(monthlyDataLastYear)
+            }else if(filter==='weekly'){
+                
+                const weeklyString = '<%- JSON.stringify(weeklyData) %>';
+                const weeklyData = JSON.parse(weeklyString)
+                  
+                console.log('weekly:',weeklyData);
+
+                labels=['sun','mon','tue','wed','thu','fri','sat']
+                values=weeklyData
+            }
+
+
+
+            if (myChart) {
+                myChart.destroy();
+            }
+            chartShow(labels, values)
+        }
+
+
+
+
+        function chartShow(labels, values) {
+            var ctx = document.getElementById('chart').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sales',
+                        data: values,
+                        borderWidth: 1
+                    },]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
-
-
+            });
+        }
 
     </script>
 </body>

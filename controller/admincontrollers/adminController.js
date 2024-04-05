@@ -42,30 +42,80 @@ exports.getDashboard = async (req, res) => {
   try {
     const users = await Users.find();
     const data = await Order.find({}, { totalAmount: 1, odrderedDate: 1 });
-    const labels = data.map((item) => item.odrderedDate);
+
     const amounts = data.map((item) => item.totalAmount);
     const productsCount = await Product.countDocuments();
 
-    const chartData = {
-      labels: labels,
-      datasets: [
-        {
-          label: "Total Amount",
-          data: amounts,
-        },
-      ],
-    };
+
 
     let totalOrder = 0;
+    let yearData = {}
     let orders = await Order.find();
+
+    //get year base data
     for (let order of orders) {
+      const year = order.odrderedDate.getFullYear();
+      if (!yearData[year]) {
+
+        yearData[year] = 0;
+
+      }
+
+      yearData[year] += order.totalAmount;
       totalOrder += order.items.length;
+
+
     }
+
     let revenue = amounts.reduce((acc, cur) => (acc += cur));
+
+    const monthlyDataLastYear = Array(12).fill(0);
+    const currentDate = new Date();
+    const oneYearAgo = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate());
+
+
+    const monthlyOrders = await Order.find({
+      odrderedDate: { $gte: oneYearAgo, $lte: currentDate }
+    });
+
+
+    monthlyOrders.forEach(order => {
+      const month = order.odrderedDate.getMonth()
+
+      monthlyDataLastYear[month] += order.totalAmount;
+
+    });
+
+
+    const weeklyData = Array(7).fill(0);
+
+    const oneWeekAgo = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 7);
+
+
+    const weeklyOrders = await Order.find({
+      odrderedDate: { $gte: oneWeekAgo, $lte: currentDate }
+    });
+
+
+    weeklyOrders.forEach(order => {
+      const week = order.odrderedDate.getMonth()
+
+     
+      const dayOfWeek = order.odrderedDate.getDay();
+      weeklyData[dayOfWeek] += order.totalAmount;
+      
+
+    });
+
+    console.log(weeklyData);
+
+
 
     res.render("admin/index", {
       users: users,
-      chartData: chartData,
+      yearData,
+      monthlyDataLastYear,
+      weeklyData,
       productsCount,
       totalOrder,
       revenue
@@ -81,7 +131,7 @@ exports.userList = async (req, res) => {
   try {
     const users = await Users.find();
     res.render("./admin/customers-details", { users: users });
-  } catch (error) {}
+  } catch (error) { }
 };
 
 //block user
@@ -95,7 +145,7 @@ exports.user_block = async (req, res) => {
       }
     );
     res.redirect("/admin/customers");
-  } catch {}
+  } catch { }
 };
 
 //unblock user
@@ -110,7 +160,7 @@ exports.user_unblock = async (req, res) => {
       }
     );
     res.redirect("/admin/customers");
-  } catch {}
+  } catch { }
 };
 
 // adminLogout handling
@@ -118,5 +168,5 @@ exports.admin_logout = (req, res) => {
   try {
     delete req.session.admin;
     res.redirect("/admin");
-  } catch (error) {}
+  } catch (error) { }
 };

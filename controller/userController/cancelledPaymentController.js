@@ -1,7 +1,14 @@
 const Cart = require("../../model/cartModel");
 const Order = require("../../model/orderModel");
 const Product = require("../../model/productModel");
+const paypal = require('paypal-rest-sdk');
 
+
+paypal.configure({
+    'mode': 'sandbox',
+    'client_id': 'AX5fcandM_opUkzH-7B0N8FJeY7awBX_tNau7wbqJO5fTNMPOYHqImN2cGZ9T04wj7Wq99evpGnne66r',
+    'client_secret': 'ENICeukRb1vfgmDfMVF4AUikC44J102ReBewE6mXSWdLDZTBsd8_s9mUn9Jpt3Za3WcbrnK83_ZpEPnG'
+});
 
 
 exports.cancelledPayment = async (req, res) => {
@@ -48,5 +55,72 @@ exports.cancelledPayment = async (req, res) => {
         res.redirect('/user/orders')
     } catch (error) {
         console.log(error);
+    }
+}
+
+
+exports.quickPayment = async (req, res) => {
+    const {cartPrice,cartQty,itemId}=req.body
+     let amount=cartPrice*cartQty
+    const paypalPayment = {
+        "intent": "sale",
+        "payer": {
+          "payment_method": "paypal"
+        },
+        "redirect_urls": {
+          "return_url": `http://localhost:5000/user/successQuickPayment?itemId=${itemId}`, // Your success URL
+          "cancel_url": `http://localhost:5000/user/orders`    // Your cancel URL
+        },
+        "transactions": [{
+          "amount": {
+            "total": amount,
+            "currency": "USD"
+          },
+          "description": "Your purchase description goes here."
+        }]
+      };
+
+      // Create PayPal payment
+    paypal.payment.create(paypalPayment, async function (error, payment) {
+        if (error) {
+            console.error(error);
+            return res.status(500).send("Failed to create PayPal payment.");
+        } else {
+            for (let i = 0; i < payment.links.length; i++) {
+                if (payment.links[i].rel === 'approval_url') {
+                  // Redirect to PayPal approval URL
+                  return res.json({ redirectUrl: payment.links[i].href });
+                }
+            } 
+        }
+    })
+}
+
+
+exports.successQuickPayement = async (req, res) => {
+    try {
+        const payerId = req.query.PayerID;
+        const paymentId = req.query.paymentId;
+        const itemId=req.query.itemId
+      
+        const execute_payment_json = {
+          payer_id: payerId
+        };
+
+        paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
+            if (error) {
+                console.error(error.response);
+                throw error;
+            } else {
+
+                await Order.updateOne(
+                    { 'items._id': itemId },
+                    { $set: { 'items.$.status': 'Odered' } }
+                );
+                res.render('Users/successOrder')
+            }
+        })
+    } catch (error) {
+        
     }
 }

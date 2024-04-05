@@ -244,7 +244,7 @@
                                 </form>
                                 <% } %>
                                 <% if (orderedItem.status==='Pending Payment' ) { %>
-                                    <button class="btn border-success text-success">Make payment</button>
+                                    <button class="btn border-success text-success" onclick="quickPayment('<%=orderedItem.price%>','<%=orderedItem.cartQty%>','<%=orderedItem._id%>')">Make payment</button>
                                 <% } %>
 
                         </div>
@@ -295,6 +295,21 @@
                 },
 
             })
+        }
+        async function quickPayment(cartPrice,cartQty,itemId){
+
+            const response=await axios.post('/user/quickPayment',{cartPrice,cartQty,itemId})
+
+            if(response){
+               window.location.href = response.data.redirectUrl
+            }else{
+               Swal.fire({
+                title:'somthing went wrong',
+                icon:'warning'
+               })
+            }
+            
+
         }
     </script>
 

@@ -135,7 +135,10 @@ userRoutes.post('/applyCoupon',cartController.applyCoupon)
 userRoutes.post('/removeCoupon',cartController.removeCoupon)
 
 
-userRoutes.get('/cancelledPayment',cancelledPaymentController.cancelledPayment)
+userRoutes.get('/cancelledPayment',isLoggedIn, isBlocked,cancelledPaymentController.cancelledPayment)
+userRoutes.post('/quickPayment', cancelledPaymentController.quickPayment)
+
+userRoutes.get('/successQuickPayment', cancelledPaymentController.successQuickPayement)
 
 userRoutes.post('/invoiceDownload',userOrderController.invoiceDownload)
 
