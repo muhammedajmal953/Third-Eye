@@ -23,8 +23,8 @@
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
-            <a href="" class="brand-wrap">
-                <h1 class="h1">Third Eye</h1>
+            <a href="" style="text-decoration: none;"  class="brand-wrap text-dark">
+                <h1 class="h1 ">Third Eye</h1>
             </a>
             <div>
                 <button class="btn btn-icon btn-aside-minimize"><i
@@ -109,7 +109,7 @@
             <div class="content-header">
                 <div>
                     <h2 class="content-title card-title">Dashboard</h2>
-                    <p>Whole data about your business here</p>
+                    <p>Whole data about business here</p>
                 </div>
                 <div>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#salesReportModal">
@@ -214,12 +214,67 @@
                 </div>
             </div>
             <select class="select form-select-lg lg-3 mb-3" id="chartData" onchange="changeFilter()"
-                aria-label=".form-select-lg example" >
+                aria-label=".form-select-lg example">
                 <option value="weekly">weekly</option>
                 <option value="monthly">monthly</option>
                 <option value="yearly">yearly</option>
             </select>
-            <canvas id="chart" width="300" height="300"></canvas>
+            <canvas id="chart" width="200" height="100"></canvas>
+
+
+            <div>
+                <h2 class="content-title card-title mt-5 "><b>Top Selling Products</b> </h2>
+                <p></p>
+            </div>
+
+            <div class="card-body mt-4">
+                <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
+                    <!-- col.// -->
+                    <% for(let product of products) {%>
+                        <div class="col  p-2">
+                            <div class="card card-product-grid bg-info-light">
+                                <a href="#" class="img-wrap"> <img src="/products/<%=product.images[0]%>" alt="Product" /> </a>
+                                <div class="info-wrap">
+                                    <h5 href="#" class="title text-truncate"><%=product.productName%></h5>
+                                    <div class="price mb-2">$<%=product.price%></div>
+                                    <!-- price.// -->
+                                 
+                                </div>
+                            </div>
+                            <!-- card-product  end// -->
+                        </div>
+                        <% } %>
+                            <!-- col.// -->
+                </div>
+                <!-- row.// -->
+            </div>
+
+            <div>
+                <h2 class="content-title card-title mt-5 "><b>Top Selling Catagories</b> </h2>
+                <p></p>
+            </div>
+
+            <div class="card-body mt-4">
+                <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
+                    <!-- col.// -->
+                    <% for(let catagory of catagories) {%>
+                        <div class="col  p-2">
+                            <div class="card card-product-grid bg-info-light">
+                                <a href="#" class="img-wrap"> <img src="/products/<%=catagory.image%>" alt="Product" /> </a>
+                                <div class="info-wrap">
+                                    <h5 href="#" class="title text-truncate"><%=catagory.catagoryName%></h5>
+                                    
+                                    <!-- price.// -->
+                                 
+                                </div>
+                            </div>
+                            <!-- card-product  end// -->
+                        </div>
+                        <% } %>
+                            <!-- col.// -->
+                </div>
+                <!-- row.// -->
+            </div>
         </section>
     </main>
 
@@ -242,7 +297,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
 
     <script>
-         let myChart
+        let myChart
         function changeFilter() {
             let filter = document.getElementById('chartData').value
             let labels
@@ -261,15 +316,15 @@
 
                 labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
                 values = Object.values(monthlyDataLastYear)
-            }else if(filter==='weekly'){
-                
+            } else if (filter === 'weekly') {
+
                 const weeklyString = '<%- JSON.stringify(weeklyData) %>';
                 const weeklyData = JSON.parse(weeklyString)
-                  
-                console.log('weekly:',weeklyData);
 
-                labels=['sun','mon','tue','wed','thu','fri','sat']
-                values=weeklyData
+                console.log('weekly:', weeklyData);
+
+                labels = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+                values = weeklyData
             }
 
 
@@ -284,6 +339,7 @@
 
 
         function chartShow(labels, values) {
+
             var ctx = document.getElementById('chart').getContext('2d');
             myChart = new Chart(ctx, {
                 type: 'bar',
@@ -305,7 +361,11 @@
             });
         }
 
+        changeFilter()
+
     </script>
+
+
 </body>
 
 </html>

@@ -1,4 +1,5 @@
 const sharp = require("sharp");
+const Catagory = require("../../model/catagoryModel");
 const Product = require("../../model/productModel");
 
 exports.products = async (req, res) => {
@@ -85,7 +86,7 @@ exports.products = async (req, res) => {
         const imageUrls = [];
         for (i = 0; i < req.files.length; i++) {
           const imageBuffer = await sharp(req.files[i].path)
-            .resize({ width: 400, height: 500, fit: sharp.fit.cover })
+            .resize({ width: 500, height: 500, fit: sharp.fit.cover })
             .toBuffer();
           const filename = `cropped_${req.files[i].originalname}`;
           imageUrls[i] = filename;

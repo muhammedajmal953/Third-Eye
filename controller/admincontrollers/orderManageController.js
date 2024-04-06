@@ -623,12 +623,12 @@ exports.approveReturn = async (req, res) => {
     wallet = new Wallet({
       userId: userId,
       balance: amount,
-      history: [{ status: `$${amount} Credited for Return `, date: Date.now(), paymentId: productId }]
+      transaction: [{ status: `Refund`, date: Date.now(), amount:amount }]
     });
     await wallet.save();
   } else {
 
-    await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount }, $push: { history: { status: `$${amount} Credited for Return `, date: Date.now(), paymentId: productId } } })
+    await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount }, $push: {transaction: { status: `Refund`, date: Date.now(), amount:amount } } })
   }
   await Product.findOneAndUpdate({ _id: productId }, { $inc: { quantity: cartQty } });
 

@@ -88,9 +88,14 @@ exports.wallet = async(req, res)=>{
   let userId = req.session.user
   
   const wallet = await Wallet.findOne({ userId: userId })
-  if(!wallet) res.render('Users/wallet',{wallet:{}})
+
+  if (!wallet) res.render('Users/wallet', { wallet: {} })
+  
   res.render('Users/wallet',{wallet})
 }
+
+
+
 exports.walletRecharge = async (req, res) => {
   const amount = req.query.amount
   paypal.configure({
@@ -154,15 +159,24 @@ exports.updateWallet = async (req, res) => {
         const newWallet =new Wallet({
           userId: userId,
           balance: amount,
-          history:[{status:`$${amount} Added through paypal`, PaymentId:`${paymentId}`,date:Date.now()}]
+          transaction:[{status:`Credited`,amount:`${amount}`,date:Date.now()}]
         })
         await newWallet.save()
         return res.redirect(`/user/wallet`)
       }
        console.log(paymentId);
     
-      await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount }, $push: { history: [{ status: `$${amount} Added through paypal`, paymentId: `${paymentId}`, date: Date.now() }] }  })
+      await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount }, $push: { transaction: [{ status: `Credited`, amount: amount, date: Date.now() }] }  })
         return res.redirect(`/user/wallet`) 
     }
   })
+}
+
+
+exports.walletWithDraw = async (req, res) => {
+  const money = req.query.amount
+  const userId=req.session.user
+  await Wallet.updateOne({ userId: userId }, { $inc: { balance: -money }, $push: { transaction: [{ status: 'Debited', amount: money, date: Date.now() }] } })
+  
+  res.json('success')
 }

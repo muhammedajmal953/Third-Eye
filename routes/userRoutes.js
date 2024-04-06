@@ -122,8 +122,10 @@ userRoutes.get('/wallet',isLoggedIn, isBlocked, userProfileController.wallet)
 
 //recharge wallet
 userRoutes.post('/walletRecharge', userProfileController.walletRecharge)
+userRoutes.post('/walletWithDraw', userProfileController.walletWithDraw)
 
 userRoutes.get('/updateWallet', isLoggedIn, isBlocked, userProfileController.updateWallet)
+
 
 
 userRoutes.get('/newPassword', (req, res) => {

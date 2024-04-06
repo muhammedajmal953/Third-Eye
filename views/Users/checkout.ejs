@@ -206,7 +206,7 @@
                             <div class="card-body">
                                 <h5 class="fw-bold mb-4">Order Summary</h5>
                                 <div class="hstack align-items-center justify-content-between">
-                                    <p class="mb-0">Bag Total</p>
+                                    <p class="mb-0">Bag Total(<%=totalProducts%> items)</p>
                                     <p class="mb-0" id="totalPrice">
                                         $ <%=cart.totalPrice%>
                                     </p>
@@ -218,14 +218,14 @@
                                 </div>
                                 <hr>
                                 <div class="hstack align-items-center justify-content-between">
-                                    <p class="mb-0">Delivery</p>
-                                    <p class="mb-0"></p>
+                                    <p class="mb-0">Shipping</p>
+                                    <p class="mb-0">$ <%=totalProducts*2%></p>
                                 </div>
                                 <hr>
                                 <div class="hstack align-items-center justify-content-between fw-bold text-content">
                                     <p class="mb-0">Total Amount</p>
                                     <p class="mb-0" id="discountAmount">
-                                        $ <%=cart.totalPrice%>
+                                        $ <%=cart.totalPrice+(totalProducts*2)%>
                                     </p>
                                 </div>
                                 <div class="mb-3 mt-4">
@@ -256,17 +256,17 @@
                                             aria-label="Coupon Code" aria-describedby="apply-coupon-button"
                                             id="couponCode">
                                         <button class="btn btn-outline-secondary" type="button"
-                                            onclick="applyCoupon('<%=cart.totalPrice%>')"
+                                            onclick="applyCoupon('<%=cart.totalPrice%>','<%=totalProducts*2%>')"
                                             id="applyCoupon">Apply</button>
                                         <button class="btn btn-outline-secondary" style="visibility: hidden"
-                                            type="button" onclick="removeCoupon('<%=cart.totalPrice%>')"
+                                            type="button" onclick="removeCoupon('<%=cart.totalPrice%>','<%=totalProducts*2%>')"
                                             id="removeCoupon">Remove</button>
                                     </div>
 
                                 </div>
                                 <!-- End Coupon Form Field -->
                                 <div class="d-grid mt-4">
-                                    <button type="button" onclick="proceedOrder('<%=cart._id%>','<%=cart.totalPrice%>')"
+                                    <button type="button" onclick="proceedOrder('<%=cart._id%>','<%=cart.totalPrice+(totalProducts*2)%>')"
                                         class="btn btn-dark btn-ecomm py-3 px-5">Continue</button>
                                 </div>
                             </div>
@@ -489,7 +489,7 @@
 
 
 
-        async function applyCoupon(totalPrice) {
+        async function applyCoupon(totalPrice,shipping) {
             const couponCode = document.getElementById('couponCode').value
 
 
@@ -522,14 +522,17 @@
                 showConfirmButton: false,
                 timer: 2000
             });
+            let total=response.data+Number(shipping)
             document.getElementById('applyCoupon').style.visibility = 'hidden'
             document.getElementById('removeCoupon').style.visibility = 'visible'
-            document.getElementById('discountAmount').innerText = response.data
+            document.getElementById('discountAmount').innerText = total
+
+           
 
         }
 
 
-        async function removeCoupon(totalPrice) {
+        async function removeCoupon(totalPrice,shipping) {
             try {
                 const response = await axios.post('/user/removeCoupon', { totalPrice })
 
@@ -542,9 +545,10 @@
                         showConfirmButton: false,
                         timer: 2000
                     });
+                    let total=Number(response.data)+Number(shipping)
                     document.getElementById('applyCoupon').style.visibility = 'visible'
                     document.getElementById('removeCoupon').style.visibility = 'hidden'
-                    document.getElementById('discountAmount').innerText = response.data
+                    document.getElementById('discountAmount').innerText = total
                     let coupon = document.getElementById('couponCode')
                     coupon.value = ''
                 }

@@ -22,22 +22,30 @@ exports.get_checkout = async (req, res) => {
     const user = await Users.findById(userId);
     const addresses = user.address;
     const cart = await Cart.findOne({ userId: userId });
-    const products = cart.produts;
+    const products = cart.products;
     const today = new Date()
     const coupons = await Coupon.find({ validity: { $gte: today } })
 
 
+    let totalProducts = 0
+    
+    for (let item of products) {
+      totalProducts+=item.cartQty
+    }
 
+    console.log(products);
+    
 
     res.render("./Users/checkout", {
       user,
       addresses,
+      totalProducts,
       cart,
       products,
       coupons
     });
   } catch (error) {
-
+    console.log(error);
   }
 };
 
@@ -59,9 +67,9 @@ exports.orderPlace = async (req, res) => {
     let items = products;
     console.log(paymentMethod);
 
-    console.log(items);
+    let totalproducts=items.reduce((acc,cur)=>acc+=cur.cartQty,0)
 
-
+   
     if (req.session.couponRate && req.query.coupon) {
       let couponRate = req.session.couponRate
 
@@ -73,13 +81,14 @@ exports.orderPlace = async (req, res) => {
         item.price = Math.floor(item.price - (item.price * couponRate / 100))
       });
 
-
+       
 
       delete req.session.couponRate
     }
 
-
-
+   
+    let shipping=totalproducts*2
+    totalPrice+=shipping
 
     if (paymentMethod === 'paypal') {
       let totalAmount = totalPrice.toFixed(2); // Format total amount for PayPal payment
@@ -246,7 +255,7 @@ exports.cancelOrder = async (req, res) => {
 
     await Order.updateOne(
       { userId: userId, 'items._id': itemsId },
-      { $set: { 'items.$.status': 'Cancelled' } } // Update the status of the specific item
+      { $set: { 'items.$.status': 'Cancelled' } }// Update the status of the specific item
     );
     const product = await Product.updateOne({ _id: productId }, { $inc: { quantity: cartQty } })
     res.status(200).json({ message: 'Order successfully cancelled.' });

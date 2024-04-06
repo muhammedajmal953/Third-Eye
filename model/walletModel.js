@@ -8,10 +8,10 @@ const walletShema = new mongoose.Schema({
         type: Number,
         default:0
     },
-    history: [
+    transaction: [
         {
             status: String,
-            paymentId:String,
+            amount:Number,
             date:Date
         }
     ]

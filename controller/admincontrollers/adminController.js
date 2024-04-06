@@ -1,7 +1,9 @@
 const Product = require("../../model/productModel");
 const Admin = require("../../model/adminModel");
+const Catagory = require("../../model/catagoryModel");
 const Order = require("../../model/orderModel");
 const Users = require("../../model/userModel");
+
 
 // Render login page
 exports.get_login = (req, res) => {
@@ -100,20 +102,50 @@ exports.getDashboard = async (req, res) => {
     weeklyOrders.forEach(order => {
       const week = order.odrderedDate.getMonth()
 
-     
+
       const dayOfWeek = order.odrderedDate.getDay();
       weeklyData[dayOfWeek] += order.totalAmount;
-      
+
 
     });
 
-    console.log(weeklyData);
 
+   //top seeling products
+    const bestSellingProducts = await Order.aggregate([
+      { $unwind: '$items' },
+      { $group: { _id: '$items.productName', totalSold: { $sum: 1 } } },
+      { $sort: { totalSold: -1 } },
+      { $limit: 5 }
+    ])
+    
+    let products=[]
+
+    const productPromises = bestSellingProducts.map(async (item) => {
+      let prdct = await Product.findOne({ productName: item._id });
+      return prdct;
+    });
+    
+    products=await Promise.all(productPromises)
+   
+
+
+    let catagories = []
+    
+    const catagoryPromises = products.map(async (item) => {
+      let prdct = await Catagory.findOne({ catagoryName: item.catagory });
+      return prdct;
+    });
+    
+    catagories=await Promise.all(catagoryPromises)
+    console.log(catagories);
+    
 
 
     res.render("admin/index", {
       users: users,
       yearData,
+      products,
+      catagories,
       monthlyDataLastYear,
       weeklyData,
       productsCount,
