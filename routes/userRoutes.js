@@ -78,6 +78,7 @@ userRoutes.post("/changePassword", userProfileController.change_password)
 userRoutes.get('/adresses', isLoggedIn, isBlocked, addressController.show_adress)
 //add address
 userRoutes.post('/addAdress', addressController.addAddress)
+userRoutes.post('/addAdressCheckOut', addressController.addAddressCheckOut)
 //edit address page render
 userRoutes.get('/editAddress', addressController.get_editAddress)
 

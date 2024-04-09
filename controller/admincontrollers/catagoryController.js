@@ -62,7 +62,7 @@ exports.edit_catagory = async (req, res) => {
         catagoryName: req.body.catagoryName,
       });
   
-      const existingId = new ObjectId(req.params.id);
+    
       const catag = await Catagory.findOne({ _id: req.params.id });
       if (existingCatagory && existingCatagory._id != req.params.id) {
         return res.render("./admin/editCatagory", {

@@ -2,7 +2,8 @@ const Cart = require("../../model/cartModel");
 const Product = require("../../model/productModel");
 const CatagoryOffer = require("../../model/offerModel");
 const ProductOffer = require("../../model/productOfferModel")
-const Coupon = require("../../model/couponModel")
+const Coupon = require("../../model/couponModel");
+const { response } = require("express");
 
 
 //handling add to cart
@@ -16,7 +17,9 @@ exports.addToCart = async (req, res) => {
     let imageUrl = product.images[0];
     let cart = await Cart.findOne({ userId });
     let cartQty = 1;
-
+    if (quantity <= 0) {
+      return res.json('product is out of stock')
+    }
     if (cart) {
       let cartTotal = cart.totalPrice;
       let itemIndex = cart.products.findIndex((p) => p.productId == productId);
@@ -37,7 +40,7 @@ exports.addToCart = async (req, res) => {
         cart.totalPrice = cartTotal + price;
         cart = await cart.save();
       }
-      res.redirect("/user/cart");
+      return res.json('success')
     } else {
       const newCart = new Cart({
         userId,
@@ -55,7 +58,7 @@ exports.addToCart = async (req, res) => {
         totalPrice: price,
       });
       newCart.save();
-      res.redirect("/user/cart");
+      return res.json('success')
     }
   } catch (error) {
     console.log(error);
@@ -79,7 +82,7 @@ exports.show_cart = async (req, res) => {
 
     for (i = 0; i < products.length; i++) {
       const prdct = await Product.findOne({ _id: products[i].productId })
-
+      products[i].price = prdct.price
       productQuantity[i] = prdct.quantity
       totalProducts+=products[i].cartQty
     }
@@ -117,7 +120,7 @@ exports.removeCart = async (req, res) => {
       { $pull: { products: { _id: productId } }, $inc: { totalPrice: -price } }
     );
 
-    // Find the cart and update the total price
+   
 
     // Send a success response back to the client
     res.status(200).json("Product removed from cart successfully.");
@@ -130,26 +133,55 @@ exports.removeCart = async (req, res) => {
 
 exports.totalIncrement = async (req, res) => {
   try {
+    const productOffer = await ProductOffer.find()
+    const catagoryOffer = await CatagoryOffer.find()
+   
     let price = parseInt(req.query.price);
     let indexId = req.query.indexId;
 
+    let totalDiscount=0
+    
     const carUpdate = await Cart.updateOne(
       { "products._id": indexId },
       { $inc: { totalPrice: price, "products.$.cartQty": 1 } }
     );
     const cart = await Cart.findOne({ "products._id": indexId });
     let totalPrice = cart.totalPrice;
+    
 
+   
     const products = cart.products
+
+  
+    for (let product of products) {
+      for (item of productOffer) {
+        if (product.productName === item.productName) {
+          product.pOffer = item.offer
+        }
+      }
+      for (item of catagoryOffer) {
+        if (product.catagory === item.catagoryName) {
+          product.cOffer = item.offer
+        }
+      }
+    }
+     
+    for (let item of products) {
+      let offerOfitem = item.pOffer > item.cOffer ? item.pOffer : item.cOffer||0;
+      let discountPrice=item.price-Math.floor(item.price-(item.price*offerOfitem/100))
+      totalDiscount += discountPrice * item.cartQty;
+    }
+
     
     let totalProducts=products.reduce((acc,cur)=>acc+=cur.cartQty,0)
     let data = {
       totalPrice,
-      totalProducts
+      totalProducts,
+      totalDiscount
     }
     res.status(200).json(data);
   } catch (error) {
-    console.error("Error incrementing product quantity in cart:", error);
+    console.log("Error incrementing product quantity in cart:", error);
     res.status(500).send("Internal server error.");
   }
 };
@@ -160,7 +192,9 @@ exports.totalIncrement = async (req, res) => {
 
 exports.totalDecrement = async (req, res) => {
   try {
-    console.log("accessed decrement");
+    const productOffer = await ProductOffer.find()
+    const catagoryOffer = await CatagoryOffer.find()
+
     let price = parseInt(req.query.price);
     let indexId = req.query.indexId;
 
@@ -170,13 +204,34 @@ exports.totalDecrement = async (req, res) => {
     );
     const cart = await Cart.findOne({ "products._id": indexId });
     let totalPrice = cart.totalPrice;
-
+    let totalDiscount=0
     const products = cart.products
     
+    for (let product of products) {
+      for (item of productOffer) {
+        if (product.productName === item.productName) {
+          product.pOffer = item.offer
+        }
+      }
+      for (item of catagoryOffer) {
+        if (product.catagory === item.catagoryName) {
+          product.cOffer = item.offer
+        }
+      }
+    }
+
+    for (let item of products) {
+      let offerOfitem = item.pOffer > item.cOffer ? item.pOffer : item.cOffer||0;
+      let discountPrice=item.price-Math.floor(item.price-(item.price*offerOfitem/100))
+      totalDiscount += discountPrice * item.cartQty;
+    }
+
+
     let totalProducts=products.reduce((acc,cur)=>acc+=cur.cartQty,0)
     let data = {
       totalPrice,
-      totalProducts
+      totalProducts,
+      totalDiscount
     }
     res.status(200).json(data);
   } catch (error) {
@@ -191,7 +246,7 @@ exports.totalDecrement = async (req, res) => {
 
 
 exports.applyCoupon = async (req, res) => {
-  let { totalPrice, couponCode } = req.body
+  let { totalPrice, couponCode,totalDiscount } = req.body
 
   const coupon = await Coupon.findOne({ code: couponCode })
 
@@ -200,16 +255,15 @@ exports.applyCoupon = async (req, res) => {
   }
 
 
-
-  let price = Number(totalPrice)
+  
+  let price = Number(totalPrice)-Number(totalDiscount)
   let couponOffer = parseFloat(coupon.offer)
 
-  console.log(couponOffer);
 
   let discountPrice = 0
   discountPrice = Math.floor(price - (price * couponOffer / 100))
 
-  console.log(discountPrice);
+ 
   req.session.couponRate = couponOffer
 
  
@@ -219,9 +273,9 @@ exports.applyCoupon = async (req, res) => {
 
 
 exports.removeCoupon = async (req, res) => {
-  const totalPrice = req.body.totalPrice
+  const { totalPrice ,totalDiscount} = req.body.totalPrice
   
   delete req.session.couponRate
 
-  res.json(totalPrice)
+  res.json(totalPrice-totalDiscount)
 }

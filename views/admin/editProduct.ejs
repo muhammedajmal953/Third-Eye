@@ -15,7 +15,26 @@
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/favicon.svg" />
     <!-- Template CSS -->
     <link href="/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+
 </head>
+<style>
+    .image-item {
+        position: relative;
+        display: inline-block;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        padding: 5px;
+        cursor: pointer;
+    }
+</style>
 
 <body>
     <aside class="navbar-aside" id="offcanvas_aside">
@@ -34,8 +53,8 @@
             <div class="card mx-auto card-login">
                 <div class="card-body">
                     <h4 class="card-title mb-4">Add Products</h4>
-                    <form method="post" onchange="return validateProd()" action="/admin/edit-product/<%=product._id%>"
-                        enctype="multipart/form-data" accept="image">
+                    <form onsubmit="validateProd('<%=product._id%>',event)" enctype="multipart/form-data"
+                        id="editProductForm" accept="image">
                         <div class="mb-3">
                             <input class="form-control" value="<%=product.productName%>" type="text" id="productName"
                                 name="productName">
@@ -68,16 +87,17 @@
                                         <%}%>
                         </select>
                         <div class="mb-3" id="imageContainer">
-                            <%for(i=0;i<product.images.length;i++){%>
-
-                                <img id="showImgEdit" src="/products/<%=product.images[i]%>" width="100px"
-                                    height="120px" id="imageView">
-
-                                <%}%>
-
-                                    <input class="form-control" onchange="viewImage()" type="file" name="images"
-                                     id="images"   multiple>
+                            <% for(let i=0; i<product.images.length; i++) { %>
+                                <div class="image-item" id="existingImage<%=i%>">
+                                    <img src="/products/<%=product.images[i]%>" width="100px" 
+                                        height="120px">
+                                    <button type="button" class="close-btn"
+                                        onclick="deleteImage('<%=i%>')">&times;</button>
+                                </div>
+                                <% } %>
                         </div>
+                        <input class="form-control" onchange="viewImages(event)" type="file" name="images" id="images"
+                            multiple>
 
                         <div class="mb-4">
                             <button type="submit" class="btn btn-primary w-100">Edit Product</button>
@@ -94,16 +114,38 @@
     <script src="/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/js/vendors/jquery.fullscreen.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- Main Script -->
     <script src="/js/main.js?v=1.1" type="text/javascript"></script>
     <script>
-        function validateProd() {
+
+
+        //product edit submit
+
+
+
+
+
+
+
+        //validation
+        let selectedFiles = [];
+        let deletedImages = []
+        function deleteImage(index) {
+            const image = document.getElementById('existingImage' + index);
+            if (image) {
+                image.style.display = 'none';
+            }
+            deletedImages.push(index)
+        }
+
+        async function validateProd(productId, event) {
+            event.preventDefault();
             const trimmedName = document.getElementById('productName').value.trim();
             const trimmedDescription = document.getElementById('discription').value.trim();
             const price = parseFloat(document.getElementById('price').value);
             const quantity = parseInt(document.getElementById('quantity').value);
-            const fileInput = document.getElementById('images').files 
-
+            const fileInput = document.getElementById('images').files
             if (trimmedName.length === 0 || trimmedDescription.length === 0 || price < 0 || quantity < 0) {
                 Swal.fire({
                     icon: "error",
@@ -111,37 +153,90 @@
                     text: 'The fields should not be empty and should not contain negative values.',
 
                 });
-                return false;
+                return
             }
-            for (i = 0; i < fileInput.length; i++) {
-                let fileType =fileInput[i].type
+            for (let i = 0; i < fileInput.length; i++) {
+                let fileType = fileInput[i].type
                 if (!fileType.startsWith('image/')) {
 
                     Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: 'Select Only Image files',
+                        icon: "error",
+                        title: "Oops...",
+                        text: 'Select Only Image files',
 
-                });
-                return false;
+                    });
+                    return
                 }
             }
-            return true;
-        }
-        function viewImages() {
-            let inputFiles = event.target.files
-            let imageContainer = document.getElementById('imageContainer')
 
-            for (i = 0; i < inputFiles.length; i++) {
-                const img = document.createElement('img')
-                img.className = "ImagePreview"
-                img.style.height = '100px'
-                img.style.width = '100px'
-                img.src = URL.createObjectURL(inputFiles[i])
-                imageContainer.appendChild(img)
+            const form = document.getElementById('editProductForm');
+            const formData = new FormData(form);
+
+            formData.append('deletedImages',deletedImages)
+
+
+            const response = await axios.post(`/admin/edit-product/${productId}`, formData)
+
+         
+
+            if (response.data === 'reduce images') {
+                Swal.fire({
+                    icon: "error",
+                    title: "Reduce images to 5",
+                });
+            }
+
+            if (response.data === 'success') {
+                Swal.fire({
+                    icon: "success",
+                    title: "Product Edited",
+                });
+                setTimeout(() => {
+                    window.location.href = '/admin/products'
+                }, 1000);
+
             }
         }
+
+
+
+
+
+        function viewImages(event) {
+            let inputFiles = event.target.files;
+            let imageContainer = document.getElementById('imageContainer');
+
+            for (let i = 0; i < inputFiles.length; i++) {
+                const imageItem = document.createElement('div');
+                imageItem.classList.add('image-item');
+
+                const img = document.createElement('img');
+                img.className = "ImagePreview";
+                img.style.height = '100px';
+                img.style.width = '100px';
+                img.src = URL.createObjectURL(inputFiles[i]);
+                imageItem.appendChild(img);
+
+                const closeButton = document.createElement('button');
+                closeButton.type = 'button';
+                closeButton.classList.add('close-btn');
+                closeButton.innerHTML = '&times;';
+                closeButton.onclick = function () {
+                    imageItem.remove();
+                    imageItem.dataset.deleted = 'true'; // Mark the image as deleted
+                    imageItem.remove();
+                    selectedFiles = selectedFiles.filter(file => file !== inputFiles[i]);
+                };
+                imageItem.appendChild(closeButton);
+
+                imageContainer.appendChild(imageItem);
+                
+                selectedFiles.push(inputFiles[i]);
+            }
+        }
+
     </script>
+
 </body>
 
 </html>

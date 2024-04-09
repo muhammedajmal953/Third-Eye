@@ -13,6 +13,7 @@
     <meta property="og:image" content="" />
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/favicon.svg" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css" rel="stylesheet">
     <!-- Template CSS -->
     <link href="/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
 </head>
@@ -96,8 +97,8 @@
                         </select>
                         <div class="mb-3">
                             <div id="imageContainer"></div>
-                            <input class="form-control" onchange="viewImages()" placeholder="Select image" type="file"
-                                name="images" id="images" multiple required>
+                            <input class="form-control" onchange="viewImages(),handleImageSelect(event)"
+                                placeholder="Select image" type="file" name="images" id="images" multiple required>
                         </div>
 
                         <div class="mb-4">
@@ -115,6 +116,9 @@
     <script src="/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/js/vendors/jquery.fullscreen.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+    
+
     <!-- Main Script -->
     <script src="/js/main.js?v=1.1" type="text/javascript"></script>
     <script>
@@ -140,7 +144,7 @@
                 deleteButton.addEventListener('click', function () {
                     img.remove();
                     deleteButton.remove();
-                   
+
                     selectedFiles = selectedFiles.filter(file => file !== inputFiles[i]);
                 });
 
@@ -192,8 +196,37 @@
                     return false;
                 }
             }
-            
+
             return true
+        }
+        function handleImageSelect(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const image = new Image();
+                    image.src = e.target.result;
+                    image.onload = function () {
+                        const cropper = new Cropper(image, {
+                            aspectRatio: 16 / 9, // Set your desired aspect ratio here
+                            viewMode: 1, // Set the view mode (0, 1, 2, 3)
+                            guides: true,
+                            cropBoxResizable: false,
+                            crop: function (event) {
+                                // Do something with the cropped image data
+                                console.log(event.detail.x);
+                                console.log(event.detail.y);
+                                console.log(event.detail.width);
+                                console.log(event.detail.height);
+                                console.log(event.detail.rotate);
+                                console.log(event.detail.scaleX);
+                                console.log(event.detail.scaleY);
+                            }
+                        });
+                    };
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
         }
     </script>
 </body>

@@ -153,17 +153,17 @@
 
 
     <!--start product details-->
-    <section class="section-padding">
+    <section class="section-padding ">
       <div class="container">
         <div class="d-flex align-items-center px-3 py-2 border mb-4">
           <div class="text-start">
             <h4 class="mb-0 h4 fw-bold">Third Eye Cart</h4>
           </div>
         </div>
-        <div class="row g-4">
+        <div class="row g-4 d-flex">
           <div class="col-12 col-lg-8 col-xl-8">
             <h6 class="fw-bold mb-3 py-2 px-3 bg-light">Products</h6>
-            <% let sumOfDiscount=0,diffrence=0 %>
+            <% let sumOfDiscount=0,diffrence=0 ,totalPrice=0%>
               <% for (let i=0; i < products.length; i++) { %>
                 <div class="card rounded-0 mb-3">
                   <div class="card-body">
@@ -179,22 +179,33 @@
                             <%let offerToApply=(products[i].pOffer && products[i].pOffer> products[i].cOffer) ?
                               products[i].pOffer : products[i].cOffer;
                               %>
-                              <% if (offerToApply) { %>
-                                <div class="h6 fw-bold" id="offer">
-                                  $<%=Math.floor(products[i].price-(products[i].price*offerToApply /100))%>
-                                </div>
-                                <%diffrence=products[i].price-Math.floor(products[i].price-(products[i].price*offerToApply
-                                  /100))%>
-                                  <% sumOfDiscount+=diffrence %>
-                                    <div class="h6 fw-light text-muted text-decoration-line-through" id="originalPrice">
-                                      $
-                                      <%=products[i].price%>
-                                    </div>
-                                    <div class="h6 fw-bold text-danger">(<%=offerToApply%>% off)</div>
-                                    <% }else{ %>
-                                      <div class="h6 fw-bold">$ <%=products[i].price%>
-                                      </div>
-                                      <%}%>
+                              <% let discountedPrice=products[i].price; %>
+                                <% if (offerToApply) { %>
+                                  <% discountedPrice=Math.floor(products[i].price - (products[i].price * offerToApply /
+                                    100)); %>
+                                    <% diffrence=products[i].price - discountedPrice; %>
+                                      <% sumOfDiscount +=diffrence*products[i].cartQty; %>
+                                        <% } %>
+                                          <% totalPrice +=discountedPrice * products[i].cartQty; %>
+                                            <% if (offerToApply) { %>
+                                              <div class="h6 fw-bold" id="offer">
+                                                $<%=Math.floor(products[i].price-(products[i].price*offerToApply
+                                                  /100))%>
+                                              </div>
+
+
+
+                                              <div class="h6 fw-light text-muted text-decoration-line-through"
+                                                id="originalPrice">
+                                                $
+                                                <%=products[i].price%>
+                                              </div>
+                                              <div class="h6 fw-bold text-danger">(<%=offerToApply%>% off)</div>
+                                              <% }else{ %>
+                                                <div class="h6 fw-bold">$ <%=products[i].price%>
+                                                </div>
+                                                <%}%>
+
                           </div>
                           <div class="input-group">
                             <div class="input-group-prepend">
@@ -221,6 +232,8 @@
                   </div>
                 </div>
                 <% } %>
+
+
           </div>
           <div class="card rounded-0">
             <div class="card-body">
@@ -235,14 +248,15 @@
                 <h5 class="fw-bold mb-4">Order Summary</h5>
                 <div class="hstack align-items-center justify-content-between">
                   <p class="mb-0">Bag Total</p>
+                  <span></span>
                   <p class="mb-0" id="bagTotal">
-                    $ <%=userCart.totalPrice%>
+                    $ <%= totalPrice %>
                   </p>
                 </div>
                 <hr>
                 <div class="hstack align-items-center justify-content-between">
                   <p class="mb-0">Bag discount</p>
-                  <p class="mb-0 text-success" id="totalDiscount">
+                  <p class="mb-0 text-success" id="totalDiscount">$<%=sumOfDiscount%>
                   </p>
                 </div>
                 <hr>
@@ -256,7 +270,7 @@
                 <div class="hstack align-items-center justify-content-between fw-bold text-content">
                   <p class="mb-0">Total Amount</p>
                   <p class="mb-0" id="total">
-                    $ <%=userCart.totalPrice+(totalProducts*2)%>
+                    $ <%= totalPrice + (totalProducts * 2) %>%>
                   </p>
                 </div>
                 <div class="d-grid mt-4">
@@ -268,6 +282,7 @@
 
           </div>
         </div>
+
       </div><!--end row-->
     </section>
   </div>
@@ -396,17 +411,15 @@
   async function incrimentTotal(indexId, price, max, i) {
 
     try {
-
-
       if ((Number(document.querySelectorAll('.quantity-input')[i].value) + 1) <= max) {
         const response = await axios.post(`/user/totalIncrement?indexId=${indexId}&price=${price}`)
 
         let data = response.data
-
-        let upadateTotal = document.getElementById('bagTotal').innerHTML = data.totalPrice
+        let upadateTotal = document.getElementById('bagTotal').innerHTML = data.totalPrice-data.totalDiscount
         let upgradeShipping = document.getElementById('shipping').innerHTML = data.totalProducts * 2
-        let updateCartTotal = document.getElementById('total').innerHTML = (data.totalProducts * 2) + (data.totalPrice)
-      }else{
+        let upgradeDiscount = document.getElementById('totalDiscount').innerHTML = data.totalDiscount
+        let updateCartTotal = document.getElementById('total').innerHTML = (data.totalProducts * 2) + (data.totalPrice)-data.totalDiscount
+      } else {
         Swal.fire({
           icon: 'warning',
           title: 'Reached Maximum Quantity'
@@ -425,11 +438,12 @@
       if ((Number(document.querySelectorAll('.quantity-input')[i].value) - 1) > 0) {
         const response = await axios.post(`/user/totalDecrement?indexId=${indexId}&price=${price}`);
         let data = response.data
-
-        let upadateTotal = document.getElementById('bagTotal').innerHTML = data.totalPrice
+     
+        let upadateTotal = document.getElementById('bagTotal').innerHTML = data.totalPrice-data.totalDiscount
         let upgradeShipping = document.getElementById('shipping').innerHTML = data.totalProducts * 2
-        let updateCartTotal = document.getElementById('total').innerHTML = (data.totalProducts * 2) + (data.totalPrice)
-      }else {
+        let upgradeDiscount = document.getElementById('totalDiscount').innerHTML = data.totalDiscount
+        let updateCartTotal = document.getElementById('total').innerHTML = (data.totalProducts * 2) + (data.totalPrice)-data.totalDiscount
+      } else {
         Swal.fire({
           icon: 'warning',
           title: 'Quantity Must be one'

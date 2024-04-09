@@ -180,11 +180,11 @@
                             product.pOffer : product.cOffer;%>
                             <% if (offerToApply) { %>
                                 <div class="h6 fw-bold">
-                                    $<%=Math.floor(product.price-(product.price*product.pOffer /100))%></div>
+                                    $<%=Math.floor(product.price-(product.price*offerToApply /100))%></div>
                                 <div class="h6 fw-light text-muted text-decoration-line-through">$
                                     <%=product.price%>
                                 </div>
-                                <div class="h6 fw-bold text-danger">(<%=product.pOffer%>% off)</div>
+                                <div class="h6 fw-bold text-danger">(<%=offerToApply%>% off)</div>
                                 <% } else{%>
                                     <div class="h6 fw-bold">$<%=Math.floor(product.price)%>
                                     </div>
@@ -194,11 +194,11 @@
                     <p class="fw-bold mb-0 mt-1 text-success">inclusive of all taxes</p>
                     <div class="cart-buttons mt-3">
                         <div class="buttons d-flex flex-column gap-3 mt-4">
-                            <form action="/user/addToCart?productId=<%=product._id%>" method="post">
+                          
 
-                                <button type="submit" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 flex-grow-1"><i
+                                <button onclick="addToCart('<%=product._id%>')" class="btn btn-lg btn-dark btn-ecomm px-5 py-3 flex-grow-1"><i
                                         class="bi bi-basket2 me-2"></i>Add to Bag</button>
-                            </form>
+                            
                             <button onclick="addToWishlist('<%=product._id%>')"
                                 class="btn btn-lg btn-outline-dark btn-ecomm px-5 py-3"><i
                                     class="bi bi-suit-heart me-2"></i>Wishlist</button>
@@ -366,6 +366,28 @@
         function showImage(img) {
             let mainImage = document.getElementById('mainImage')
             mainImage.src = `/products/${img}`
+        }
+
+        async function addToCart(productId) {
+            let response=await axios.post(`/user/addToCart?productId=${productId}`)
+
+            if(response.data==='success'){
+                Swal.fire({
+                    title: "Product added to cart",
+                  
+                    icon: "success"
+                });
+              setTimeout(()=>{
+                window.location.href='/user/cart'
+              },1000)
+            }else  if(response.data==='product is out of stock'){
+
+                Swal.fire({
+                    title: "Product out of stock",
+                    icon: "warning"
+                });
+
+            }
         }
     </script>
 

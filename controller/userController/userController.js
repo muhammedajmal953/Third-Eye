@@ -89,7 +89,7 @@ exports.user_login = async (req, res) => {
 
         if (result && userData.isBlocked === false) {
           req.session.user = userData._id;
-          res.redirect("/user/home");
+          res.redirect("/user/home?message=success");
         } else {
 
           // Redirect to login page with an alert for invalid credentials
@@ -301,9 +301,11 @@ exports.get_home = async (req, res) => {
   try {
     // Retrieving categories and products from the database
     const catagory = await Catagory.find();
-    const products = await Product.find({ isListed: true }).limit(4)
+    const products = await Product.find({ isListed: true,quantity:{$gt:0} }).limit(4)
     const productOffer = await ProductOffer.find()
     const catagoryOffer = await CatagoryOffer.find()
+
+    const message=req.query.message
 
     for (let product of products) {
       for (item of productOffer) {
@@ -319,7 +321,7 @@ exports.get_home = async (req, res) => {
     }
     
 
-    res.render("./Users/home", { catagory: catagory, product: products });
+    res.render("./Users/home", { catagory: catagory, product: products ,message});
   } catch (error) {
     console.log(error);
   }

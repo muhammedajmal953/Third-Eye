@@ -33,6 +33,29 @@ exports.addAddress = async (req, res) => {
     res.redirect("/user/adresses");
   } catch (error) { }
 };
+exports.addAddressCheckOut = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const { houseName, pincode, village, city, state } = req.body;
+
+    const address = {
+      pincode,
+      houseName,
+      village,
+      city,
+      state,
+    };
+
+    const user = await Users.findByIdAndUpdate(
+      { _id: id },
+      { $addToSet: { address: address } }
+    );
+
+    res.redirect("/user/checkout");
+  } catch (error) { 
+
+  }
+};
 
 exports.get_editAddress = async (req, res) => {
   try {

@@ -7,6 +7,8 @@ const paypal = require('paypal-rest-sdk');
 const Wallet = require("../../model/walletModel");
 const Coupon = require("../../model/couponModel")
 const PDFDocument = require('pdfkit-table');
+const CatagoryOffer = require("../../model/offerModel");
+const ProductOffer = require("../../model/productOfferModel")
 
 paypal.configure({
   'mode': 'sandbox',
@@ -25,16 +27,42 @@ exports.get_checkout = async (req, res) => {
     const products = cart.products;
     const today = new Date()
     const coupons = await Coupon.find({ validity: { $gte: today } })
-
+    const productOffer = await ProductOffer.find()
+    const catagoryOffer = await CatagoryOffer.find()
 
     let totalProducts = 0
-    
-    for (let item of products) {
-      totalProducts+=item.cartQty
+    let totalDiscount = 0
+
+
+    for (i = 0; i < products.length; i++) {
+      const prdct = await Product.findOne({ _id: products[i].productId })
+      products[i].price = prdct.price
+      totalProducts += products[i].cartQty
     }
 
-    console.log(products);
+
     
+   
+    for (let product of products) {
+      for (item of productOffer) {
+        if (product.productName === item.productName) {
+          product.pOffer = item.offer
+        }
+      }
+      for (item of catagoryOffer) {
+        if (product.catagory === item.catagoryName) {
+          product.cOffer = item.offer
+        }
+      }
+    }
+     let offerOfitem=0
+    for (let item of products) {
+      offerOfitem = item.pOffer > item.cOffer ? item.pOffer : item.cOffer||0;
+      let discountPrice = item.price - Math.floor(item.price - (item.price * offerOfitem / 100))
+      totalDiscount += discountPrice * item.cartQty;
+    }
+
+
 
     res.render("./Users/checkout", {
       user,
@@ -42,6 +70,7 @@ exports.get_checkout = async (req, res) => {
       totalProducts,
       cart,
       products,
+      totalDiscount,
       coupons
     });
   } catch (error) {
@@ -56,44 +85,55 @@ exports.get_checkout = async (req, res) => {
 exports.orderPlace = async (req, res) => {
   try {
     // Retrieve data from the request
-    let { cart, address, paymentMethod } = req.query;
+    let { cart, address, paymentMethod,total,totalDiscount } = req.body;
 
     let userId = req.session.user;
     // Fetch user and cart details from the database
     let user = await Users.findById(userId);
     let userCart = await Cart.findById(cart);
     let { username, email } = user;
-    let { totalPrice, products } = userCart;
-    let items = products;
-    console.log(paymentMethod);
-
-    let totalproducts=items.reduce((acc,cur)=>acc+=cur.cartQty,0)
-
+    let { products } = userCart;
    
+    
+    for (let product of products) {
+      let original = await Product.findOne({ _id: product.productId })
+      let quantity=original.quantity
+      if (quantity <= 0) {
+       return  res.json(`the product is out of stock`)
+      }
+    }
+
+
+
+    let totalPrice=Number(total)-Number(totalDiscount)
+
+    let totalproducts = products.reduce((acc, cur) => acc += cur.cartQty, 0)
+
+
     if (req.session.couponRate && req.query.coupon) {
       let couponRate = req.session.couponRate
-
+    
 
       totalPrice = Math.floor(totalPrice - (totalPrice * couponRate / 100))
 
 
-      items.forEach(item => {
+     products.forEach(item => {
         item.price = Math.floor(item.price - (item.price * couponRate / 100))
       });
 
-       
+
 
       delete req.session.couponRate
     }
 
-   
-    let shipping=totalproducts*2
-    totalPrice+=shipping
 
+    let shipping = totalproducts * 2
+    totalPrice += shipping
+    
     if (paymentMethod === 'paypal') {
-      let totalAmount = totalPrice.toFixed(2); // Format total amount for PayPal payment
+      let totalAmount = totalPrice // Format total amount for PayPal payment
       let amount = totalAmount.toString();
-      
+
       const paypalPayment = {
         "intent": "sale",
         "payer": {
@@ -124,8 +164,9 @@ exports.orderPlace = async (req, res) => {
             username,
             email,
             shippingAddress: address,
-            items,
+            items:products,
             totalAmount: totalPrice,
+            totalDiscount,
             paymentMethod,
             cart: cart,
             paymentId: payment.id
@@ -146,17 +187,18 @@ exports.orderPlace = async (req, res) => {
         email,
         userId,
         shippingAddress: address,
-        items,
+        items: products,
+        totalDiscount,
         totalAmount: totalPrice,
         paymentMethod
       });
 
       await order.save();
       await Cart.deleteOne({ _id: cart });
-      for (let i = 0; i < items.length; i++) {
+      for (let i = 0; i <products.length; i++) {
         await Product.updateOne(
-          { _id: items[i].productId },
-          { $inc: { quantity: -items[i].cartQty } }
+          { _id: products[i].productId },
+          { $inc: { quantity: -products[i].cartQty } }
         );
       }
       return res.json("your order throug Cash on delivery");
@@ -167,6 +209,7 @@ exports.orderPlace = async (req, res) => {
   }
 };
 exports.successOrder = async (req, res) => {
+ try {
   let orderData = req.session.orderData
   let cart = req.query.cart
   // Fetch user and cart details from the database
@@ -193,6 +236,7 @@ exports.successOrder = async (req, res) => {
         items: orderData.items,
         totalAmount: orderData.totalAmount,
         paymentMethod: orderData.paymentMethod,
+        totalDiscount:orderData.totalDiscount,
         paymentId: paymentId
 
       })
@@ -211,6 +255,10 @@ exports.successOrder = async (req, res) => {
     }
   })
 
+ } catch (error) {
+   console.log(error);
+   res.render('Users/404error')
+ }
 
 }
 
@@ -267,7 +315,7 @@ exports.cancelOrder = async (req, res) => {
 
 exports.returnOrder = async (req, res) => {
   try {
-    const userId = req.session.user;
+    const userId = req.session.user; 
     const { productId, cartQty, itemId } = req.query;
 
 
@@ -318,7 +366,7 @@ exports.orderDetails = async (req, res) => {
 
 exports.invoiceDownload = async (req, res) => {
   try {
-    const { productId, cartQty, itemId, cartPrice} = req.query
+    const { productId, cartQty, itemId, cartPrice } = req.query
 
     const doc = new PDFDocument();
 
@@ -338,17 +386,17 @@ exports.invoiceDownload = async (req, res) => {
     const product = await Product.findOne({ _id: productId })
 
     const order = await Order.findOne({ 'items._id': itemId })
-  
+
     const user = await Users.findOne({ _id: req.session.user })
 
-   
+
 
     const { productName, price } = product
-  
+
     const orderedDate = order.odrderedDate
 
     const { username, phone } = user
-    let discount = (price -cartPrice) * cartQty
+    let discount = (price - cartPrice) * cartQty
 
     let InvoiceDetails = [
       username,
@@ -374,9 +422,9 @@ exports.invoiceDownload = async (req, res) => {
     doc.table(tableOptions);
 
     doc.end();
-   
+
   } catch (error) {
-    console.log('Error while download',error);
+    console.log('Error while download', error);
   }
 
 }

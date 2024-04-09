@@ -17,10 +17,12 @@ const orderSchema = mongoose.Schema({
         price: Number,
         cartQty: Number,
         imageUrl: String,
+        offerApplied:Number,
         status: { type: String, default: 'Odered' }
     }],
     paymentMethod: String,
     totalAmount: Number,
+    totalDiscount:Number,
     deleveredAt: Date,
     paymentId:String
 })

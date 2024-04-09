@@ -22,6 +22,7 @@
   <link href="/user/css/style.css" rel="stylesheet">
   <link href="/user/css/dark-theme.css" rel="stylesheet">
 
+
   <title>ThirdEye - eCommerce</title>
 </head>
 
@@ -134,7 +135,7 @@
 
     <!--start carousel-->
     <section class="slider-section">
-      <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+      <div id="carouselExampleCaptions" class="carousel" data-bs-ride="carousel">
         <div class="carousel-indicators">
           <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
             aria-current="true"></button>
@@ -148,9 +149,9 @@
             <div class="row d-flex align-items-center">
               <div class="col d-none d-lg-flex justify-content-center">
                 <div class="">
-                  <h3 class="h3 fw-light text-white fw-bold">New Arrival</h3>
+                  <h3 class="h3 fw-light text-white fw-bold">Welcome to Third Eye</h3>
                   <h1 class="h1 text-white fw-bold">Classic Collection</h1>
-                  <p class="text-white fw-bold"><i>Last call for upto 25%</i></p>
+                  <p class="text-white fw-bold"><i></i></p>
                   <div class=""><a class="btn btn-dark btn-ecomm" href="shop-grid.html">Shop Now</a>
                   </div>
                 </div>
@@ -219,7 +220,7 @@
                                 product[i].pOffer : product[i].cOffer%>
                                 <% if (offerToApply) { %>
                                   <div class="h6 fw-bold">
-                                    $<%=Math.floor(product[i].price-(product[i].price*offerToApply/100))%></div>
+                                    $<%=Math.floor(product[i].price-(product[i].price*offerToApply /100))%></div>
                                   <div class="h6 fw-light text-muted text-decoration-line-through">$
                                     <%=product[i].price%>
                                   </div>
@@ -403,6 +404,26 @@
   <script src="/user/js/main.js"></script>
   <script src="/user/js/index.js"></script>
   <script src="/user/js/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+  <script>
+    let message = '<%-JSON.stringify(message)%>'
+    message = JSON.parse(message)
+
+    if (message) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful!',
+        text: 'You have successfully logged in.',
+        position: 'top',
+        timer: 3000, // Auto close after 3 seconds
+        toast: true,
+        showConfirmButton: false
+      });
+      message = null
+    }
+  </script>
 
 </body>
 

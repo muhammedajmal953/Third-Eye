@@ -185,6 +185,7 @@
                                                                             </span>
                                                 </span>
                                             </label>
+
                                         </div>
                                         <div class="d-none d-xl-block vr"></div>
                                         <!-- <div class="d-grid gap-2 align-self-start align-self-xl-center">
@@ -196,6 +197,14 @@
                                     </div>
                                 </div>
                                 <%}%>
+                                    <div class="card rounded-0">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-outline-dark btn-ecomm"
+                                                data-bs-toggle="modal" data-bs-target="#NewAddress">
+                                                Add New Address
+                                            </button>
+                                        </div>
+                                    </div>
                         </div>
 
 
@@ -214,18 +223,21 @@
                                 <hr>
                                 <div class="hstack align-items-center justify-content-between">
                                     <p class="mb-0">Bag discount</p>
-                                    <p class="mb-0 text-success">0</p>
+                                    <p class="mb-0 text-success">
+                                        <%=totalDiscount%>
+                                    </p>
                                 </div>
                                 <hr>
                                 <div class="hstack align-items-center justify-content-between">
                                     <p class="mb-0">Shipping</p>
-                                    <p class="mb-0">$ <%=totalProducts*2%></p>
+                                    <p class="mb-0">$ <%=totalProducts*2%>
+                                    </p>
                                 </div>
                                 <hr>
                                 <div class="hstack align-items-center justify-content-between fw-bold text-content">
                                     <p class="mb-0">Total Amount</p>
                                     <p class="mb-0" id="discountAmount">
-                                        $ <%=cart.totalPrice+(totalProducts*2)%>
+                                        $ <%=cart.totalPrice+(totalProducts*2)-totalDiscount%>
                                     </p>
                                 </div>
                                 <div class="mb-3 mt-4">
@@ -256,17 +268,19 @@
                                             aria-label="Coupon Code" aria-describedby="apply-coupon-button"
                                             id="couponCode">
                                         <button class="btn btn-outline-secondary" type="button"
-                                            onclick="applyCoupon('<%=cart.totalPrice%>','<%=totalProducts*2%>')"
+                                            onclick="applyCoupon('<%=cart.totalPrice%>','<%=totalProducts*2%>','<%=totalDiscount%>')"
                                             id="applyCoupon">Apply</button>
                                         <button class="btn btn-outline-secondary" style="visibility: hidden"
-                                            type="button" onclick="removeCoupon('<%=cart.totalPrice%>','<%=totalProducts*2%>')"
+                                            type="button"
+                                            onclick="removeCoupon('<%=cart.totalPrice%>','<%=totalProducts*2%>','<%=totalDiscount%>')"
                                             id="removeCoupon">Remove</button>
                                     </div>
 
                                 </div>
                                 <!-- End Coupon Form Field -->
                                 <div class="d-grid mt-4">
-                                    <button type="button" onclick="proceedOrder('<%=cart._id%>','<%=cart.totalPrice+(totalProducts*2)%>')"
+                                    <button type="button"
+                                        onclick="proceedOrder('<%=cart._id%>','<%=cart.totalPrice%>','<%=totalDiscount%>')"
                                         class="btn btn-dark btn-ecomm py-3 px-5">Continue</button>
                                 </div>
                             </div>
@@ -399,7 +413,58 @@
         <p class="mb-0 text-muted">© 2022. www.example.com | All rights reserved.</p>
     </footer>
 
-
+      <!-- New Address Modal -->
+      <div class="modal" id="NewAddress" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content rounded-0">
+            <div class="modal-header">
+              <h5 class="modal-title fw-bold">Add New Address</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/user/addAdressCheckOut?id=<%=user._id%>" method="post" onsubmit="return validateAddress()">
+              <div class="modal-body">
+                <div class="mt-4">
+                  <h6 class="fw-bold mb-3">Address</h6>
+                  <div class="form-floating mb-3">
+                    <input type="number" class="form-control rounded-0" id="floatingPinCode" name="pincode" />
+                    <label for="floatingPinCode">Pin Code</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="text" class="form-control rounded-0" id="floatingAddress" name="houseName" />
+                    <label for="floatingAddress">House Name</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="text" class="form-control rounded-0" id="floatingLocalityTown" name="village" />
+                    <label for="floatingLocalityTown">village / Town</label>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-floating">
+                        <input type="text" class="form-control rounded-0" id="floatingCity" name="city" />
+                        <label for="floatingAddress">District/city</label>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-floating">
+                        <input type="text" class="form-control rounded-0" id="floatingState" name="state" />
+                        <label for="floatingState">State</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <div class="d-grid w-100">
+                  <button type="submit" class="btn btn-dark py-3 px-5 btn-ecomm">
+                    Add Address
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- end New Address Modal -->
 
     <!--Start Back To Top Button-->
     <a href="javaScript:;" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
@@ -431,7 +496,7 @@
             });
         });
 
-        async function proceedOrder(cart,total) {
+        async function proceedOrder(cart, total, totalDiscount) {
             var selectedOption = document.querySelector('input[name="paymentOption"]:checked');
             var paymentMethod = selectedOption.value;
             var coupon = document.getElementById('couponCode').value
@@ -447,7 +512,7 @@
                 return;
             }
 
-            if(total>100&&paymentMethod==='Cod'){
+            if (total > 100 && paymentMethod === 'Cod') {
                 Swal.fire({
                     icon: 'error',
                     title: 'COD not allowed over $100!',
@@ -457,10 +522,17 @@
                 });
                 return;
             }
+            let address = addressVal
 
+            const response = await axios.post(`/user/proceedOrder`, {
+                cart,
+                address,
+                paymentMethod,
+                coupon,
+                total,
+                totalDiscount
+            })
 
-            const response = await axios.post(`/user/proceedOrder?cart=${cart}&address=${addressVal}&paymentMethod=${paymentMethod}&coupon=${coupon}`)
-            console.log(response.data);
             if (response.data === 'your order throug Cash on delivery') {
                 Swal.fire({
                     icon: 'success',
@@ -474,6 +546,14 @@
                 }, 2000);
             } else if (response.data.redirectUrl) {
                 window.location.href = response.data.redirectUrl
+            } else if (response.data === 'the product is out of stock') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sorry!',
+                    text: 'the product is out of stock',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
             }
             else {
                 Swal.fire({
@@ -489,7 +569,7 @@
 
 
 
-        async function applyCoupon(totalPrice,shipping) {
+        async function applyCoupon(totalPrice, shipping, totalDiscount) {
             const couponCode = document.getElementById('couponCode').value
 
 
@@ -503,7 +583,7 @@
                 });
                 return;
             }
-            const response = await axios.post(`/user/applyCoupon`, { totalPrice, couponCode });
+            const response = await axios.post(`/user/applyCoupon`, { totalPrice, couponCode, totalDiscount });
 
             if (response.data === 'No coupon found') {
                 Swal.fire({
@@ -522,19 +602,19 @@
                 showConfirmButton: false,
                 timer: 2000
             });
-            let total=response.data+Number(shipping)
+            let total = response.data + Number(shipping)
             document.getElementById('applyCoupon').style.visibility = 'hidden'
             document.getElementById('removeCoupon').style.visibility = 'visible'
             document.getElementById('discountAmount').innerText = total
 
-           
+
 
         }
 
 
-        async function removeCoupon(totalPrice,shipping) {
+        async function removeCoupon(totalPrice, shipping, totalDiscount) {
             try {
-                const response = await axios.post('/user/removeCoupon', { totalPrice })
+                const response = await axios.post('/user/removeCoupon', { totalPrice, totalDiscount })
 
                 if (response.data) {
 
@@ -545,7 +625,7 @@
                         showConfirmButton: false,
                         timer: 2000
                     });
-                    let total=Number(response.data)+Number(shipping)
+                    let total = Number(response.data) + Number(shipping)
                     document.getElementById('applyCoupon').style.visibility = 'visible'
                     document.getElementById('removeCoupon').style.visibility = 'hidden'
                     document.getElementById('discountAmount').innerText = total
@@ -556,6 +636,36 @@
                 console.error('Error removing coupon:', error);
             }
         }
+
+        function validateAddress() {
+        const house = document.getElementById('floatingAddress').value.trim()
+        const state = document.getElementById('floatingState').value.trim()
+        const village = document.getElementById('floatingLocalityTown').value.trim()
+        const city = document.getElementById('floatingCity').value.trim()
+        const pincode = document.getElementById('floatingPinCode').value
+
+        let pincodeRegex = /^(?!0)\d{6}$/;
+
+
+        if (house === '' || state === '' || village === '' || city === '' || pincode === '') {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "all fields must be filled"
+          });
+          return false
+        }
+        if (!pincodeRegex.test(pincode)) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "enter a valid pincode"
+          });
+          return false
+        }
+
+        return true
+      }
     </script>
 </body>
 
