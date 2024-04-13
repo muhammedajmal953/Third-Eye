@@ -129,16 +129,22 @@ exports.getDashboard = async (req, res) => {
    
 
 
-    let catagories = []
-    
-    const catagoryPromises = products.map(async (item) => {
-      let prdct = await Catagory.findOne({ catagoryName: item.catagory });
-      return prdct;
-    });
-    
-    catagories=await Promise.all(catagoryPromises)
-    console.log(catagories);
-    
+    let catagories = [];
+
+const categoryPromises = products.map(async (item) => {
+  let prdct = await Catagory.findOne({ catagoryName: item.catagory });
+  return prdct;
+});
+
+
+const resolvedCategories = await Promise.all(categoryPromises);
+
+
+const distinctCategories = resolvedCategories.filter((item, index, self) => {
+  return self.findIndex((t) => t._id.toString() === item._id.toString()) === index;
+});
+
+catagories = distinctCategories;
 
 
     res.render("admin/index", {

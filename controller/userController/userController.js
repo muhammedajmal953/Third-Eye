@@ -50,8 +50,8 @@ exports.get_login = (req, res) => {
 };
 
 exports.get_signup = (req, res) => {
-  let referalId = req.query.referalId||''
-
+  let referalId = req.query.referalId || ''
+  
   if (!referalId) {
     return res.render("./Users/userSignUp", { message: "", referalId: '' })
 
@@ -125,7 +125,7 @@ exports.user_SignUp = async (req, res) => {
     const existingUser = await Users.findOne({ email });
     if (existingUser) {
       return res.render("./Users/userSignUp", {
-        message: "this email is already used",
+        message: "this email is already used",referalId
       });
     }
 
@@ -163,7 +163,7 @@ exports.user_SignUp = async (req, res) => {
 exports.verifyEmail = async (req, res) => {
   const userOtp = req.body.otp;
 
-  const referals = await Referal.find()
+  const referals = await Referal.find() 
 
   const referal = referals[0]
 
@@ -206,13 +206,30 @@ exports.verifyEmail = async (req, res) => {
       if (req.session.referalId) {
         const user = await Users.findOne({ shortId: req.session.referalId })
         if (user) {
-          await Wallet.updateOne({ userId: user._id }, { $inc: { balance: referal.referalOffer } })
 
+          let wallet = await Wallet.findOne({ userId: user._id })
+          if (!wallet) {
+            const newWallet = new Wallet({
+              userId: user._id,
+              balance: referal.referalOffer,
+              transaction: [{ status: `Credited`, amount: `${referal.referalOffer}`, date: Date.now() }]
+            })
+            await newWallet.save()
+          }
+
+          let updateWallet = await Wallet.updateOne({ userId: user._id }, { $inc: { balance: referal.referalOffer }, $push: { transaction: { status: `Credited`, amount: referal.referalOffer, date: Date.now() } } })
+         
+         
+         
+         
+          
+         
           const newUser = await Users.findOne({ shortId: globalShortId })
           if (newUser) {
             let wallet = new Wallet({
               userId: newUser._id,
-              balance: referal.referedOffer
+              balance: referal.referedOffer,
+              transaction: [{ status: `Credited`, amount: referal.referedOffer, date: Date.now() }]
             })
             await wallet.save()
           }
@@ -301,11 +318,11 @@ exports.get_home = async (req, res) => {
   try {
     // Retrieving categories and products from the database
     const catagory = await Catagory.find();
-    const products = await Product.find({ isListed: true,quantity:{$gt:0} }).limit(4)
+    const products = await Product.find({ isListed: true, quantity: { $gt: 0 } }).limit(4)
     const productOffer = await ProductOffer.find()
     const catagoryOffer = await CatagoryOffer.find()
 
-    const message=req.query.message
+    const message = req.query.message
 
     for (let product of products) {
       for (item of productOffer) {
@@ -319,9 +336,9 @@ exports.get_home = async (req, res) => {
         }
       }
     }
-    
 
-    res.render("./Users/home", { catagory: catagory, product: products ,message});
+
+    res.render("./Users/home", { catagory: catagory, product: products, message });
   } catch (error) {
     console.log(error);
   }
