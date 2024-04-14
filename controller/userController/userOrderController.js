@@ -98,7 +98,7 @@ exports.orderPlace = async (req, res) => {
     for (let product of products) {
       let original = await Product.findOne({ _id: product.productId })
       let quantity=original.quantity
-      if (quantity <= 0) {
+      if (quantity <= 0||quantity<product.cartQty) {
        return  res.json(`the product is out of stock`)
       }
     }
@@ -127,7 +127,7 @@ exports.orderPlace = async (req, res) => {
     }
 
 
-    let shipping = totalproducts * 2
+    let shipping = totalproducts * 40
     totalPrice += shipping
     
     if (paymentMethod === 'paypal') {

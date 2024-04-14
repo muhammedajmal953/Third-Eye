@@ -194,7 +194,7 @@
                                                             <button type="button"
                                                                 class="btn btn-sm border rounded-0">Qty:<%=
                                                                     orderedItem.cartQty %></button>
-                                                            <h6>Price:<%= orderedItem.price %>
+                                                            <h6>Price:Rs-<%= orderedItem.price %>
                                                             </h6>
                                 </div>
                             </div>
@@ -224,7 +224,7 @@
                             <p>Order ID: <span id="order-id">
                                     <%= orderedItem._id %>
                                 </span></p>
-                            <p>Product Total Price: $-<span id="total-price">
+                            <p>Product Total Price: Rs-<span id="total-price">
                                     <%= orderedItem.price*orderedItem.cartQty %>
                                 </span></p>
                             <p>Ordered Address: <span id="order-time">

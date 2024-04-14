@@ -189,7 +189,7 @@
                                           <% totalPrice +=discountedPrice * products[i].cartQty; %>
                                             <% if (offerToApply) { %>
                                               <div class="h6 fw-bold" id="offer">
-                                                $<%=Math.floor(products[i].price-(products[i].price*offerToApply
+                                                Rs <%=Math.floor(products[i].price-(products[i].price*offerToApply
                                                   /100))%>
                                               </div>
 
@@ -197,7 +197,7 @@
 
                                               <div class="h6 fw-light text-muted text-decoration-line-through"
                                                 id="originalPrice">
-                                                $
+                                                Rs
                                                 <%=products[i].price%>
                                               </div>
                                               <div class="h6 fw-bold text-danger">(<%=offerToApply%>% off)</div>
@@ -250,27 +250,27 @@
                   <p class="mb-0">Bag Total</p>
                   <span></span>
                   <p class="mb-0" id="bagTotal">
-                    $ <%= totalPrice %>
+                    Rs <%= totalPrice %>
                   </p>
                 </div>
                 <hr>
                 <div class="hstack align-items-center justify-content-between">
                   <p class="mb-0">Bag discount</p>
-                  <p class="mb-0 text-success" id="totalDiscount">$<%=sumOfDiscount%>
+                  <p class="mb-0 text-success" id="totalDiscount">Rs <%=sumOfDiscount%>
                   </p>
                 </div>
                 <hr>
                 <div class="hstack align-items-center justify-content-between">
                   <p class="mb-0">Delivery(<%=totalProducts%> items)</p>
                   <p class="mb-0" id="shipping">
-                    $ <%=totalProducts*2%>
+                    Rs <%=totalProducts*40%>
                   </p>
                 </div>
                 <hr>
                 <div class="hstack align-items-center justify-content-between fw-bold text-content">
                   <p class="mb-0">Total Amount</p>
                   <p class="mb-0" id="total">
-                    $ <%= totalPrice + (totalProducts * 2) %>%>
+                    Rs <%= totalPrice + (totalProducts * 40) %>%>
                   </p>
                 </div>
                 <div class="d-grid mt-4">
@@ -416,9 +416,9 @@
 
         let data = response.data
         let upadateTotal = document.getElementById('bagTotal').innerHTML = data.totalPrice-data.totalDiscount
-        let upgradeShipping = document.getElementById('shipping').innerHTML = data.totalProducts * 2
+        let upgradeShipping = document.getElementById('shipping').innerHTML = data.totalProducts * 40
         let upgradeDiscount = document.getElementById('totalDiscount').innerHTML = data.totalDiscount
-        let updateCartTotal = document.getElementById('total').innerHTML = (data.totalProducts * 2) + (data.totalPrice)-data.totalDiscount
+        let updateCartTotal = document.getElementById('total').innerHTML = (data.totalProducts * 40) + (data.totalPrice)-data.totalDiscount
       } else {
         Swal.fire({
           icon: 'warning',
@@ -440,9 +440,9 @@
         let data = response.data
      
         let upadateTotal = document.getElementById('bagTotal').innerHTML = data.totalPrice-data.totalDiscount
-        let upgradeShipping = document.getElementById('shipping').innerHTML = data.totalProducts * 2
+        let upgradeShipping = document.getElementById('shipping').innerHTML = data.totalProducts * 40
         let upgradeDiscount = document.getElementById('totalDiscount').innerHTML = data.totalDiscount
-        let updateCartTotal = document.getElementById('total').innerHTML = (data.totalProducts * 2) + (data.totalPrice)-data.totalDiscount
+        let updateCartTotal = document.getElementById('total').innerHTML = (data.totalProducts * 40) + (data.totalPrice)-data.totalDiscount
       } else {
         Swal.fire({
           icon: 'warning',

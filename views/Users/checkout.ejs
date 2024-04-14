@@ -217,7 +217,7 @@
                                 <div class="hstack align-items-center justify-content-between">
                                     <p class="mb-0">Bag Total(<%=totalProducts%> items)</p>
                                     <p class="mb-0" id="totalPrice">
-                                        $ <%=cart.totalPrice%>
+                                        Rs <%=cart.totalPrice%>
                                     </p>
                                 </div>
                                 <hr>
@@ -230,14 +230,14 @@
                                 <hr>
                                 <div class="hstack align-items-center justify-content-between">
                                     <p class="mb-0">Shipping</p>
-                                    <p class="mb-0">$ <%=totalProducts*2%>
+                                    <p class="mb-0">Rs <%=totalProducts*40%>
                                     </p>
                                 </div>
                                 <hr>
                                 <div class="hstack align-items-center justify-content-between fw-bold text-content">
                                     <p class="mb-0">Total Amount</p>
                                     <p class="mb-0" id="discountAmount">
-                                        $ <%=cart.totalPrice+(totalProducts*2)-totalDiscount%>
+                                        Rs <%=cart.totalPrice+(totalProducts*40)-totalDiscount%>
                                     </p>
                                 </div>
                                 <div class="mb-3 mt-4">
@@ -268,11 +268,11 @@
                                             aria-label="Coupon Code" aria-describedby="apply-coupon-button"
                                             id="couponCode">
                                         <button class="btn btn-outline-secondary" type="button"
-                                            onclick="applyCoupon('<%=cart.totalPrice%>','<%=totalProducts*2%>','<%=totalDiscount%>')"
+                                            onclick="applyCoupon('<%=cart.totalPrice%>','<%=totalProducts*40%>','<%=totalDiscount%>')"
                                             id="applyCoupon">Apply</button>
                                         <button class="btn btn-outline-secondary" style="visibility: hidden"
                                             type="button"
-                                            onclick="removeCoupon('<%=cart.totalPrice%>','<%=totalProducts*2%>','<%=totalDiscount%>')"
+                                            onclick="removeCoupon('<%=cart.totalPrice%>','<%=totalProducts*40%>','<%=totalDiscount%>')"
                                             id="removeCoupon">Remove</button>
                                     </div>
 
@@ -413,58 +413,64 @@
         <p class="mb-0 text-muted">© 2022. www.example.com | All rights reserved.</p>
     </footer>
 
-      <!-- New Address Modal -->
-      <div class="modal" id="NewAddress" tabindex="-1">
+    <!-- New Address Modal -->
+    <div class="modal" id="NewAddress" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content rounded-0">
-            <div class="modal-header">
-              <h5 class="modal-title fw-bold">Add New Address</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Add New Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/user/addAdressCheckOut?id=<%=user._id%>" method="post"
+                    onsubmit="return validateAddress()">
+                    <div class="modal-body">
+                        <div class="mt-4">
+                            <h6 class="fw-bold mb-3">Address</h6>
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control rounded-0" id="floatingPinCode"
+                                    name="pincode" />
+                                <label for="floatingPinCode">Pin Code</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control rounded-0" id="floatingAddress"
+                                    name="houseName" />
+                                <label for="floatingAddress">House Name</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control rounded-0" id="floatingLocalityTown"
+                                    name="village" />
+                                <label for="floatingLocalityTown">village / Town</label>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control rounded-0" id="floatingCity"
+                                            name="city" />
+                                        <label for="floatingAddress">District/city</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control rounded-0" id="floatingState"
+                                            name="state" />
+                                        <label for="floatingState">State</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-grid w-100">
+                            <button type="submit" class="btn btn-dark py-3 px-5 btn-ecomm">
+                                Add Address
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <form action="/user/addAdressCheckOut?id=<%=user._id%>" method="post" onsubmit="return validateAddress()">
-              <div class="modal-body">
-                <div class="mt-4">
-                  <h6 class="fw-bold mb-3">Address</h6>
-                  <div class="form-floating mb-3">
-                    <input type="number" class="form-control rounded-0" id="floatingPinCode" name="pincode" />
-                    <label for="floatingPinCode">Pin Code</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <input type="text" class="form-control rounded-0" id="floatingAddress" name="houseName" />
-                    <label for="floatingAddress">House Name</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <input type="text" class="form-control rounded-0" id="floatingLocalityTown" name="village" />
-                    <label for="floatingLocalityTown">village / Town</label>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="form-floating">
-                        <input type="text" class="form-control rounded-0" id="floatingCity" name="city" />
-                        <label for="floatingAddress">District/city</label>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="form-floating">
-                        <input type="text" class="form-control rounded-0" id="floatingState" name="state" />
-                        <label for="floatingState">State</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <div class="d-grid w-100">
-                  <button type="submit" class="btn btn-dark py-3 px-5 btn-ecomm">
-                    Add Address
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
         </div>
-      </div>
-      <!-- end New Address Modal -->
+    </div>
+    <!-- end New Address Modal -->
 
     <!--Start Back To Top Button-->
     <a href="javaScript:;" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
@@ -512,10 +518,10 @@
                 return;
             }
 
-            if (total > 100 && paymentMethod === 'Cod') {
+            if (total > 1000 && paymentMethod === 'Cod') {
                 Swal.fire({
                     icon: 'error',
-                    title: 'COD not allowed over $100!',
+                    title: 'COD not allowed over Rs-1000!',
                     text: 'Please select another payment option.',
                     showConfirmButton: false,
                     timer: 2000
@@ -638,34 +644,34 @@
         }
 
         function validateAddress() {
-        const house = document.getElementById('floatingAddress').value.trim()
-        const state = document.getElementById('floatingState').value.trim()
-        const village = document.getElementById('floatingLocalityTown').value.trim()
-        const city = document.getElementById('floatingCity').value.trim()
-        const pincode = document.getElementById('floatingPinCode').value
+            const house = document.getElementById('floatingAddress').value.trim()
+            const state = document.getElementById('floatingState').value.trim()
+            const village = document.getElementById('floatingLocalityTown').value.trim()
+            const city = document.getElementById('floatingCity').value.trim()
+            const pincode = document.getElementById('floatingPinCode').value
 
-        let pincodeRegex = /^(?!0)\d{6}$/;
+            let pincodeRegex = /^(?!0)\d{6}$/;
 
 
-        if (house === '' || state === '' || village === '' || city === '' || pincode === '') {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "all fields must be filled"
-          });
-          return false
+            if (house === '' || state === '' || village === '' || city === '' || pincode === '') {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "all fields must be filled"
+                });
+                return false
+            }
+            if (!pincodeRegex.test(pincode)) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "enter a valid pincode"
+                });
+                return false
+            }
+
+            return true
         }
-        if (!pincodeRegex.test(pincode)) {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "enter a valid pincode"
-          });
-          return false
-        }
-
-        return true
-      }
     </script>
 </body>
 

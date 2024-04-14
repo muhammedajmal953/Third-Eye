@@ -180,13 +180,13 @@
                             product.pOffer : product.cOffer;%>
                             <% if (offerToApply) { %>
                                 <div class="h6 fw-bold">
-                                    $<%=Math.floor(product.price-(product.price*offerToApply /100))%></div>
-                                <div class="h6 fw-light text-muted text-decoration-line-through">$
+                                    Rs-<%=Math.floor(product.price-(product.price*offerToApply /100))%></div>
+                                <div class="h6 fw-light text-muted text-decoration-line-through">Rs
                                     <%=product.price%>
                                 </div>
                                 <div class="h6 fw-bold text-danger">(<%=offerToApply%>% off)</div>
                                 <% } else{%>
-                                    <div class="h6 fw-bold">$<%=Math.floor(product.price)%>
+                                    <div class="h6 fw-bold">Rs- <%=Math.floor(product.price)%>
                                     </div>
                                     <%}%>
                     </div>

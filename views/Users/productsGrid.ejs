@@ -266,14 +266,14 @@
                                 %>
                                 <% if (offerToApply) { %>
                                   <div class="h6 fw-bold">
-                                    $<%=Math.floor(products[i].price-(products[i].price*offerToApply /100))%>
+                                    Rs- <%=Math.floor(products[i].price-(products[i].price*offerToApply /100))%>
                                   </div>
-                                  <div class="h6 fw-light text-muted text-decoration-line-through">$
+                                  <div class="h6 fw-light text-muted text-decoration-line-through">Rs- 
                                     <%=products[i].price%>
                                   </div>
                                   <div class="h6 fw-bold text-danger">(<%=offerToApply%>% off)</div>
                                   <% }else{ %>
-                                    <div class="h6 fw-bold">$ <%=products[i].price%>
+                                    <div class="h6 fw-bold">Rs- <%=products[i].price%>
                                     </div>
                                     <%}%>
                             </div>

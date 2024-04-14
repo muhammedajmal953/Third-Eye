@@ -110,41 +110,46 @@ exports.getDashboard = async (req, res) => {
     });
 
 
-   //top seeling products
+    //top seeling products
     const bestSellingProducts = await Order.aggregate([
       { $unwind: '$items' },
       { $group: { _id: '$items.productName', totalSold: { $sum: 1 } } },
       { $sort: { totalSold: -1 } },
       { $limit: 5 }
     ])
-    
-    let products=[]
+
+    let products = []
 
     const productPromises = bestSellingProducts.map(async (item) => {
       let prdct = await Product.findOne({ productName: item._id });
       return prdct;
     });
-    
-    products=await Promise.all(productPromises)
-   
+
+    products = await Promise.all(productPromises)
+
 
 
     let catagories = [];
 
-const categoryPromises = products.map(async (item) => {
-  let prdct = await Catagory.findOne({ catagoryName: item.catagory });
-  return prdct;
-});
+    const categoryPromises = products.map(async (item) => {
+      console.log(item);
+      if (item.catagory) {
+        let prdct = await Catagory.findOne({ catagoryName: item.catagory });
+
+      return prdct;
+      }
+      return
+    });
 
 
-const resolvedCategories = await Promise.all(categoryPromises);
+    const resolvedCategories = await Promise.all(categoryPromises);
 
 
-const distinctCategories = resolvedCategories.filter((item, index, self) => {
-  return self.findIndex((t) => t._id.toString() === item._id.toString()) === index;
-});
+    const distinctCategories = resolvedCategories.filter((item, index, self) => {
+      return self.findIndex((t) => t._id.toString() === item._id.toString()) === index;
+    });
 
-catagories = distinctCategories;
+    catagories = distinctCategories;
 
 
     res.render("admin/index", {
