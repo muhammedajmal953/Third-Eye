@@ -69,7 +69,7 @@ exports.getDashboard = async (req, res) => {
 
     }
 
-    let revenue = amounts.reduce((acc, cur) => (acc += cur));
+    let revenue = amounts.reduce((acc, cur) => (acc += cur),0);
 
     const monthlyDataLastYear = Array(12).fill(0);
     const currentDate = new Date();
@@ -119,38 +119,41 @@ exports.getDashboard = async (req, res) => {
     ])
 
     let products = []
-
-    const productPromises = bestSellingProducts.map(async (item) => {
-      let prdct = await Product.findOne({ productName: item._id });
-      return prdct;
-    });
-
-    products = await Promise.all(productPromises)
-
-
-
     let catagories = [];
 
-    const categoryPromises = products.map(async (item) => {
-      console.log(item);
-      if (item.catagory) {
+
+    if (bestSellingProducts && bestSellingProducts.length > 0) {
+
+      const productPromises = bestSellingProducts.map(async (item) => {
+        let prdct = await Product.findOne({ productName: item._id });
+        return prdct;
+      });
+
+      products = await Promise.all(productPromises)
+
+
+      const categoryPromises = products.map(async (item) => {
+      
+
         let prdct = await Catagory.findOne({ catagoryName: item.catagory });
 
-      return prdct;
-      }
-      return
-    });
+        return prdct;
+
+      });
 
 
-    const resolvedCategories = await Promise.all(categoryPromises);
+      const resolvedCategories = await Promise.all(categoryPromises);
 
 
-    const distinctCategories = resolvedCategories.filter((item, index, self) => {
-      return self.findIndex((t) => t._id.toString() === item._id.toString()) === index;
-    });
+      const distinctCategories = resolvedCategories.filter((item, index, self) => {
+        return self.findIndex((t) => t._id.toString() === item._id.toString()) === index;
+      });
 
-    catagories = distinctCategories;
+      catagories = distinctCategories;
 
+    }
+     
+    catagories
 
     res.render("admin/index", {
       users: users,
@@ -165,7 +168,7 @@ exports.getDashboard = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching data:", error);
-    res.status(500).send("Internal Server Error");
+
   }
 };
 
