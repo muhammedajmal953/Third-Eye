@@ -505,9 +505,11 @@
         async function proceedOrder(cart, total, totalDiscount) {
             var selectedOption = document.querySelector('input[name="paymentOption"]:checked');
             var paymentMethod = selectedOption.value;
+            console.log(paymentMethod);
             var coupon = document.getElementById('couponCode').value
+            console.log(paymentMethod);
 
-            if (!addressVal && !paymentMethod) {
+            if (!addressVal ) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Validation Error!',
@@ -517,7 +519,16 @@
                 });
                 return;
             }
-
+            if (paymentMethod!=='cod'||paymentMethod!=='paypal') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error!',
+                    text: 'Please select both address and payment option.',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                return;
+            }
             if (total > 1000 && paymentMethod === 'Cod') {
                 Swal.fire({
                     icon: 'error',

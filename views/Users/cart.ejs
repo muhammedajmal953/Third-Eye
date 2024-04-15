@@ -154,6 +154,12 @@
 
     <!--start product details-->
     <section class="section-padding ">
+      <% if(products.length===0) {%>
+        <div class="container d-flex align-items-center">
+          <img src="/user/images/emtycart.png" alt="">
+        </div>
+      <%}else{%>
+
       <div class="container">
         <div class="d-flex align-items-center px-3 py-2 border mb-4">
           <div class="text-start">
@@ -284,6 +290,7 @@
         </div>
 
       </div><!--end row-->
+      <% } %>
     </section>
   </div>
 

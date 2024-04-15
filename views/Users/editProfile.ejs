@@ -172,8 +172,8 @@
                         class="bi bi-pencil me-2"></i>Edit Profile</a>
                     <a href="/user/adresses" class="list-group-item"><i class="bi bi-pin-map me-2"></i>Saved
                       Address</a>
-                    <a href="wishlist.html" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Wishlist</a>
-                    <a href="authentication-login.html" class="list-group-item"><i
+                    <a href="/user/showWishlist" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Wishlist</a>
+                    <a href="/user/logout" class="list-group-item"><i
                         class="bi bi-power me-2"></i>Logout</a>
                   </div>
                 </div>
@@ -204,7 +204,7 @@
                     <div class="col">
                       <div class="form-floating">
                         <input type="text" class="form-control rounded-0" id="email" name="email"
-                          value="<%=user.email%>">
+                          value="<%=user.email%>" readonly>
                         <label for="floatingInputEmail">Email</label>
                       </div>
                     </div>
