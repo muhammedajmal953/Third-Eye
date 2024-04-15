@@ -24,8 +24,8 @@ userRoutes.get('/', userController.landing)
 
 
 // Route for user login page
-userRoutes.get('/login', userController.get_login);
-userRoutes.post('/login', userController.user_login); // POST route for user login
+userRoutes.get('/user/login', userController.get_login);
+userRoutes.post('/user/login', userController.user_login); // POST route for user login
 
 // //Route for google sign in
 // userRoutes.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
@@ -35,115 +35,115 @@ userRoutes.post('/login', userController.user_login); // POST route for user log
 
 
 // Route for user signup page
-userRoutes.post('/signup', userController.user_SignUp);
-userRoutes.get('/signup', userController.get_signup);
-userRoutes.post('/verify-email', userController.verifyEmail)
-userRoutes.post('/resendOtp', userController.resendOtp)
+userRoutes.post('/user/signup', userController.user_SignUp);
+userRoutes.get('/user/signup', userController.get_signup);
+userRoutes.post('/user/verify-email', userController.verifyEmail)
+userRoutes.post('/user/resendOtp', userController.resendOtp)
 
 
-userRoutes.get('/forgotPassword',userController.forgotPassword)
-userRoutes.post('/forgotPassword', userController.forgotOtp)
+userRoutes.get('/user/forgotPassword',userController.forgotPassword)
+userRoutes.post('/user/forgotPassword', userController.forgotOtp)
 
-userRoutes.post('/newPassword',userController.newPassword)
+userRoutes.post('/user/newPassword',userController.newPassword)
 
 // Route for user home page
-userRoutes.get('/home', isLoggedIn, isBlocked, userController.get_home)
+userRoutes.get('/user/home', isLoggedIn, isBlocked, userController.get_home)
 
 //Route for user shop page
-userRoutes.get('/productList/:page', isLoggedIn, isBlocked, userProductController.get_products)
+userRoutes.get('/user/productList/:page', isLoggedIn, isBlocked, userProductController.get_products)
 
-userRoutes.get('/product-search', isLoggedIn, isBlocked, userProductController.searchPage)
+userRoutes.get('/user/product-search', isLoggedIn, isBlocked, userProductController.searchPage)
 
 //router for search product
-userRoutes.post('/searchProducts', userProductController.searchProducts)
+userRoutes.post('/user/searchProducts', userProductController.searchProducts)
 // Route for viewing product details
-userRoutes.get('/product-details', isLoggedIn, isBlocked, userProductController.view_products);
+userRoutes.get('/user/product-details', isLoggedIn, isBlocked, userProductController.view_products);
 //add to wish list
 
-userRoutes.post('/addToWishlist', userProductController.addToWishlist)
-userRoutes.post('/wishlistRemove', userProductController.wishlistRemove)
+userRoutes.post('/user/addToWishlist', userProductController.addToWishlist)
+userRoutes.post('/user/wishlistRemove', userProductController.wishlistRemove)
 //show wishlist
-userRoutes.get('/showWishlist', isLoggedIn, isBlocked, userProductController.show_wishlist)
+userRoutes.get('/user/showWishlist', isLoggedIn, isBlocked, userProductController.show_wishlist)
 
 //Route for user profile
 
-userRoutes.get('/profile', isLoggedIn, isBlocked, userProfileController.view_profile)
+userRoutes.get('/user/profile', isLoggedIn, isBlocked, userProfileController.view_profile)
 //get edit user
-userRoutes.get('/profileEdit', isLoggedIn, isBlocked, userProfileController.edit_profile)
+userRoutes.get('/user/profileEdit', isLoggedIn, isBlocked, userProfileController.edit_profile)
 //save the editted profile
-userRoutes.post('/profileUpdate', userProfileController.update_profile)
+userRoutes.post('/user/profileUpdate', userProfileController.update_profile)
 
-userRoutes.post("/changePassword", userProfileController.change_password)
+userRoutes.post("/user/changePassword", userProfileController.change_password)
 //show addresses
-userRoutes.get('/adresses', isLoggedIn, isBlocked, addressController.show_adress)
+userRoutes.get('/user/adresses', isLoggedIn, isBlocked, addressController.show_adress)
 //add address
-userRoutes.post('/addAdress', addressController.addAddress)
-userRoutes.post('/addAdressCheckOut', addressController.addAddressCheckOut)
+userRoutes.post('/user/addAdress', addressController.addAddress)
+userRoutes.post('/user/addAdressCheckOut', addressController.addAddressCheckOut)
 //edit address page render
-userRoutes.get('/editAddress', addressController.get_editAddress)
+userRoutes.get('/user/editAddress', addressController.get_editAddress)
 
-userRoutes.post('/addressEdit', addressController.addressEdit)
-userRoutes.post('/deleteAddress', addressController.deleteAddress)
+userRoutes.post('/user/addressEdit', addressController.addressEdit)
+userRoutes.post('/user/deleteAddress', addressController.deleteAddress)
 
 //logout user
-userRoutes.get('/logout', userController.user_logout)
+userRoutes.get('/user/logout', userController.user_logout)
 
 //show Cart
-userRoutes.get('/cart', isLoggedIn, isBlocked, cartController.show_cart)
+userRoutes.get('/user/cart', isLoggedIn, isBlocked, cartController.show_cart)
 
-userRoutes.post('/addToCart', cartController.addToCart)
-
-
-userRoutes.post('/removeCart', cartController.removeCart)
-
-userRoutes.post('/totalIncrement', cartController.totalIncrement)
-
-userRoutes.post('/totalDecrement', cartController.totalDecrement)
+userRoutes.post('/user/addToCart', cartController.addToCart)
 
 
-userRoutes.get('/checkout', isLoggedIn, isBlocked, userOrderController.get_checkout)
+userRoutes.post('/user/removeCart', cartController.removeCart)
+
+userRoutes.post('/user/totalIncrement', cartController.totalIncrement)
+
+userRoutes.post('/user/totalDecrement', cartController.totalDecrement)
 
 
-userRoutes.post('/proceedOrder',isLoggedIn, isBlocked,  userOrderController.orderPlace)
-
-userRoutes.get('/orders', isLoggedIn, isBlocked, userOrderController.orderView)
+userRoutes.get('/user/checkout', isLoggedIn, isBlocked, userOrderController.get_checkout)
 
 
-userRoutes.get('/orderDetails', isLoggedIn, isBlocked, userOrderController.orderDetails)
+userRoutes.post('/user/proceedOrder',isLoggedIn, isBlocked,  userOrderController.orderPlace)
 
-userRoutes.post('/cancelOrder', userOrderController.cancelOrder)
-
-userRoutes.post('/returnOrder', userOrderController.returnOrder)
+userRoutes.get('/user/orders', isLoggedIn, isBlocked, userOrderController.orderView)
 
 
-userRoutes.get('/successOrder', isLoggedIn, isBlocked, userOrderController.successOrder)
+userRoutes.get('/user/orderDetails', isLoggedIn, isBlocked, userOrderController.orderDetails)
+
+userRoutes.post('/user/cancelOrder', userOrderController.cancelOrder)
+
+userRoutes.post('/user/returnOrder', userOrderController.returnOrder)
+
+
+userRoutes.get('/user/successOrder', isLoggedIn, isBlocked, userOrderController.successOrder)
 
 //user wallet
-userRoutes.get('/wallet',isLoggedIn, isBlocked, userProfileController.wallet)
+userRoutes.get('/user/wallet',isLoggedIn, isBlocked, userProfileController.wallet)
 
 //recharge wallet
-userRoutes.post('/walletRecharge', userProfileController.walletRecharge)
-userRoutes.post('/walletWithDraw', userProfileController.walletWithDraw)
+userRoutes.post('/user/walletRecharge', userProfileController.walletRecharge)
+userRoutes.post('/user/walletWithDraw', userProfileController.walletWithDraw)
 
-userRoutes.get('/updateWallet', isLoggedIn, isBlocked, userProfileController.updateWallet)
+userRoutes.get('/user/updateWallet', isLoggedIn, isBlocked, userProfileController.updateWallet)
 
 
 
-userRoutes.get('/newPassword', (req, res) => {
+userRoutes.get('/user/newPassword', (req, res) => {
     res.render('Users/newPassword')
 })
 
 
-userRoutes.post('/applyCoupon',cartController.applyCoupon)
-userRoutes.post('/removeCoupon',cartController.removeCoupon)
+userRoutes.post('/user/applyCoupon',cartController.applyCoupon)
+userRoutes.post('/user/removeCoupon',cartController.removeCoupon)
 
 
-userRoutes.get('/cancelledPayment',isLoggedIn, isBlocked,cancelledPaymentController.cancelledPayment)
-userRoutes.post('/quickPayment', cancelledPaymentController.quickPayment)
+userRoutes.get('/user/cancelledPayment',isLoggedIn, isBlocked,cancelledPaymentController.cancelledPayment)
+userRoutes.post('/user/quickPayment', cancelledPaymentController.quickPayment)
 
-userRoutes.get('/successQuickPayment', cancelledPaymentController.successQuickPayement)
+userRoutes.get('/user/successQuickPayment', cancelledPaymentController.successQuickPayement)
 
-userRoutes.post('/invoiceDownload',userOrderController.invoiceDownload)
+userRoutes.post('/user/invoiceDownload',userOrderController.invoiceDownload)
 
 
 

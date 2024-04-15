@@ -35,7 +35,7 @@ app.use(express.static('uploads'));
 
 // Setting up session middleware for managing sessions
 app.use(session({ 
-  secret: 'secret-key',   
+  secret: process.env.Session_secret,   
   resave: false, 
   saveUninitialized: true,
   cookie: { maxAge: 6000000 } // Session cookie configuration
@@ -47,7 +47,7 @@ app.use(passport.initialize())
 
 // Routing for admin and user functionalities
 app.use('/admin', adminRoutes);
-app.use('/user', userRoutes);
+app.use('/', userRoutes);
 
 
 
