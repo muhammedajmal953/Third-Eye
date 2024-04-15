@@ -26,7 +26,7 @@ exports.landing = async (req, res) => {
       return res.redirect("/user/home");
     }
     const catagory = await Catagory.find().limit(4);
-    const product = await Product.find().limit(4);
+    const product = await Product.find().limit(5);
     // Rendering user home page and passing retrieved categories and products to the view
     res.render("./Users/landing", { catagory: catagory, product: product });
   } catch (error) {
