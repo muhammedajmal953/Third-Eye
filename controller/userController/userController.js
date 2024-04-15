@@ -350,6 +350,6 @@ exports.get_home = async (req, res) => {
 exports.user_logout = (req, res) => {
   try {
     req.session.user = null;
-    res.redirect("/user");
+    res.redirect("/");
   } catch (error) { }
 };
