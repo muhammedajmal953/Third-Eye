@@ -507,7 +507,7 @@
             var paymentMethod = selectedOption.value;
             var coupon = document.getElementById('couponCode').value
 
-            if (!addressVal || !paymentMethod) {
+            if (!addressVal && !paymentMethod) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Validation Error!',
