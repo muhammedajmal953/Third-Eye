@@ -7,7 +7,7 @@ function isLoggedIn(req, res, next) {
   if (req.session && req.session.user) {
     return next()
   }
-  res.redirect('/user/login')
+  res.redirect('/')
 }
 
 function isAdminLoggedIn(req, res, next) {

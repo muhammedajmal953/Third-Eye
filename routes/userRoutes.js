@@ -50,14 +50,14 @@ userRoutes.post('/user/newPassword',userController.newPassword)
 userRoutes.get('/user/home', isLoggedIn, isBlocked, userController.get_home)
 
 //Route for user shop page
-userRoutes.get('/user/productList/:page', isLoggedIn, isBlocked, userProductController.get_products)
+userRoutes.get('/user/productList/:page', userProductController.get_products)
 
 userRoutes.get('/user/product-search', isLoggedIn, isBlocked, userProductController.searchPage)
 
 //router for search product
-userRoutes.post('/user/searchProducts', userProductController.searchProducts)
+userRoutes.post('/user/searchProducts', isLoggedIn, isBlocked, userProductController.searchProducts)
 // Route for viewing product details
-userRoutes.get('/user/product-details', isLoggedIn, isBlocked, userProductController.view_products);
+userRoutes.get('/user/product-details',  userProductController.view_products);
 //add to wish list
 
 userRoutes.post('/user/addToWishlist', userProductController.addToWishlist)
@@ -91,7 +91,7 @@ userRoutes.get('/user/logout', userController.user_logout)
 //show Cart
 userRoutes.get('/user/cart', isLoggedIn, isBlocked, cartController.show_cart)
 
-userRoutes.post('/user/addToCart', cartController.addToCart)
+userRoutes.post('/user/addToCart', isLoggedIn, isBlocked, cartController.addToCart)
 
 
 userRoutes.post('/user/removeCart', cartController.removeCart)

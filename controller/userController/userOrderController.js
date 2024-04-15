@@ -41,8 +41,8 @@ exports.get_checkout = async (req, res) => {
     }
 
 
-    
-   
+
+
     for (let product of products) {
       for (item of productOffer) {
         if (product.productName === item.productName) {
@@ -55,9 +55,9 @@ exports.get_checkout = async (req, res) => {
         }
       }
     }
-     let offerOfitem=0
+    let offerOfitem = 0
     for (let item of products) {
-      offerOfitem = item.pOffer > item.cOffer ? item.pOffer : item.cOffer||0;
+      offerOfitem = item.pOffer > item.cOffer ? item.pOffer : item.cOffer || 0;
       let discountPrice = item.price - Math.floor(item.price - (item.price * offerOfitem / 100))
       totalDiscount += discountPrice * item.cartQty;
     }
@@ -75,6 +75,7 @@ exports.get_checkout = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.render('Users/404error')
   }
 };
 
@@ -85,7 +86,7 @@ exports.get_checkout = async (req, res) => {
 exports.orderPlace = async (req, res) => {
   try {
     // Retrieve data from the request
-    let { cart, address, paymentMethod,total,totalDiscount } = req.body;
+    let { cart, address, paymentMethod, total, totalDiscount } = req.body;
 
     let userId = req.session.user;
     // Fetch user and cart details from the database
@@ -93,31 +94,31 @@ exports.orderPlace = async (req, res) => {
     let userCart = await Cart.findById(cart);
     let { username, email } = user;
     let { products } = userCart;
-   
-    
+
+
     for (let product of products) {
       let original = await Product.findOne({ _id: product.productId })
-      let quantity=original.quantity
-      if (quantity <= 0||quantity<product.cartQty) {
-       return  res.json(`the product is out of stock`)
+      let quantity = original.quantity
+      if (quantity <= 0 || quantity < product.cartQty) {
+        return res.json(`the product is out of stock`)
       }
     }
 
 
 
-    let totalPrice=Number(total)-Number(totalDiscount)
+    let totalPrice = Number(total) - Number(totalDiscount)
 
     let totalproducts = products.reduce((acc, cur) => acc += cur.cartQty, 0)
 
 
     if (req.session.couponRate && req.query.coupon) {
       let couponRate = req.session.couponRate
-    
+
 
       totalPrice = Math.floor(totalPrice - (totalPrice * couponRate / 100))
 
 
-     products.forEach(item => {
+      products.forEach(item => {
         item.price = Math.floor(item.price - (item.price * couponRate / 100))
       });
 
@@ -129,7 +130,7 @@ exports.orderPlace = async (req, res) => {
 
     let shipping = totalproducts * 40
     totalPrice += shipping
-    
+
     if (paymentMethod === 'paypal') {
       let totalAmount = totalPrice // Format total amount for PayPal payment
       let amount = totalAmount.toString();
@@ -164,7 +165,7 @@ exports.orderPlace = async (req, res) => {
             username,
             email,
             shippingAddress: address,
-            items:products,
+            items: products,
             totalAmount: totalPrice,
             totalDiscount,
             paymentMethod,
@@ -195,7 +196,7 @@ exports.orderPlace = async (req, res) => {
 
       await order.save();
       await Cart.deleteOne({ _id: cart });
-      for (let i = 0; i <products.length; i++) {
+      for (let i = 0; i < products.length; i++) {
         await Product.updateOne(
           { _id: products[i].productId },
           { $inc: { quantity: -products[i].cartQty } }
@@ -205,60 +206,60 @@ exports.orderPlace = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).send("Order not placed.");
+    res.render('Users/404error')
   }
 };
 exports.successOrder = async (req, res) => {
- try {
-  let orderData = req.session.orderData
-  let cart = req.query.cart
-  // Fetch user and cart details from the database
-  let userCart = await Cart.findById(cart);
-  let { products } = userCart;
-  let items = products;
-  const payerId = req.query.PayerID;
-  const paymentId = req.query.paymentId;
+  try {
+    let orderData = req.session.orderData
+    let cart = req.query.cart
+    // Fetch user and cart details from the database
+    let userCart = await Cart.findById(cart);
+    let { products } = userCart;
+    let items = products;
+    const payerId = req.query.PayerID;
+    const paymentId = req.query.paymentId;
 
-  const execute_payment_json = {
-    payer_id: payerId
-  };
+    const execute_payment_json = {
+      payer_id: payerId
+    };
 
-  paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
-    if (error) {
-      console.error(error.response);
-      throw error;
-    } else {
-      let order = new Order({
-        userId: orderData.userId,
-        username: orderData.username,
-        email: orderData.email,
-        shippingAddress: orderData.shippingAddress,
-        items: orderData.items,
-        totalAmount: orderData.totalAmount,
-        paymentMethod: orderData.paymentMethod,
-        totalDiscount:orderData.totalDiscount,
-        paymentId: paymentId
+    paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
+      if (error) {
+        console.error(error.response);
+        throw error;
+      } else {
+        let order = new Order({
+          userId: orderData.userId,
+          username: orderData.username,
+          email: orderData.email,
+          shippingAddress: orderData.shippingAddress,
+          items: orderData.items,
+          totalAmount: orderData.totalAmount,
+          paymentMethod: orderData.paymentMethod,
+          totalDiscount: orderData.totalDiscount,
+          paymentId: paymentId
 
-      })
-      await order.save()
+        })
+        await order.save()
 
-      delete req.session.orderData
-      await Cart.deleteOne({ _id: cart });
-      for (let i = 0; i < items.length; i++) {
-        await Product.updateOne(
-          { _id: items[i].productId },
-          { $inc: { quantity: -items[i].cartQty } }
-        );
+        delete req.session.orderData
+        await Cart.deleteOne({ _id: cart });
+        for (let i = 0; i < items.length; i++) {
+          await Product.updateOne(
+            { _id: items[i].productId },
+            { $inc: { quantity: -items[i].cartQty } }
+          );
+        }
+
+        res.render('Users/successOrder')
       }
+    })
 
-      res.render('Users/successOrder')
-    }
-  })
-
- } catch (error) {
-   console.log(error);
-   res.render('Users/404error')
- }
+  } catch (error) {
+    console.log(error);
+    res.render('Users/404error')
+  }
 
 }
 
@@ -288,8 +289,8 @@ exports.orderView = async (req, res) => {
     }
   } catch (error) {
     console.error("Error retrieving orders:", error);
-    // Handle the error and render an error page or provide appropriate response
-    res.status(500).send("Error retrieving orders");
+
+    res.render('Users/404error')
   }
 };
 
@@ -309,13 +310,13 @@ exports.cancelOrder = async (req, res) => {
     res.status(200).json({ message: 'Order successfully cancelled.' });
 
   } catch (error) {
-
+    res.render('Users/404error')
   }
 }
 
 exports.returnOrder = async (req, res) => {
   try {
-    const userId = req.session.user; 
+    const userId = req.session.user;
     const { productId, cartQty, itemId } = req.query;
 
 
@@ -342,7 +343,7 @@ exports.returnOrder = async (req, res) => {
 
   } catch (error) {
     console.error('Error in returning order:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.render('Users/404error')
   }
 };
 
@@ -360,6 +361,7 @@ exports.orderDetails = async (req, res) => {
     res.render('./Users/orderDetails', { order, orderedItem })
   } catch (error) {
     console.log(error);
+    res.render('Users/404error')
   }
 }
 
@@ -425,6 +427,7 @@ exports.invoiceDownload = async (req, res) => {
 
   } catch (error) {
     console.log('Error while download', error);
+    res.render('Users/404error')
   }
 
 }

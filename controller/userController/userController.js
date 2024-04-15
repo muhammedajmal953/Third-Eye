@@ -25,8 +25,8 @@ exports.landing = async (req, res) => {
     if (req.session.user) {
       return res.redirect("/user/home");
     }
-    const catagory = await Catagory.find().limit(5);
-    const product = await Product.find().limit(5);
+    const catagory = await Catagory.find().limit(4);
+    const product = await Product.find().limit(4);
     // Rendering user home page and passing retrieved categories and products to the view
     res.render("./Users/landing", { catagory: catagory, product: product });
   } catch (error) {
@@ -45,18 +45,22 @@ exports.get_login = (req, res) => {
     return res.render("./Users/userLogin", { message });
   } catch (error) {
     console.error("Error rendering login page:", error);
-    res.status(500).send("Internal Server Error");
+    res.render('Users/404error')
   }
 };
 
 exports.get_signup = (req, res) => {
-  let referalId = req.query.referalId || ''
+  try {
+    let referalId = req.query.referalId || ''
   
-  if (!referalId) {
-    return res.render("./Users/userSignUp", { message: "", referalId: '' })
+    if (!referalId) {
+      return res.render("./Users/userSignUp", { message: "", referalId: '' })
 
+    }
+    res.render("./Users/userSignUp", { message: "", referalId }); // Rendering user signup page
+  } catch (error){
+    res.render('Users/404error')
   }
-  res.render("./Users/userSignUp", { message: "", referalId }); // Rendering user signup page
 };
 
 exports.user_login = async (req, res) => {
@@ -104,7 +108,7 @@ exports.user_login = async (req, res) => {
   } catch (error) {
     // Handle any errors that occur during the process
     console.error("Error logging in user:", error);
-    res.status(400).json({ error: "Invalid credentials" });
+    res.render('Users/404error')
   }
 };
 
@@ -112,7 +116,7 @@ exports.google_login = async (req, res) => {
   try {
     res.redirect("/user/home");
   } catch (error) {
-
+    res.render('Users/404error')
   }
 };
 
@@ -155,7 +159,7 @@ exports.user_SignUp = async (req, res) => {
   } catch (error) {
     // Handle any errors that occur during the process
     console.error("Error signing up user:", error);
-    res.status(500).send("Internal Server Error");
+    res.render('Users/404error')
   }
 };
 
@@ -243,7 +247,7 @@ exports.verifyEmail = async (req, res) => {
     await otpModel.deleteOne({ email: globalEmail, otp: userOtp });
   } catch (error) {
     console.error("Error signing up user:", error);
-    res.status(500).send("Internal Server Error");
+    res.render('Users/404error')
   }
 };
 
@@ -257,7 +261,9 @@ exports.resendOtp = async (req, res) => {
     await otpModel.updateOne({ email: globalEmail }, { otp: newOtp });
 
     res.render("./Users/otpVerification", { message: "" });
-  } catch { }
+  } catch { 
+    res.render('Users/404error')
+  }
 };
 
 //forgot password
@@ -270,34 +276,38 @@ exports.forgotPassword = (req, res) => {
   } catch (error) {
 
     console.log(error);
-
+    res.render('Users/404error')
   }
 }
 
 
 
 exports.forgotOtp = async (req, res) => {
-  const email = req.body.email
-  const user = await Users.find({ email: email })
+  try {
+    const email = req.body.email
+    const user = await Users.find({ email: email })
 
-  if (!user) {
+    if (!user) {
 
-    return res.redirect('/user/forgotPassword?message=enter a valid email')
+      return res.redirect('/user/forgotPassword?message=enter a valid email')
+    }
+    globalEmail = email
+    OTP = generateOtp();
+    console.log(OTP);
+
+    sendMail(email, OTP);
+
+    const otpStore = new otpModel({
+      email: email,
+      otp: OTP,
+    });
+
+    await otpStore.save();
+    req.session.forgot = 1
+    res.render('Users/otpVerification', { message: '' })
+  } catch {
+    res.render('Users/404error')
   }
-  globalEmail = email
-  OTP = generateOtp();
-  console.log(OTP);
-
-  sendMail(email, OTP);
-
-  const otpStore = new otpModel({
-    email: email,
-    otp: OTP,
-  });
-
-  await otpStore.save();
-  req.session.forgot = 1
-  res.render('Users/otpVerification', { message: '' })
 }
 
 exports.newPassword = async (req, res) => {
@@ -310,7 +320,7 @@ exports.newPassword = async (req, res) => {
     globalEmail = null
     res.redirect('/user/login?message=password changed successfully')
   } catch (error) {
-
+    res.render('Users/404error')
   }
 }
 
@@ -341,6 +351,7 @@ exports.get_home = async (req, res) => {
     res.render("./Users/home", { catagory: catagory, product: products, message });
   } catch (error) {
     console.log(error);
+    res.render('Users/404error')
   }
 };
 
@@ -351,5 +362,8 @@ exports.user_logout = (req, res) => {
   try {
     req.session.user = null;
     res.redirect("/");
-  } catch (error) { }
+  } catch (error) { 
+    res.render('Users/404error')
+  }
 };
+ 

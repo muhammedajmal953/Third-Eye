@@ -20,7 +20,9 @@ exports.orders = async (req, res) => {
       res.render("./admin/orderManage", { orders: "", totalPages: [] });
     }
     res.render("./admin/orderManage", { orders, totalPages });
-  } catch (error) { }
+  } catch (error) { 
+    res.render('admin/admin404')
+  }
 };
 
 exports.ordersDetails = async (req, res) => {
@@ -32,7 +34,9 @@ exports.ordersDetails = async (req, res) => {
     const orderedItems = order.items;
 
     res.render("./admin/orderdetails", { orderedItems, order });
-  } catch (error) { }
+  } catch (error) { 
+    res.render('admin/admin404')
+  }
 };
 
 exports.change_status = async (req, res) => {
@@ -46,7 +50,9 @@ exports.change_status = async (req, res) => {
     );
 
     res.status(200).json(changedStatus);
-  } catch (error) { }
+  } catch (error) { 
+    res.render('admin/admin404')
+  }
 };
 
 exports.weeklyReport = async (req, res) => {
@@ -94,7 +100,7 @@ exports.weeklyReport = async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.render('admin/admin404')
   }
 };
 
@@ -159,7 +165,7 @@ exports.weeklyDownloads = async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.render('admin/admin404')
   }
 }
 
@@ -204,7 +210,7 @@ exports.dailyReport = async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.render('admin/admin404')
   }
 }
 
@@ -315,7 +321,7 @@ exports.monthlyReport = async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.render('admin/admin404')
   }
 }
 exports.monthlyDownloads = async (req, res) => {
@@ -377,7 +383,7 @@ exports.monthlyDownloads = async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.render('admin/admin404')
   }
 }
 
@@ -424,7 +430,7 @@ exports.customReport = async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.render('admin/admin404')
   }
 }
 
@@ -488,7 +494,7 @@ exports.customDownloads = async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.render('admin/admin404')
   }
 }
 
@@ -536,7 +542,7 @@ exports.yearlyReport = async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.render('admin/admin404')
   }
 }
 
@@ -601,7 +607,7 @@ exports.yearlyDownloads = async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.render('admin/admin404')
   }
 }
 
@@ -639,6 +645,6 @@ exports.approveReturn = async (req, res) => {
 
   res.json('success');
   } catch (error) {
-    
+    res.render('admin/admin404')
   }
 }

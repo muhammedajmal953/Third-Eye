@@ -55,45 +55,52 @@ exports.cancelledPayment = async (req, res) => {
         res.redirect('/user/orders')
     } catch (error) {
         console.log(error);
+        res.render('Users/404error')
     }
 }
 
 
 exports.quickPayment = async (req, res) => {
-    const {cartPrice,cartQty,itemId}=req.body
-     let amount=cartPrice*cartQty
-    const paypalPayment = {
-        "intent": "sale",
-        "payer": {
-          "payment_method": "paypal"
-        },
-        "redirect_urls": {
-          "return_url": `http://localhost:5000/user/successQuickPayment?itemId=${itemId}`, // Your success URL
-          "cancel_url": `http://localhost:5000/user/orders`    // Your cancel URL
-        },
-        "transactions": [{
-          "amount": {
-            "total": amount,
-            "currency": "USD"
-          },
-          "description": "Your purchase description goes here."
-        }]
-      };
+    try {
 
-      // Create PayPal payment
-    paypal.payment.create(paypalPayment, async function (error, payment) {
-        if (error) {
-            console.error(error);
-            return res.status(500).send("Failed to create PayPal payment.");
-        } else {
-            for (let i = 0; i < payment.links.length; i++) {
-                if (payment.links[i].rel === 'approval_url') {
-                  // Redirect to PayPal approval URL
-                  return res.json({ redirectUrl: payment.links[i].href });
+
+        const { cartPrice, cartQty, itemId } = req.body
+        let amount = cartPrice * cartQty
+        const paypalPayment = {
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal"
+            },
+            "redirect_urls": {
+                "return_url": `http://localhost:5000/user/successQuickPayment?itemId=${itemId}`, // Your success URL
+                "cancel_url": `http://localhost:5000/user/orders`    // Your cancel URL
+            },
+            "transactions": [{
+                "amount": {
+                    "total": amount,
+                    "currency": "USD"
+                },
+                "description": "Your purchase description goes here."
+            }]
+        };
+
+        // Create PayPal payment
+        paypal.payment.create(paypalPayment, async function (error, payment) {
+            if (error) {
+                console.error(error);
+                return res.status(500).send("Failed to create PayPal payment.");
+            } else {
+                for (let i = 0; i < payment.links.length; i++) {
+                    if (payment.links[i].rel === 'approval_url') {
+                        // Redirect to PayPal approval URL
+                        return res.json({ redirectUrl: payment.links[i].href });
+                    }
                 }
-            } 
-        }
-    })
+            }
+        })
+    } catch (error) {
+        res.render('Users/404error')
+    }
 }
 
 
@@ -101,10 +108,10 @@ exports.successQuickPayement = async (req, res) => {
     try {
         const payerId = req.query.PayerID;
         const paymentId = req.query.paymentId;
-        const itemId=req.query.itemId
-      
+        const itemId = req.query.itemId
+
         const execute_payment_json = {
-          payer_id: payerId
+            payer_id: payerId
         };
 
         paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
@@ -121,6 +128,6 @@ exports.successQuickPayement = async (req, res) => {
             }
         })
     } catch (error) {
-        
+        res.render('Users/404error')
     }
 }

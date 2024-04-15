@@ -10,6 +10,14 @@ const { response } = require("express");
 exports.addToCart = async (req, res) => {
   try {
     let userId = req.session.user;
+
+
+    if (!userId) {
+      return res.json('')
+    }
+    
+
+
     let { productId } = req.query;
 
     const product = await Product.findOne({ _id: productId });
@@ -62,7 +70,7 @@ exports.addToCart = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send("Something went wrong");
+    res.render('Users/404error')
   }
 };
 
@@ -101,7 +109,9 @@ exports.show_cart = async (req, res) => {
     }
     
     res.render("./Users/cart", { products, userCart, productQuantity ,totalProducts});
-  } catch (error) { }
+  } catch (error) { 
+    res.render('Users/404error')
+  }
 };
 
 //remove from cart
@@ -127,7 +137,8 @@ exports.removeCart = async (req, res) => {
   } catch (error) {
     // Handle any errors that occur during the update operation
     console.error("Error removing product from cart:", error);
-    res.status(500).send("Internal server error.");
+    res.render('Users/404error')
+   
   }
 };
 
@@ -182,7 +193,7 @@ exports.totalIncrement = async (req, res) => {
     res.status(200).json(data);
   } catch (error) {
     console.log("Error incrementing product quantity in cart:", error);
-    res.status(500).send("Internal server error.");
+    res.render('Users/404error')
   }
 };
 
@@ -236,7 +247,7 @@ exports.totalDecrement = async (req, res) => {
     res.status(200).json(data);
   } catch (error) {
     console.error("Error incrementing product quantity in cart:", error);
-    res.status(500).send("Internal server error.");
+    res.render('Users/404error')
   }
 };
 
@@ -246,36 +257,44 @@ exports.totalDecrement = async (req, res) => {
 
 
 exports.applyCoupon = async (req, res) => {
-  let { totalPrice, couponCode,totalDiscount } = req.body
+  try {
+    let { totalPrice, couponCode, totalDiscount } = req.body
 
-  const coupon = await Coupon.findOne({ code: couponCode })
+    const coupon = await Coupon.findOne({ code: couponCode })
 
-  if (!coupon) {
-    return res.json('No coupon found')
-  }
+    if (!coupon) {
+      return res.json('No coupon found')
+    }
 
 
   
-  let price = Number(totalPrice)-Number(totalDiscount)
-  let couponOffer = parseFloat(coupon.offer)
+    let price = Number(totalPrice) - Number(totalDiscount)
+    let couponOffer = parseFloat(coupon.offer)
 
 
-  let discountPrice = 0
-  discountPrice = Math.floor(price - (price * couponOffer / 100))
-
- 
-  req.session.couponRate = couponOffer
+    let discountPrice = 0
+    discountPrice = Math.floor(price - (price * couponOffer / 100))
 
  
-  res.json(discountPrice)
+    req.session.couponRate = couponOffer
+
+ 
+    res.json(discountPrice)
+  } catch (error){
+    res.render('Users/404error')
+  }
 
 }
 
 
 exports.removeCoupon = async (req, res) => {
-  const { totalPrice ,totalDiscount} = req.body.totalPrice
+  try {
+    const { totalPrice, totalDiscount } = req.body.totalPrice
   
-  delete req.session.couponRate
+    delete req.session.couponRate
 
-  res.json(totalPrice-totalDiscount)
+    res.json(totalPrice - totalDiscount)
+  } catch(error) {
+    res.render('Users/404error')
+  }
 }

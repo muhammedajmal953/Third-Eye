@@ -85,7 +85,7 @@ exports.edit_catagory = async (req, res) => {
     } catch (error) {
       // Handle any errors that occur during the process
       console.error("Error editing category:", error);
-      res.status(500).send("error of eddting catagory");
+      res.render('admin/admin404')
     }
 };
   
@@ -106,7 +106,7 @@ exports.remove_catagory = async (req, res) => {
     } catch (error) {
       // Handle any errors that occur during the process
       console.error("Error removing category:", error);
-      res.status(500).send("Internal Server Error");
+      res.render('admin/admin404')
     }
   };
   
@@ -123,9 +123,9 @@ exports.remove_catagory = async (req, res) => {
       // Redirect to the unlisted categories page
       res.redirect("/admin/unlisted-catagory");
     } catch (error) {
-      // Handle any errors that occur during the process
+      
       console.error("Error restoring category:", error);
-      res.status(500).send("Internal Server Error");
+      res.render('admin/admin404')
     }
   };
   

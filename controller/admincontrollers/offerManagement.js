@@ -7,37 +7,52 @@ const Referal = require("../../model/referalModel")
 
 
 exports.referal = async (req, res) => {
-    const referal = await Referal.find()
-    if (!referal) {
-        res.render('admin/referalOffer', { referal: [] })
+    try {
+        const referal = await Referal.find()
+        if (!referal) {
+            res.render('admin/referalOffer', { referal: [] })
+        }
+
+        res.render('admin/referalOffer', { referal })
+
+    } catch (error) {
+        res.render('admin/admin404')
     }
-    
-    res.render('admin/referalOffer', { referal })
 }
 
 
 exports.saveReferal = async (req, res) => {
-    const { referralOffer, referredOffer, validity } = req.body
+    try {
+        const { referralOffer, referredOffer, validity } = req.body
 
-    const newDate = new Date(validity)
+        const newDate = new Date(validity)
 
-    const referal = new Referal({
-        referalOffer: referralOffer,
-        referedOffer: referredOffer, 
-        Validity: newDate
-    })
-    referal.save()
+        const referal = new Referal({
+            referalOffer: referralOffer,
+            referedOffer: referredOffer,
+            Validity: newDate
+        })
+        referal.save()
 
-    res.redirect('/admin/referalOffer')
+        res.redirect('/admin/referalOffer')
+
+    } catch (error) {
+        res.render('admin/admin404')
+    }
 }
 
 
 exports.deleteReferal = async (req, res) => {
-    const referalId = req.query.id
+    try {
+        const referalId = req.query.id
 
-    await Referal.deleteOne({ _id: referalId })
+        await Referal.deleteOne({ _id: referalId })
 
-    res.redirect('/admin/referalOffer')
+        res.redirect('/admin/referalOffer')
+
+    } catch (error) {
+        res.render('admin/admin404')
+    }
 }
 
 
@@ -49,7 +64,7 @@ exports.catagoryOffer = async (req, res) => {
 
         res.render('admin/catagoryOffer', { catagories, catagoryOffer })
     } catch (error) {
-
+        res.render('admin/admin404')
     }
 }
 
@@ -69,7 +84,7 @@ exports.saveCatagoryOffer = async (req, res) => {
 
         res.redirect('/admin/catagoryOffer')
     } catch (error) {
-
+        res.render('admin/admin404')
     }
 }
 exports.deleteCatagoryOffer = async (req, res) => {
@@ -78,7 +93,7 @@ exports.deleteCatagoryOffer = async (req, res) => {
         await CatagoryOffer.deleteOne({ _id: id })
         res.redirect('/admin/catagoryOffer')
     } catch (error) {
-
+        res.render('admin/admin404')
     }
 }
 
@@ -86,12 +101,12 @@ exports.deleteCatagoryOffer = async (req, res) => {
 exports.productOffer = async (req, res) => {
     try {
         const products = await Product.find()
-       
+
         const productOffer = await ProductOffer.find()
 
         res.render('admin/productOffer', { products, productOffer })
     } catch (error) {
-
+        res.render('admin/admin404')
     }
 }
 
@@ -111,7 +126,7 @@ exports.saveProductOffer = async (req, res) => {
 
         res.redirect('/admin/productOffer')
     } catch (error) {
-
+        res.render('admin/admin404')
     }
 }
 
@@ -123,7 +138,7 @@ exports.deleteProductOffer = async (req, res) => {
         await ProductOffer.deleteOne({ _id: id })
         res.redirect('/admin/productOffer')
     } catch (error) {
-
+        res.render('admin/admin404')
     }
 }
 
@@ -137,30 +152,40 @@ exports.coupon = async (req, res) => {
         }
         res.render('admin/coupons', { coupons })
     } catch (error) {
-
+        res.render('admin/admin404')
     }
 }
 
 exports.saveCoupon = async (req, res) => {
-    const { code, couponDiscount, validity } = req.body
-    const today=new Date()
-
-    const existing = await Coupon.findOne({ code: code })
+    try {
+        const { code, couponDiscount, validity } = req.body
+        const today = new Date()
     
-  
-    const coupon = new Coupon({
-        code,
-        offer: couponDiscount,
-        validity
-    })
-
-    coupon.save()
-
-    res.redirect('/admin/coupons')
+        const existing = await Coupon.findOne({ code: code })
+    
+    
+        const coupon = new Coupon({
+            code,
+            offer: couponDiscount,
+            validity
+        })
+    
+        coupon.save()
+    
+        res.redirect('/admin/coupons')
+        
+    } catch (error) {
+        res.render('admin/admin404')
+    }
 }
 
 exports.deleteCoupon = async (req, res) => {
-    let id = req.query.id
-    await Coupon.deleteOne({ _id: id })
-    res.redirect('/admin/coupons')
+    try {
+        let id = req.query.id
+        await Coupon.deleteOne({ _id: id })
+        res.redirect('/admin/coupons')
+        
+    } catch (error) {
+        res.render('admin/admin404')  
+    }
 }

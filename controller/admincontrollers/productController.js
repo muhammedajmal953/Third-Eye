@@ -15,7 +15,9 @@ exports.products = async (req, res) => {
     const product = await Product.find().skip(skip).limit(limit);
 
     res.render("./admin/productList", { product: product, totalPages });
-  } catch (error) { }
+  } catch (error) { 
+    res.render('admin/admin404')
+  }
 };
 
 
@@ -55,7 +57,7 @@ exports.add_products = async (req, res) => {
   } catch (error) {
     // Handle any errors that occur during the process
     console.error("Error adding product:", error);
-    res.status(500).send("Internal Server Error");
+    res.render('admin/admin404')
   }
 };
 
@@ -124,7 +126,7 @@ exports.edit_products = async (req, res) => {
   } catch (error) {
     // Handle any errors that occur during the process
     console.error("Error editing product:", error);
-    res.status(500).send("Give The Correct Images");
+    res.render('admin/admin404')
   }
 };
 
@@ -143,7 +145,7 @@ exports.unlist_product = async (req, res) => {
   } catch (error) {
     // Handle any errors that occur during the process
     console.error("Error unlisting product:", error);
-    res.status(500).send("Internal Server Error");
+    res.render('admin/admin404')
   }
 };
 
@@ -162,7 +164,7 @@ exports.list_products = async (req, res) => {
   } catch (error) {
     // Handle any errors that occur during the process
     console.error("Error listing product:", error);
-    res.status(500).send("Internal Server Error");
+    res.render('admin/admin404')
   }
 };
 

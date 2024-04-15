@@ -8,7 +8,9 @@ exports.show_adress = async (req, res) => {
     const user = await Users.findOne({ _id: id });
 
     res.render("./Users/address", { user });
-  } catch (error) { }
+  } catch (error) {
+    res.render('Users/404error')
+  }
 };
 
 //addind address
@@ -31,7 +33,9 @@ exports.addAddress = async (req, res) => {
     );
 
     res.redirect("/user/adresses");
-  } catch (error) { }
+  } catch (error) {
+    res.render('Users/404error')
+  }
 };
 exports.addAddressCheckOut = async (req, res) => {
   try {
@@ -52,8 +56,8 @@ exports.addAddressCheckOut = async (req, res) => {
     );
 
     res.redirect("/user/checkout");
-  } catch (error) { 
-
+  } catch (error) {
+    res.render('Users/404error')
   }
 };
 
@@ -68,28 +72,35 @@ exports.get_editAddress = async (req, res) => {
     res.render("./Users/editAddress", { address, index });
   } catch (error) {
     console.log(error);
+    res.render('Users/404error')
   }
 };
 
 //save the edited address
 exports.addressEdit = async (req, res) => {
-  const addressIndex = req.query.addressIndex;
-  const userId = req.session.user;
-  const { houseName, pincode, city, village, state } = req.body;
-  const newAddress = {
-    houseName,
-    pincode,
-    city,
-    village,
-    state,
-  };
+  try {
 
-  const user = await Users.findById(userId);
 
-  user.address[addressIndex] = newAddress;
-  await user.save();
+    const addressIndex = req.query.addressIndex;
+    const userId = req.session.user;
+    const { houseName, pincode, city, village, state } = req.body;
+    const newAddress = {
+      houseName,
+      pincode,
+      city,
+      village,
+      state,
+    };
 
-  res.redirect("/user/adresses");
+    const user = await Users.findById(userId);
+
+    user.address[addressIndex] = newAddress;
+    await user.save();
+
+    res.redirect("/user/adresses");
+  } catch (error) {
+    res.render('Users/404error')
+  }
 };
 
 //delete address
@@ -103,7 +114,7 @@ exports.deleteAddress = async (req, res) => {
       { $pull: { address: { _id: addressId } } }
     );
     res.redirect("/user/adresses");
-  } catch (error) { 
-    
+  } catch (error) {
+    res.render('Users/404error')
   }
 };

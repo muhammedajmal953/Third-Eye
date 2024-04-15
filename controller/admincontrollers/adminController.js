@@ -15,8 +15,9 @@ exports.get_login = (req, res) => {
     // not logged in redirect to login page
     return res.render("./admin/login");
   } catch (error) {
-    res.status(500).send("Internal Server Error");
+   
     console.error("Error rendering login page:", error);
+    res.render('admin/admin404')
   }
 };
 
@@ -34,7 +35,7 @@ exports.admin_login = async (req, res) => {
       return res.redirect("/admin");
     }
   } catch (error) {
-    res.status(500).send("invalid credentials");
+    res.render('admin/admin404')
   }
 };
 
@@ -168,7 +169,7 @@ exports.getDashboard = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching data:", error);
-
+    res.render('admin/admin404')
   }
 };
 
@@ -177,7 +178,9 @@ exports.userList = async (req, res) => {
   try {
     const users = await Users.find();
     res.render("./admin/customers-details", { users: users });
-  } catch (error) { }
+  } catch (error) { 
+    res.render('admin/admin404')
+  }
 };
 
 //block user
@@ -191,7 +194,9 @@ exports.user_block = async (req, res) => {
       }
     );
     res.redirect("/admin/customers");
-  } catch { }
+  } catch {
+    res.render('admin/admin404')
+   }
 };
 
 //unblock user
@@ -206,7 +211,9 @@ exports.user_unblock = async (req, res) => {
       }
     );
     res.redirect("/admin/customers");
-  } catch { }
+  } catch {
+    res.render('admin/admin404')
+   }
 };
 
 // adminLogout handling
@@ -214,5 +221,7 @@ exports.admin_logout = (req, res) => {
   try {
     delete req.session.admin;
     res.redirect("/admin");
-  } catch (error) { }
+  } catch (error) {
+    res.render('admin/admin404')
+   }
 };

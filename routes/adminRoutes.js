@@ -30,20 +30,35 @@ adminRoutes.post('/block-user', adminControler.user_block)
 adminRoutes.post('/unBlock-user', adminControler.user_unblock)
 
 adminRoutes.get('/catagory', isAdminLoggedIn, async (req, res) => {
-    const catagory = await Catagory.find()
-
-    res.render("./admin/catagory", { catagory: catagory })
+    try {
+        const catagory = await Catagory.find()
+    
+        res.render("./admin/catagory", { catagory: catagory })
+        
+    } catch (error) {
+        res.render('admin/admin404')  
+    }
 })
 adminRoutes.get('/add-catagory', isAdminLoggedIn, async (req, res) => {
-    res.render("./admin/addCatagory", { message: '' })
+    try {
+        res.render("./admin/addCatagory", { message: '' })
+        
+    } catch (error) {
+        res.render('admin/admin404') 
+    }
 })
 
 adminRoutes.post('/add-catagory', upload.single('image'), catagoryController.add_catagory)
 
 adminRoutes.get('/edit-catagory', isAdminLoggedIn, async (req, res) => {
-    const id = req.query.id
-    const catag = await Catagory.findOne({ _id: id })
-    res.render('./admin/editCatagory', { message: '', catag: catag })
+    try {
+        const id = req.query.id
+        const catag = await Catagory.findOne({ _id: id })
+        res.render('./admin/editCatagory', { message: '', catag: catag })
+        
+    } catch (error) {
+        res.render('admin/admin404')
+    }
 })
 adminRoutes.post('/edit-catagory/:id', upload.single('image'), catagoryController.edit_catagory)
 
@@ -54,32 +69,52 @@ adminRoutes.post('/remove-catagory', catagoryController.remove_catagory)
 adminRoutes.post('/unRemove-catagory', catagoryController.unRemove_catagory)
 
 adminRoutes.get('/unlisted-catagory', isAdminLoggedIn, async (req, res) => {
-    const catagory = await Catagory.find()
-
-    res.render("./admin/removedCatagory", { catagory: catagory })
+    try {
+        const catagory = await Catagory.find()
+    
+        res.render("./admin/removedCatagory", { catagory: catagory })
+        
+    } catch (error) {
+        res.render('admin/admin404') 
+    }
 })
 
 adminRoutes.get('/products', isAdminLoggedIn, productController.products)
 
 
 adminRoutes.get('/add-product', isAdminLoggedIn, async (req, res) => {
-    const catagory = await Catagory.find()
-
-    res.render("./admin/addProduct", { catagory: catagory })
+    try {
+        const catagory = await Catagory.find()
+    
+        res.render("./admin/addProduct", { catagory: catagory })
+        
+    } catch (error) {
+        res.render('admin/admin404')
+    }
 })
 
 adminRoutes.get('/edit-product', async (req, res) => {
-    const id = req.query.id
-    const product = await Product.findOne({ _id: id })
-    const catagory = await Catagory.find()
-
-    res.render("./admin/editProduct", { product: product, catagory: catagory })
+    try {
+        const id = req.query.id
+        const product = await Product.findOne({ _id: id })
+        const catagory = await Catagory.find()
+    
+        res.render("./admin/editProduct", { product: product, catagory: catagory })
+        
+    } catch (error) {
+        res.render('admin/admin404')
+    }
 })
 
 adminRoutes.get('/unListedProducts', isAdminLoggedIn, async (req, res) => {
-    const product = await Product.find()
-
-    res.render("./admin/unListedproducts", { product: product })
+    try {
+        const product = await Product.find()
+    
+        res.render("./admin/unListedproducts", { product: product })
+        
+    } catch (error) {
+        res.render('admin/admin404')
+    }
 })
 
 
