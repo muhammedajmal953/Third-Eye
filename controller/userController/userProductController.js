@@ -103,10 +103,15 @@ exports.view_products = async (req, res) => {
       if (product.productName === item.productName) {
         product.pOffer = item.offer
       }
+      else {
+        product.pOffer=0
+      }
     }
     for (item of catagoryOffer) {
       if (product.catagory === item.catagoryName) {
         product.cOffer = item.offer
+      } else {
+        product.cOffer =0
       }
     }
 

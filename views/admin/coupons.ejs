@@ -154,7 +154,8 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="offerForm" method="post" action="/admin/saveCoupon" onsubmit="return dateVal()">
+                        <form id="offerForm" method="post" action=""
+                            onsubmit="return saveCoupon(event)">
                             <div class="form-group">
                                 <label for="categoryType">Coupon code:</label>
                                 <input type="text" class="form-control" id="categoryType" name="code" required
@@ -164,7 +165,7 @@
                             <div class="form-group">
                                 <label for="referredOffer">Enter the % of offer:</label>
                                 <input type="number" class="form-control" id="referredOffer" name="couponDiscount"
-                                    min="1" max="100" required>
+                                    min="1" max="75" required>
                                 <div class="invalid-feedback"> Offer must be a positive number.</div>
                             </div>
                             <div class="form-group">
@@ -222,18 +223,18 @@
                         timer: 2000,
 
                     });
+                    const deleteOffer = await axios.post(`/admin/deleteCoupon?id=${couponId}`)
+                    setTimeout(() => {
+                        if (deleteOffer) {
+                            window.location.reload()
+                        }
+                    }, 1000)
                 }
-                const deleteOffer = await axios.post(`/admin/deleteCoupon?id=${couponId}`)
-                setTimeout(() => {
-                    if (deleteOffer) {
-                        window.location.reload()
-                    }
-                }, 2000)
+
             });
 
         }
-        function dateVal() {
-
+        function dateVal() {      
             const selectedDate = document.getElementById('validity')
             const newDate = new Date(selectedDate.value)
             const today = new Date()
@@ -251,6 +252,51 @@
             return true
 
         }
+
+
+        async function saveCoupon(event) {
+        event.preventDefault();
+       
+        if (!(await dateVal())) {
+            return; 
+        }
+
+        try {
+           
+            const formData = new FormData(event.target);
+
+            
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+        
+            const response = await axios.post('/admin/saveCoupon', data);
+             
+            if(!response.data.success){
+                Swal.fire({
+                    title: "oops!",
+                    text: "coupon already exists",
+                    icon: "warning",
+                    timer: 1000,  
+                })
+            }else if(response.data.success){
+                Swal.fire({
+                    title:'coupon added',
+                    icon:'success'
+                })
+                setTimeout(()=>{
+                    window.location.reload()
+                },1000)
+            }  
+           
+        } catch (error) {
+            
+            
+        
+        }
+    }
     </script>
 </body>
 

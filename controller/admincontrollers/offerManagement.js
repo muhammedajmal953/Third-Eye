@@ -163,6 +163,9 @@ exports.saveCoupon = async (req, res) => {
     
         const existing = await Coupon.findOne({ code: code })
     
+        if (existing) {
+           return res.json({ success: false })
+        }
     
         const coupon = new Coupon({
             code,
@@ -172,7 +175,7 @@ exports.saveCoupon = async (req, res) => {
     
         coupon.save()
     
-        res.redirect('/admin/coupons')
+        res.json({ success:true })
         
     } catch (error) {
         res.render('admin/admin404')

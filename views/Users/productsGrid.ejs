@@ -259,8 +259,9 @@
                               <%=products[i].catagory%>
                             </p>
                             <div class="product-price d-flex align-items-center gap-2 mt-2">
-                              <%let offerToApply=(products[i].pOffer && products[i].pOffer> products[i].cOffer) ?
-                                products[i].pOffer : products[i].cOffer;
+                              <% let pOffer = products[i].pOffer||0;
+                                let cOffer = products[i].cOffer||0;
+                                let offerToApply=Math.max(pOffer,cOffer)
                                 %>
                                 <% if (offerToApply) { %>
                                   <div class="h6 fw-bold">

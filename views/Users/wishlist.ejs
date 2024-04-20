@@ -175,9 +175,11 @@
                     </p>
                     <div class="product-price  align-items-center gap-2 mt-2 justify-content-center">
                       <div class="product-price d-flex align-items-center gap-2 mt-2">
-                        <%let offerToApply=(product.pOffer && product.pOffer> product.cOffer) ?
-                          product.pOffer : product.cOffer;
-                          %>
+                       
+                        <% let pOffer = product.pOffer||0;
+                                let cOffer = product.cOffer||0;
+                                let offerToApply=Math.max(pOffer,cOffer)
+                                %>
                           <% if (offerToApply) { %>
                             <div class="h6 fw-bold">
                               $<%=Math.floor(product.price-(product.price*offerToApply /100))%>

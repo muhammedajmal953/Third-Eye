@@ -182,9 +182,10 @@
                           </span><br>
                           <span class="fw-bold mb-0 text-danger">Only <%= productQuantity[i] %> left</span><br>
                           <div class="product-price d-flex align-items-center gap-2 mt-2">
-                            <%let offerToApply=(products[i].pOffer && products[i].pOffer> products[i].cOffer) ?
-                              products[i].pOffer : products[i].cOffer;
-                              %>
+                            <% let pOffer = products[i].pOffer||0;
+                            let cOffer = products[i].cOffer||0;
+                            let offerToApply=Math.max(pOffer,cOffer)
+                            %>
                               <% let discountedPrice=products[i].price; %>
                                 <% if (offerToApply) { %>
                                   <% discountedPrice=Math.floor(products[i].price - (products[i].price * offerToApply /
