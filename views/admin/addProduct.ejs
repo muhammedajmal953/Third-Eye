@@ -202,7 +202,7 @@
             const form = document.getElementById('addProduct');
             const formData = new FormData(form);
 
-           
+           //
             const response = await axios.post(`/admin/add-product`, formData)
 
             if (response.data === 'reduce images') {
