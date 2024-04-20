@@ -124,8 +124,8 @@ exports.walletRecharge = async (req, res) => {
         "payment_method": "paypal"
       },
       "redirect_urls": {
-        "return_url": `http://localhost:5000/user//updateWallet?amount=${amount}`, // Your success URL
-        "cancel_url": 'http://localhost:5000/user/wallet'    // Your cancel URL
+        "return_url": `http://www.thethirdeye.com/user//updateWallet?amount=${amount}`, // Your success URL
+        "cancel_url": 'http://www.thethirdeye.com/user/wallet'    // Your cancel URL
       },
       "transactions": [{
         "amount": {

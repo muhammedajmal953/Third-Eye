@@ -25,19 +25,24 @@ exports.add_products = async (req, res) => {
   try {
     // Extract image URLs from the uploaded files
     const imageUrls = [];
+    if (!req.files || req.files.length === 0) {
+      return res.json('NoImages');
+    }
 
+   else {
     if (req.files) {
+     
       for (i = 0; i < req.files.length; i++) {
         const imageBuffer = await sharp(req.files[i].path)
           .resize({ width: 500, height: 500, fit: sharp.fit.cover })
           .toBuffer();
         const filename = `cropped_${req.files[i].originalname}`;
         imageUrls[i] = filename;
-
+        
         await sharp(imageBuffer).toFile(`./uploads/products/${filename}`);
       }
     }
-
+   
     // Create a new product instance
     const addProduct = new Product({
       productName: req.body.productName,
@@ -53,7 +58,8 @@ exports.add_products = async (req, res) => {
     await addProduct.save();
 
     // Redirect to the products page after successful addition
-    res.redirect("/admin/products");
+    res.json('success')
+   }
   } catch (error) {
     // Handle any errors that occur during the process
     console.error("Error adding product:", error);

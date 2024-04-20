@@ -89,8 +89,7 @@
                         <div class="mb-3" id="imageContainer">
                             <% for(let i=0; i<product.images.length; i++) { %>
                                 <div class="image-item" id="existingImage<%=i%>">
-                                    <img src="/products/<%=product.images[i]%>" width="100px" 
-                                        height="120px">
+                                    <img src="/products/<%=product.images[i]%>" width="100px" height="120px">
                                     <button type="button" class="close-btn"
                                         onclick="deleteImage('<%=i%>')">&times;</button>
                                 </div>
@@ -172,12 +171,12 @@
             const form = document.getElementById('editProductForm');
             const formData = new FormData(form);
 
-            formData.append('deletedImages',deletedImages)
+            formData.append('deletedImages', deletedImages)
 
 
             const response = await axios.post(`/admin/edit-product/${productId}`, formData)
 
-         
+
 
             if (response.data === 'reduce images') {
                 Swal.fire({
@@ -196,6 +195,7 @@
                 }, 1000);
 
             }
+            
         }
 
 
@@ -230,7 +230,7 @@
                 imageItem.appendChild(closeButton);
 
                 imageContainer.appendChild(imageItem);
-                
+
                 selectedFiles.push(inputFiles[i]);
             }
         }

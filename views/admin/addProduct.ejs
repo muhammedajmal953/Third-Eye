@@ -64,8 +64,7 @@
             <div class="card mx-auto card-login">
                 <div class="card-body">
                     <h4 class="card-title mb-4">Add Products</h4>
-                    <form method="post" action="/admin/add-product" enctype="multipart/form-data"
-                        onsubmit="return validateProd()" accept="image">
+                    <form enctype="multipart/form-data" onsubmit="validateProd(event)" accept="image" id="addProduct">
                         <div class="mb-3">
                             <input class="form-control" placeholder="Product Name" id="productName" type="text"
                                 name="productName">
@@ -116,8 +115,9 @@
     <script src="/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/js/vendors/jquery.fullscreen.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
-    
+
 
     <!-- Main Script -->
     <script src="/js/main.js?v=1.1" type="text/javascript"></script>
@@ -159,7 +159,8 @@
                 selectedFiles.push(inputFiles[i]);
             }
         }
-        function validateProd() {
+        async function validateProd(event) {
+            event.preventDefault();
             const trimmedName = document.getElementById('productName').value.trim();
             const trimmedDescription = document.getElementById('discription').value.trim();
             const price = parseFloat(document.getElementById('price').value);
@@ -181,7 +182,7 @@
                     text: 'The fields should not be empty and should not contain negative values.',
 
                 });
-                return false;
+                return
             }
             for (i = 0; i < fileInput.length; i++) {
                 let fileType = fileInput[i].type
@@ -193,41 +194,45 @@
                         text: 'Select Only Image files',
 
                     });
-                    return false;
+                    return
                 }
+                
             }
 
-            return true
-        }
-        function handleImageSelect(event) {
-            const input = event.target;
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const image = new Image();
-                    image.src = e.target.result;
-                    image.onload = function () {
-                        const cropper = new Cropper(image, {
-                            aspectRatio: 16 / 9, // Set your desired aspect ratio here
-                            viewMode: 1, // Set the view mode (0, 1, 2, 3)
-                            guides: true,
-                            cropBoxResizable: false,
-                            crop: function (event) {
-                                // Do something with the cropped image data
-                                console.log(event.detail.x);
-                                console.log(event.detail.y);
-                                console.log(event.detail.width);
-                                console.log(event.detail.height);
-                                console.log(event.detail.rotate);
-                                console.log(event.detail.scaleX);
-                                console.log(event.detail.scaleY);
-                            }
-                        });
-                    };
-                };
-                reader.readAsDataURL(input.files[0]);
+            const form = document.getElementById('addProduct');
+            const formData = new FormData(form);
+
+           
+            const response = await axios.post(`/admin/add-product`, formData)
+
+            if (response.data === 'reduce images') {
+                Swal.fire({
+                    icon: "error",
+                    title: "Reduce images to 5",
+                });
             }
+            if (response.data==='NoImages') {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: 'Select at least one image',
+                    });
+                }
+
+            if (response.data === 'success') {
+                Swal.fire({
+                    icon: "success",
+                    title: "Product Added",
+                });
+                setTimeout(() => {
+                    window.location.href = '/admin/products'
+                }, 1000);
+
+            }
+
+
         }
+
     </script>
 </body>
 

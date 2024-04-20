@@ -72,8 +72,8 @@ exports.quickPayment = async (req, res) => {
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": `http://localhost:5000/user/successQuickPayment?itemId=${itemId}`, // Your success URL
-                "cancel_url": `http://localhost:5000/user/orders`    // Your cancel URL
+                "return_url": `http://www.thethirdeye.com/user/successQuickPayment?itemId=${itemId}`, // Your success URL
+                "cancel_url": `http://www.thethirdeye.com/user/orders`    // Your cancel URL
             },
             "transactions": [{
                 "amount": {

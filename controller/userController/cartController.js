@@ -290,11 +290,11 @@ exports.applyCoupon = async (req, res) => {
 exports.removeCoupon = async (req, res) => {
   try {
     const { totalPrice, totalDiscount } = req.body.totalPrice
-  
+   
     delete req.session.couponRate
-
+    console.log('sssss');  
     res.json(totalPrice - totalDiscount)
   } catch(error) {
     res.render('Users/404error')
   }
-}
+} 
