@@ -26,7 +26,7 @@ exports.add_products = async (req, res) => {
     // Extract image URLs from the uploaded files
     const imageUrls = [];
     if (!req.files || req.files.length === 0) {
-      return res.json('NoImages');
+      return res.json('NoImages'); 
     }
 
    else {
