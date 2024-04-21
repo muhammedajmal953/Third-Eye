@@ -62,11 +62,8 @@ exports.cancelledPayment = async (req, res) => {
 
 exports.quickPayment = async (req, res) => {
     try {
-        let couponRate = req.session.couponRate
         const { cartPrice, cartQty, itemId } = req.body
-        let amount = cartPrice * cartQty   
-        amount = Math.floor(amount - (amount * couponRate / 100))
-        amount+=cartQty*40
+        let amount = cartPrice * cartQty+(cartQty*40)
         const paypalPayment = {
             "intent": "sale",
             "payer": {
