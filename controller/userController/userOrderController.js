@@ -114,7 +114,7 @@ exports.orderPlace = async (req, res) => {
    
 
     let shipping = totalproducts * 40
-    totalPrice += shipping
+  
 
     if (req.session.couponRate) {
       let couponRate = req.session.couponRate
@@ -132,7 +132,7 @@ exports.orderPlace = async (req, res) => {
 
       delete req.session.couponRate
     }
-
+    totalPrice += shipping
 
     if (paymentMethod === 'paypal') {
       let totalAmount = totalPrice // Format total amount for PayPal payment
