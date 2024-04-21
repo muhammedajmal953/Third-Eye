@@ -62,8 +62,6 @@ exports.cancelledPayment = async (req, res) => {
 
 exports.quickPayment = async (req, res) => {
     try {
-
-
         const { cartPrice, cartQty, itemId } = req.body
         let amount = cartPrice * cartQty+(cartQty*40)
         const paypalPayment = {

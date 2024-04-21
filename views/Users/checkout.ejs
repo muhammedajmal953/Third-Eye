@@ -588,11 +588,11 @@
             const couponCode = document.getElementById('couponCode').value
 
 
-            if (totalPrice < 75) {
+            if (totalPrice < 500) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Sorry!',
-                    text: 'Order must be over $75 to Apply coupon!',
+                    text: 'Order must be over rs-500 to Apply coupon!',
                     showConfirmButton: false,
                     timer: 2000
                 });
