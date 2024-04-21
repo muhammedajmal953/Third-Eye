@@ -65,7 +65,7 @@ exports.quickPayment = async (req, res) => {
 
 
         const { cartPrice, cartQty, itemId } = req.body
-        let amount = cartPrice * cartQty
+        let amount = cartPrice * cartQty+(cartQty*40)
         const paypalPayment = {
             "intent": "sale",
             "payer": {
