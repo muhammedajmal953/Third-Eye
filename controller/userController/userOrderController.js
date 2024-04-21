@@ -130,7 +130,7 @@ exports.orderPlace = async (req, res) => {
 
 
 
-      delete req.session.couponRate
+    
     }
     totalPrice += shipping
 
@@ -198,6 +198,7 @@ exports.orderPlace = async (req, res) => {
       });
 
       await order.save();
+      delete req.session.couponRate
       await Cart.deleteOne({ _id: cart });
       for (let i = 0; i < products.length; i++) {
         await Product.updateOne(
@@ -245,7 +246,7 @@ exports.successOrder = async (req, res) => {
 
         })
         await order.save()
-
+        delete req.session.couponRate
         delete req.session.orderData
         await Cart.deleteOne({ _id: cart });
         for (let i = 0; i < items.length; i++) {

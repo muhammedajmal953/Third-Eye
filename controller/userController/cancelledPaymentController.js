@@ -51,7 +51,7 @@ exports.cancelledPayment = async (req, res) => {
                 { $inc: { quantity: -items[i].cartQty } }
             );
         }
-
+        
         res.render('Users/cancelledPayment')
     } catch (error) {
         console.log(error);
@@ -62,8 +62,11 @@ exports.cancelledPayment = async (req, res) => {
 
 exports.quickPayment = async (req, res) => {
     try {
+        let couponRate = req.session.couponRate
         const { cartPrice, cartQty, itemId } = req.body
-        let amount = cartPrice * cartQty+(cartQty*40)
+        let amount = cartPrice * cartQty   
+        amount = Math.floor(amount - (amount * couponRate / 100))
+        amount+=cartQty*40
         const paypalPayment = {
             "intent": "sale",
             "payer": {
@@ -107,11 +110,11 @@ exports.successQuickPayement = async (req, res) => {
         const payerId = req.query.PayerID;
         const paymentId = req.query.paymentId;
         const itemId = req.query.itemId
-
+        
         const execute_payment_json = {
             payer_id: payerId
         };
-
+        delete req.session.couponRate
         paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
             if (error) {
                 console.error(error.response);
