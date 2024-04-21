@@ -111,6 +111,11 @@ exports.orderPlace = async (req, res) => {
     let totalproducts = products.reduce((acc, cur) => acc += cur.cartQty, 0)
 
 
+   
+
+    let shipping = totalproducts * 40
+    totalPrice += shipping
+
     if (req.session.couponRate && req.query.coupon) {
       let couponRate = req.session.couponRate
 
@@ -127,9 +132,6 @@ exports.orderPlace = async (req, res) => {
       delete req.session.couponRate
     }
 
-
-    let shipping = totalproducts * 40
-    totalPrice += shipping
 
     if (paymentMethod === 'paypal') {
       let totalAmount = totalPrice // Format total amount for PayPal payment
