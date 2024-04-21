@@ -116,10 +116,11 @@ exports.orderPlace = async (req, res) => {
     let shipping = totalproducts * 40
     totalPrice += shipping
 
-    if (req.session.couponRate && req.query.coupon) {
+    if (req.session.couponRate) {
       let couponRate = req.session.couponRate
-
-
+      
+      console.log('coupon rate:',couponRate );
+      
       totalPrice = Math.floor(totalPrice - (totalPrice * couponRate / 100))
 
 
