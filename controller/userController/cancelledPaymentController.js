@@ -52,7 +52,7 @@ exports.cancelledPayment = async (req, res) => {
             );
         }
 
-        res.redirect('/user/orders')
+        res.render('Users/cancelledPayment')
     } catch (error) {
         console.log(error);
         res.render('Users/404error')
@@ -72,7 +72,7 @@ exports.quickPayment = async (req, res) => {
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": `http://www.thethirdeye.shop/user/successQuickPayment?itemId=${itemId}`, // Your success URL
+                "return_url": `http://www.thethirdeye.shop/user/successQuickPayment?itemId=${itemId}`, 
                 "cancel_url": `http://www.thethirdeye.shop/user/orders`    // Your cancel URL
             },
             "transactions": [{
