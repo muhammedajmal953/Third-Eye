@@ -77,12 +77,13 @@ exports.weeklyReport = async (req, res) => {
     let totalSales = 0
     // Iterate over each order document
     sales.forEach(order => {
-      const { username, shippingAddress, odrderedDate, totalAmount } = order;
+      const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
       order.items.forEach(item => {
         const formattedItem = {
           username,
+          _id,
           shippingAddress,
           odrderedDate: odrderedDate.toDateString(),
           productName: item.productName,
@@ -175,7 +176,7 @@ exports.dailyReport = async (req, res) => {
     const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
 
     const sales = await Order.find({
-      odrderedDate: { $gte: yesterday, $lte: today }
+      odrderedDate: { $gt: yesterday, $lte: today }
     });
 
     const formattedOrders = [];
@@ -187,12 +188,13 @@ exports.dailyReport = async (req, res) => {
     let totalSales = 0
     // Iterate over each order document
     sales.forEach(order => {
-      const { username, shippingAddress, odrderedDate, totalAmount } = order;
+      const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
       order.items.forEach(item => {
         const formattedItem = {
           username,
+          _id,
           shippingAddress,
           odrderedDate: odrderedDate.toDateString(),
           productName: item.productName,
@@ -204,7 +206,6 @@ exports.dailyReport = async (req, res) => {
       });
       totalSales = totalSales + totalAmount
     });
-    console.log(totalSales);
     // Render the view with the formatted data
     res.render('admin/dailyReport', { formattedOrders, totalSales });
   } catch (error) {
@@ -220,10 +221,8 @@ exports.dailyDownloads = async (req, res) => {
     const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
 
     // Query orders within the specified date range
-    console.log(today);
-    console.log(yesterday);
     const sales = await Order.find({
-      odrderedDate: { $gte: yesterday, $lte: today }
+      odrderedDate: { $gt: yesterday, $lte: today }
     });
     const doc = new PDFDocument();
 
@@ -261,7 +260,6 @@ exports.dailyDownloads = async (req, res) => {
 
     // Push total sales as a separate row at the end
     formattedOrders.push(['Total sales', '', '', '', '', totalSales]);
-    console.log('formatted doc', formattedOrders);
     const tableOptions = {
       headers: tableHeaders,
       rows: formattedOrders
@@ -298,12 +296,13 @@ exports.monthlyReport = async (req, res) => {
     let totalSales = 0
     // Iterate over each order document
     sales.forEach(order => {
-      const { username, shippingAddress, odrderedDate, totalAmount } = order;
+      const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
       order.items.forEach(item => {
         const formattedItem = {
           username,
+          _id,
           shippingAddress,
           odrderedDate: odrderedDate.toDateString(),
           productName: item.productName,
@@ -315,7 +314,7 @@ exports.monthlyReport = async (req, res) => {
       });
       totalSales = totalSales + totalAmount
     });
-    console.log(totalSales);
+  
     // Render the view with the formatted data
     res.render('admin/monthlyReport', { formattedOrders, totalSales });
   } catch (error) {
@@ -407,12 +406,13 @@ exports.customReport = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      const { username, shippingAddress, odrderedDate, totalAmount } = order;
+      const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
       order.items.forEach(item => {
         const formattedItem = {
           username,
+          _id,
           shippingAddress,
           odrderedDate: odrderedDate.toDateString(),
           productName: item.productName,
@@ -519,12 +519,13 @@ exports.yearlyReport = async (req, res) => {
     let totalSales = 0
     // Iterate over each order document
     sales.forEach(order => {
-      const { username, shippingAddress, odrderedDate, totalAmount } = order;
+      const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
       order.items.forEach(item => {
         const formattedItem = {
           username,
+          _id,
           shippingAddress,
           odrderedDate: odrderedDate.toDateString(),
           productName: item.productName,
