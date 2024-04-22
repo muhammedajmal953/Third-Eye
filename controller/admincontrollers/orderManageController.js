@@ -74,13 +74,15 @@ exports.weeklyReport = async (req, res) => {
       // Render the view with an empty array if there are no sales
       return res.render('admin/weeklyReport', { formattedOrders: [] });
     }
+    let actualTotal=0
     let totalSales = 0
+    let shipping=0
     // Iterate over each order document
-    sales.forEach(order => {
+    for(let order of sales) {
       const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
-      order.items.forEach(item => {
+      for (let item of order.items) {
         const formattedItem = {
           username,
           _id,
@@ -91,13 +93,26 @@ exports.weeklyReport = async (req, res) => {
           quantity: item.cartQty
 
         };
+
+        let product=await Product.findOne({_id:item.productId})
+       
+        let actualPrice = product.price * item.cartQty
+        shipping+=item.cartQty*40
+        actualTotal+=actualPrice
+
+        
         formattedOrders.push(formattedItem);
-      });
+      };
       totalSales = totalSales + totalAmount
-    });
+    };
+
+
+    console.log('actotal:', actualTotal)
+    console.log('shipping:',shipping)
     console.log(totalSales);
+
     // Render the view with the formatted data
-    res.render('admin/weeklyReport', { formattedOrders, totalSales });
+    res.render('admin/weeklyReport', { formattedOrders, totalSales,actualTotal,shipping });
   } catch (error) {
     // Handle errors
     console.error(error);
@@ -185,13 +200,15 @@ exports.dailyReport = async (req, res) => {
       // Render the view with an empty array if there are no sales
       return res.render('admin/dailyReport', { formattedOrders: [] });
     }
+    let actualTotal=0
     let totalSales = 0
+    let shipping=0
     // Iterate over each order document
-    sales.forEach(order => {
+    for(let order of sales) {
       const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
-      order.items.forEach(item => {
+      for (let item of order.items) {
         const formattedItem = {
           username,
           _id,
@@ -202,12 +219,25 @@ exports.dailyReport = async (req, res) => {
           quantity: item.cartQty
 
         };
+
+        let product=await Product.findOne({_id:item.productId})
+       
+        let actualPrice = product.price * item.cartQty
+        shipping+=item.cartQty*40
+        actualTotal+=actualPrice
+
+        
         formattedOrders.push(formattedItem);
-      });
+      };
       totalSales = totalSales + totalAmount
-    });
+    };
+
+
+    console.log('actotal:', actualTotal)
+    console.log('shipping:',shipping)
+    console.log(totalSales);
     // Render the view with the formatted data
-    res.render('admin/dailyReport', { formattedOrders, totalSales });
+    res.render('admin/dailyReport', { formattedOrders, totalSales,actualTotal,shipping });
   } catch (error) {
     // Handle errors
     console.error(error);
@@ -294,12 +324,14 @@ exports.monthlyReport = async (req, res) => {
       return res.render('admin/monthlyReport', { formattedOrders: [] });
     }
     let totalSales = 0
+    let actualTotal=0
+    let shipping=0
     // Iterate over each order document
-    sales.forEach(order => {
+    for(let order of sales) {
       const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
-      order.items.forEach(item => {
+      for (let item of order.items) {
         const formattedItem = {
           username,
           _id,
@@ -310,13 +342,21 @@ exports.monthlyReport = async (req, res) => {
           quantity: item.cartQty
 
         };
+
+        let product=await Product.findOne({_id:item.productId})
+       
+        let actualPrice = product.price * item.cartQty
+        shipping+=item.cartQty*40
+        actualTotal+=actualPrice
+
+        
         formattedOrders.push(formattedItem);
-      });
+      };
       totalSales = totalSales + totalAmount
-    });
+    };
   
     // Render the view with the formatted data
-    res.render('admin/monthlyReport', { formattedOrders, totalSales });
+    res.render('admin/monthlyReport', { formattedOrders, totalSales,actualTotal,shipping });
   } catch (error) {
     // Handle errors
     console.error(error);
@@ -404,12 +444,14 @@ exports.customReport = async (req, res) => {
       return res.render('admin/customReport', { formattedOrders: [], totalSales, date });
     }
 
+    let actualTotal=0
+    let shipping=0
     // Iterate over each order document
-    sales.forEach(order => {
+    for(let order of sales) {
       const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
-      order.items.forEach(item => {
+      for (let item of order.items) {
         const formattedItem = {
           username,
           _id,
@@ -420,13 +462,20 @@ exports.customReport = async (req, res) => {
           quantity: item.cartQty
 
         };
+
+        let product=await Product.findOne({_id:item.productId})
+       
+        let actualPrice = product.price * item.cartQty
+        shipping+=item.cartQty*40
+        actualTotal+=actualPrice
+
+        
         formattedOrders.push(formattedItem);
-      });
+      };
       totalSales = totalSales + totalAmount
-    });
-    console.log(totalSales);
+    };
     // Render the view with the formatted data
-    res.render('admin/customReport', { formattedOrders, totalSales, date });
+    res.render('admin/customReport', { formattedOrders, totalSales, date,actualTotal,shipping });
   } catch (error) {
     // Handle errors
     console.error(error);
@@ -516,13 +565,15 @@ exports.yearlyReport = async (req, res) => {
       // Render the view with an empty array if there are no sales
       return res.render('admin/yearlyReport', { formattedOrders: [] });
     }
+    let actualTotal=0
     let totalSales = 0
+    let shipping=0
     // Iterate over each order document
-    sales.forEach(order => {
+    for(let order of sales) {
       const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
-      order.items.forEach(item => {
+      for (let item of order.items) {
         const formattedItem = {
           username,
           _id,
@@ -533,13 +584,20 @@ exports.yearlyReport = async (req, res) => {
           quantity: item.cartQty
 
         };
+
+        let product=await Product.findOne({_id:item.productId})
+       
+        let actualPrice = product.price * item.cartQty
+        shipping+=item.cartQty*40
+        actualTotal+=actualPrice
+
+        
         formattedOrders.push(formattedItem);
-      });
+      };
       totalSales = totalSales + totalAmount
-    });
-    console.log(totalSales);
+    };
     // Render the view with the formatted data
-    res.render('admin/yearlyReport', { formattedOrders, totalSales });
+    res.render('admin/yearlyReport', { formattedOrders, totalSales,actualTotal,shipping });
   } catch (error) {
     // Handle errors
     console.error(error);
