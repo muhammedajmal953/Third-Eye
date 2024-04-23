@@ -173,6 +173,7 @@
                                 <form>
                                     <div class="mb-3">
                                         <label for="amount" class="form-label">Amount</label>
+                                        <input type="number" id="balance" value="<%=wallet.balance%>" hidden>
                                         <input type="number" class="form-control" id="amount" name="amount"
                                             placeholder="Enter amount to add" required min="1">
 
@@ -368,12 +369,14 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         async function validateWallet() {
+          
             const money = document.getElementById('amount').value
             if (!money) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Enter a amount to recharge'
                 })
+            
             }
             else {
                 const response = await axios.post(`/user/walletRecharge?amount=${money}`)
@@ -387,10 +390,17 @@
 
         async function validateWalletWithDraw() {
             const money = document.getElementById('amount').value
-            if (!money) {
+            const balance=document.getElementById('balance').value
+            console.log(balance);
+            if ( !money ) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Enter a amount to recharge'
+                })
+            }else if(balance<money){
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Insufficient Balance'
                 })
             }
             else {
