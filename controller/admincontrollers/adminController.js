@@ -114,7 +114,7 @@ exports.getDashboard = async (req, res) => {
     //top seeling products
     const bestSellingProducts = await Order.aggregate([
       { $unwind: '$items' },
-      { $group: { _id: '$items.productName', totalSold: { $sum: 1 } } },
+      { $group: { _id: '$items.productId', totalSold: { $sum: 1 } } },
       { $sort: { totalSold: -1 } },
       { $limit: 5 }
     ])
@@ -126,7 +126,7 @@ exports.getDashboard = async (req, res) => {
     if (bestSellingProducts && bestSellingProducts.length > 0) {
 
       const productPromises = bestSellingProducts.map(async (item) => {
-        let prdct = await Product.findOne({ productName: item._id });
+        let prdct = await Product.findOne({ _id: item._id });
         return prdct;
       });
 
