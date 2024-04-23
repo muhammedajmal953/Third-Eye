@@ -30,7 +30,7 @@
                         OTP Verification
                     </div>
                     <div class="card-body">
-                        <form method="" action="">
+                     
                             <div class="form-group">
                                 <label for="otpInput">Enter OTP</label>
                                 <input type="text" name="otp" class="form-control" id="otpInput"
@@ -43,7 +43,6 @@
                         <form action="/user/resendOtp" method="post">
                             <input type="submit" value="resend" id="resend">
 
-                        </form>
                     </div>
                 </div>
             </div>
@@ -55,6 +54,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <script>
         // JavaScript code to update the timer
@@ -98,17 +99,28 @@
                     warning.innerHTML = response.data
 
                 }
-                if(response.data==='success'){
-                    window.location.href='/user/login?message=email verified'
+                if (response.data === 'success') {
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Register Successful!',
+                        text: 'You have successfully Registered.',
+                        timer: 1500, 
+                        toast: true,
+                        showConfirmButton: false
+                    });
+                    setTimeout(()=>{
+                        window.location.href = '/user/login'
+                    },1500)
                 }
 
-                if(response.data==='forgot'){
-                    window.location.href='/user/newPassword'
+                if (response.data === 'forgot') {
+                    window.location.href = '/user/newPassword'
                 }
 
 
             } catch (error) {
-                  console.log(error);
+                console.log(error);
             }
         }
     </script>
