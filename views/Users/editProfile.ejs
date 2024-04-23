@@ -172,9 +172,9 @@
                         class="bi bi-pencil me-2"></i>Edit Profile</a>
                     <a href="/user/adresses" class="list-group-item"><i class="bi bi-pin-map me-2"></i>Saved
                       Address</a>
-                    <a href="/user/showWishlist" class="list-group-item"><i class="bi bi-suit-heart me-2"></i>Wishlist</a>
-                    <a href="/user/logout" class="list-group-item"><i
-                        class="bi bi-power me-2"></i>Logout</a>
+                    <a href="/user/showWishlist" class="list-group-item"><i
+                        class="bi bi-suit-heart me-2"></i>Wishlist</a>
+                    <a href="/user/logout" class="list-group-item"><i class="bi bi-power me-2"></i>Logout</a>
                   </div>
                 </div>
               </div>
@@ -236,8 +236,7 @@
           <div class="modal-body">
             <h5 class="fw-bold mb-3">Change Password</h5>
             <hr>
-            <form method="post" action="/user/changePassword?password=<%=user.password%>"
-              onsubmit="return validateCheckPass()">
+            <form onsubmit="validateCheckPass(event,'<%=user.password%>')" id="passwordForm">
               <div class="form-floating mb-3">
                 <input type="password" class="form-control rounded-0" id="oldPassword" name="oldPassword"
                   placeholder="Old Password">
@@ -282,7 +281,7 @@
               platform specializing in eyewear. With a mission to provide
               stylish and high-quality eyewear to customers worldwide,
               Visionary Optics offers a diverse range of products, including
-              prescription glasses, sunglasses, and contact lenses. 
+              prescription glasses, sunglasses, and contact lenses.
             </p>
           </div>
         </div>
@@ -373,6 +372,7 @@
   <script src="/user/js/index.js"></script>
   <script src="/user/js/loader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script>
     function validateEditUser() {
       let username = document.getElementById('username').value.trim();
@@ -411,26 +411,82 @@
       return true;
     }
 
-    function validateCheckPass() {
+    async function validateCheckPass(event, password) {
+      event.preventDefault();
+
       let oldPassword = document.getElementById('oldPassword').value
       let newPassword1 = document.getElementById('newPassword1').value
       let newPassword2 = document.getElementById('newPassword2').value
 
-      let passwordRegex = /^[^\s]{8,}$/
+      let passwordRegex = /(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z0-9\s]).{8,}/
 
       if (!passwordRegex.test(oldPassword)) {
-        alert('password must be atleast 8 characters')
-        return false
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: 'Password must be at least 8 characters at least have one special character,one number and a special character '
+        });
+
+        return
       }
       if (!passwordRegex.test(newPassword1)) {
-        alert('new password must be atleast 8 characters')
-        return false
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: 'Password must be at least 8 characters at least have one special character,one number and a special character '
+        });
+        return
       }
       if (newPassword1 !== newPassword2) {
-        alert('password must be same')
-        return false
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: 'Password must be same'
+        });
+        return
       }
-        return true
+      let form = document.getElementById('passwordForm')
+      const formData = new FormData(form);
+
+
+
+
+
+
+      try {
+        const response = await axios.post(`/user/changePassword?password=${password}`, {
+          oldPassword: oldPassword,
+          newPassword1: newPassword1
+        })
+
+        if (!response.data.success) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: 'old Password is incorrect'
+          });
+        }
+
+
+        else {
+          Swal.fire({
+            icon: "success",
+            title: "Changed",
+            text: 'Password must be at least 8 characters at least have one special character,one number and a special character '
+          });
+
+          setTimeout(() => {
+            window.location.href = '/user/profile'
+          }, 1500)
+        }
+
+
+
+
+
+      } catch (error) {
+
+      }
     }  
   </script>
 

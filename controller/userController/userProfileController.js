@@ -57,28 +57,29 @@ exports.change_password = async (req, res) => {
   try {
     let password = req.query.password;
 
-    const { oldPassword, newPassword } = req.body;
-
+    const { oldPassword, newPassword1 } = req.body;
     // Retrieve the user's current password from the database
     const user = await Users.findOne({ password });
 
     if (!user) {
+      console.log('passeword not found');
       return res.status(404).json({ error: "User not found" });
     }
 
     // Compare the provided old password with the one stored in the database
     const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
     if (!isPasswordMatch) {
-      return res.render("./Users/editProfile", { user, message: 'Password changed Succesfully' });
+      return res.json({success:false})
     }
 
     // Hash the new password
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    const hashedNewPassword = await bcrypt.hash(newPassword1, 10);
 
     // Update the user's password in the database
     await Users.updateOne({ _id: user._id }, { password: hashedNewPassword });
 
-    res.redirect("/user/profile");
+    res.json({success:true});
+
 
   } catch (error) {
     console.error(error);
