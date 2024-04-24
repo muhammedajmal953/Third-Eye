@@ -36,7 +36,7 @@ exports.add_products = async (req, res) => {
         const imageBuffer = await sharp(req.files[i].path)
           .resize({ width: 500, height: 500, fit: sharp.fit.cover })
           .toBuffer();
-        const filename = `cropped_${req.files[i].originalname}`;
+        const filename = `cropped_${Date.now()}${req.files[i].originalname}`;
         imageUrls[i] = filename;
         
         await sharp(imageBuffer).toFile(`./uploads/products/${filename}`);
@@ -100,7 +100,7 @@ exports.edit_products = async (req, res) => {
         const imageBuffer = await sharp(req.files[i].path)
           .resize({ width: 500, height: 500, fit: sharp.fit.cover })
           .toBuffer();
-        const filename = `cropped_${req.files[i].originalname}`;
+        const filename = `cropped_${Date.now()}${req.files[i].originalname}`;
         imageUrls[i] = filename;
 
         await sharp(imageBuffer).toFile(`./uploads/products/${filename}`);

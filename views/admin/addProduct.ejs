@@ -107,9 +107,9 @@
                         </select>
                         <div class="mb-3">
                             <div id="imageContainer"></div>
-                            <input class="form-control" onchange="viewImages()"
-                                placeholder="Select image" type="file" name="images" id="images" multiple required>
-                           
+                            <input class="form-control" onchange="viewImages()" placeholder="Select image" type="file"
+                                name="images" id="images" multiple required>
+
                         </div>
 
 
@@ -123,6 +123,29 @@
                 </div>
             </div>
         </section>
+
+        <!-- Modal -->
+        <div class="modal fade" id="cropModal" tabindex="-1" aria-labelledby="cropModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cropModalLabel">Crop Image</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="cropper-container">
+                            <img id="cropperImage" src="" alt="Crop Image">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="cropButton" type="button" class="btn btn-primary">Crop Image</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
     </main>
     <script src="/js/vendors/jquery-3.6.0.min.js"></script>
@@ -147,7 +170,7 @@
 
             for (let i = 0; i < inputFiles.length; i++) {
                 const img = document.createElement('img');
-                img.className = "ImagePreview";
+                img.className = `ImagePreview${i}`;
                 img.style.height = '100px';
                 img.style.width = '100px';
                 img.src = URL.createObjectURL(inputFiles[i]);
@@ -155,28 +178,89 @@
                 const deleteButton = document.createElement('button');
                 deleteButton.innerHTML = '&times;'; // Use 'x' as delete button
                 deleteButton.className = 'deleteButton'; // Add a class for styling
-                deleteButton.addEventListener('click', function () {
-                    img.remove();
-                    deleteButton.remove();
 
-                    selectedFiles = selectedFiles.filter(file => file !== inputFiles[i]);
+
+                const cropButton = document.createElement('button');
+                cropButton.innerHTML = 'Crop'; // Crop button
+                cropButton.className = 'cropButton btn btn-primary'; // Add a class for styling
+
+                // Add click event listener to the crop button
+                cropButton.addEventListener('click', function (event) {
+                    event.preventDefault(); // Prevent form submission
+                    openCropModal(inputFiles[i], img, i);
                 });
 
                 const containerDiv = document.createElement('div');
                 containerDiv.className = 'imageContainerItem'; // Add a class for styling
                 containerDiv.appendChild(img);
                 containerDiv.appendChild(deleteButton);
+                containerDiv.appendChild(cropButton); // Append the crop button
 
                 imageContainer.appendChild(containerDiv);
 
-                // Add the file to the selected files array
+
                 selectedFiles.push(inputFiles[i]);
+                deleteButton.addEventListener('click', function (event) {
+                    event.preventDefault()
+                    if (selectedFiles.length - 1 === 0) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: 'You cannot Remove All images',
+
+                        });
+                        return
+                    }
+                    img.remove();
+                    deleteButton.remove();
+                    selectedFiles.splice(i, 1);
+                    cropButton.remove()
+
+                });
             }
         }
 
-        var cropper;
+        async function openCropModal(selectedImage, imgElement, index) {
+            // Display the Bootstrap modal
+            const modal = new bootstrap.Modal(document.getElementById('cropModal'));
+            modal.show();
 
-    
+            // Display the selected image in the modal
+            const cropperImage = document.getElementById('cropperImage');
+            cropperImage.src = URL.createObjectURL(selectedImage);
+
+            // Initialize Cropper.js
+            let cropper = new Cropper(cropperImage, {
+                aspectRatio: 1, // Set the aspect ratio as needed
+                viewMode: 1, // Set the view mode as needed
+                // Add any other Cropper.js options you require
+            });
+
+
+            const cropButton = document.getElementById('cropButton');
+            cropButton.addEventListener('click', async function () {
+
+                const croppedCanvas = cropper.getCroppedCanvas();
+
+                croppedCanvas.toBlob(async function (blob) {
+
+                    const croppedImageFile = new File([blob], selectedImage.name, { type: 'image/jpeg' });
+
+                    selectedFiles[index] = croppedImageFile;
+
+                    imgElement.src = URL.createObjectURL(blob);
+
+                    modal.hide();
+
+
+
+                }, 'image/jpeg');
+                cropper.destroy();
+            });
+        }
+
+
+
         async function validateProd(event) {
             event.preventDefault();
             const trimmedName = document.getElementById('productName').value.trim();
@@ -185,12 +269,12 @@
             const quantity = parseInt(document.getElementById('quantity').value);
             const fileInput = document.getElementById('images')
 
+
             const fileList = new DataTransfer();
             for (let i = 0; i < selectedFiles.length; i++) {
                 fileList.items.add(selectedFiles[i]);
             }
             fileInput.files = fileList.files;
-
 
 
             if (trimmedName.length === 0 || trimmedDescription.length === 0 || price < 0 || quantity < 0) {
@@ -218,6 +302,7 @@
             }
             const form = document.getElementById('addProduct');
             const formData = new FormData(form);
+
 
             //
             const response = await axios.post(`/admin/add-product`, formData)
