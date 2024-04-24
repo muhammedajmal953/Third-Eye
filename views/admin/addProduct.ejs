@@ -11,11 +11,22 @@
     <meta property="og:type" content="" />
     <meta property="og:url" content="" />
     <meta property="og:image" content="" />
+
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/favicon.svg" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css" rel="stylesheet">
     <!-- Template CSS -->
     <link href="/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+
+
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+
+    <!-- Cropper.js JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+
+
 </head>
 
 <style>
@@ -96,14 +107,17 @@
                         </select>
                         <div class="mb-3">
                             <div id="imageContainer"></div>
-                            <input class="form-control" onchange="viewImages(),handleImageSelect(event)"
+                            <input class="form-control" onchange="viewImages()"
                                 placeholder="Select image" type="file" name="images" id="images" multiple required>
+                           
                         </div>
+
 
                         <div class="mb-4">
                             <button type="submit" class="btn btn-primary w-100">Add Product</button>
                         </div>
                         <!-- form-group// -->
+
                     </form>
 
                 </div>
@@ -159,6 +173,10 @@
                 selectedFiles.push(inputFiles[i]);
             }
         }
+
+        var cropper;
+
+    
         async function validateProd(event) {
             event.preventDefault();
             const trimmedName = document.getElementById('productName').value.trim();
@@ -184,8 +202,8 @@
                 });
                 return
             }
-            for (i = 0; i < fileInput.length; i++) {
-                let fileType = fileInput[i].type
+            for (i = 0; i < fileInput.files.length; i++) {
+                let fileType = fileInput.files[i].type
                 if (!fileType.startsWith('image/')) {
 
                     Swal.fire({
@@ -196,13 +214,12 @@
                     });
                     return
                 }
-                
-            }
 
+            }
             const form = document.getElementById('addProduct');
             const formData = new FormData(form);
 
-           //
+            //
             const response = await axios.post(`/admin/add-product`, formData)
 
             if (response.data === 'reduce images') {
@@ -211,13 +228,13 @@
                     title: "Reduce images to 5",
                 });
             }
-            if (response.data==='NoImages') {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: 'Select at least one image',
-                    });
-                }
+            if (response.data === 'NoImages') {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: 'Select at least one image',
+                });
+            }
 
             if (response.data === 'success') {
                 Swal.fire({
