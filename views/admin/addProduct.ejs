@@ -176,13 +176,13 @@
                 img.src = URL.createObjectURL(inputFiles[i]);
 
                 const deleteButton = document.createElement('button');
-                deleteButton.innerHTML = '&times;'; // Use 'x' as delete button
-                deleteButton.className = 'deleteButton'; // Add a class for styling
+                deleteButton.innerHTML = '&times;'; 
+                deleteButton.className = 'deleteButton'; 
 
 
-                const cropButton = document.createElement('button');
-                cropButton.innerHTML = 'Crop'; // Crop button
-                cropButton.className = 'cropButton btn btn-primary'; // Add a class for styling
+                const cropButton = document.createElement('a');
+                cropButton.innerHTML = 'Crop'
+                cropButton.className = 'cropButton position-absolute  start-0 translate-middle badge rounded-pill bg-success'; // Add a class for styling
 
                 // Add click event listener to the crop button
                 cropButton.addEventListener('click', function (event) {
@@ -221,19 +221,18 @@
         }
 
         async function openCropModal(selectedImage, imgElement, index) {
-            // Display the Bootstrap modal
+           
             const modal = new bootstrap.Modal(document.getElementById('cropModal'));
             modal.show();
 
-            // Display the selected image in the modal
+         
             const cropperImage = document.getElementById('cropperImage');
             cropperImage.src = URL.createObjectURL(selectedImage);
 
-            // Initialize Cropper.js
+            
             let cropper = new Cropper(cropperImage, {
-                aspectRatio: 1, // Set the aspect ratio as needed
-                viewMode: 1, // Set the view mode as needed
-                // Add any other Cropper.js options you require
+                aspectRatio: 1, 
+                viewMode: 1, 
             });
 
 
