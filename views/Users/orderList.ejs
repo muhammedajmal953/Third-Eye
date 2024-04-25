@@ -254,13 +254,13 @@
                       <% if (items[i].status==='Cancelled'|| items[i].status==='Delivered' || items[i].status==='Returned'||items[i].status==='Waiting for Return Confirmation') { %>
                         
                         <button type="button" id="cancelBtn" class="btn btn-danger mt-2 invisible"
-                          onclick="cancelOrder('<%=items[i].productId%>','<%=items[i].cartQty%>',)">Cancel
+                          onclick="cancelOrder('<%=items[i].productId%>','<%=items[i].cartQty%>')">Cancel
                           Order</button>
 
 
                         <% } else {%>
                           <button type="button" id="cancelBtn" class="btn btn-danger mt-2"
-                            onclick="cancelOrder('<%=items[i].productId%>','<%=items[i].cartQty%>','<%=items[i]._id%>')">Cancel
+                            onclick="cancelOrder('<%=items[i].productId%>','<%=items[i].cartQty%>','<%=items[i]._id%>','<%=items[i].price%>')">Cancel
                             Order</button>
                           <%}%>
 
@@ -405,7 +405,7 @@
 
 
   <script>
-    async function cancelOrder(productId, cartQty, itemsId) {
+    async function cancelOrder(productId, cartQty, itemsId,price) {
       try {
         const result = await Swal.fire({
           title: 'Are you sure?',
@@ -419,7 +419,7 @@
 
         if (result.isConfirmed) {
           console.log(itemsId);
-          const response = await axios.post(`/user/cancelOrder?productId=${productId}&cartQty=${cartQty}&itemsId=${itemsId}`);
+          const response = await axios.post(`/user/cancelOrder?productId=${productId}&cartQty=${cartQty}&itemsId=${itemsId}&price=${price}`);
 
           const removeBtn = document.getElementById('cancelBtn').style.visibility = 'hidden';
 
@@ -427,13 +427,14 @@
           Swal.fire({
             icon: 'success',
             title: 'Order Cancelled!',
-            text: response.data,
             showConfirmButton: false,
             timer: 2000
           });
 
 
-          window.location.href = '/user/orders';
+          setTimeout(() => {
+            window.location.href = '/user/orders';
+          }, 2000);
 
         }
       } catch (error) {

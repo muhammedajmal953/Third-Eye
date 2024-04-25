@@ -265,12 +265,14 @@ exports.applyCoupon = async (req, res) => {
     if (!coupon) {
       return res.json('No coupon found')
     }
+    
 
 
   
     let price = Number(totalPrice) - Number(totalDiscount)
     let couponOffer = parseFloat(coupon.offer)
-
+    
+    if(price<coupon.minimum) return res.json(`this coupon is not available for this amount`)
 
     let discountPrice = 0
     discountPrice = Math.floor(price - (price * couponOffer / 100))

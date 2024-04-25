@@ -588,7 +588,7 @@
             const couponCode = document.getElementById('couponCode').value
 
 
-            if (totalPrice < 500) {
+            if (totalPrice < 300) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Sorry!',
@@ -605,6 +605,17 @@
                     icon: 'warning',
                     title: 'Sorry!',
                     text: 'No coupon found in that code',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                return;
+            }
+            
+            if (response.data === 'this coupon is not available for this amount') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sorry!',
+                    text: 'this coupon is not available for this amount',
                     showConfirmButton: false,
                     timer: 2000
                 });

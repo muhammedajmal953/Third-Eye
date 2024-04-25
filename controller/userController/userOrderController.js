@@ -111,16 +111,16 @@ exports.orderPlace = async (req, res) => {
     let totalproducts = products.reduce((acc, cur) => acc += cur.cartQty, 0)
 
 
-   
+
 
     let shipping = totalproducts * 40
-  
+
 
     if (req.session.couponRate) {
       let couponRate = req.session.couponRate
-      
-      console.log('coupon rate:',couponRate );
-      
+
+      console.log('coupon rate:', couponRate);
+
       totalPrice = Math.floor(totalPrice - (totalPrice * couponRate / 100))
 
 
@@ -130,7 +130,7 @@ exports.orderPlace = async (req, res) => {
 
 
 
-    
+
     }
     totalPrice += shipping
 
@@ -301,16 +301,38 @@ exports.orderView = async (req, res) => {
 
 exports.cancelOrder = async (req, res) => {
   try {
-    const { productId, cartQty, itemsId } = req.query
+    const { productId, cartQty, itemsId, price } = req.query
     const userId = req.session.user
 
-    console.log(itemsId);
+    const order = await Product.findOne({ userId: userId, 'items._id': itemsId })
+
+
+    let amount = cartQty * price
 
     await Order.updateOne(
       { userId: userId, 'items._id': itemsId },
-      { $set: { 'items.$.status': 'Cancelled' } }// Update the status of the specific item
+      { $set: { 'items.$.status': 'Cancelled' } }
     );
+
+
     const product = await Product.updateOne({ _id: productId }, { $inc: { quantity: cartQty } })
+
+    if (order.paymentMethod === 'paypal') {
+      
+      let wallet = await Wallet.findOne({ userId: userId });
+      if (!wallet) {
+        wallet = new Wallet({
+          userId: userId,
+          balance: amount,
+          transaction: [{ status: `Refund`, date: Date.now(), amount: amount }]
+        });
+        await wallet.save();
+      } else {
+
+        await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount }, $push: { transaction: { status: `Refund`, date: Date.now(), amount: amount } } })
+      }
+    }
+
     res.status(200).json({ message: 'Order successfully cancelled.' });
 
   } catch (error) {

@@ -158,7 +158,7 @@ exports.coupon = async (req, res) => {
 
 exports.saveCoupon = async (req, res) => {
     try {
-        const { code, couponDiscount, validity } = req.body
+        const { code, couponDiscount, validity,minimum } = req.body
         const today = new Date()
     
         const existing = await Coupon.findOne({ code: code })
@@ -169,6 +169,7 @@ exports.saveCoupon = async (req, res) => {
     
         const coupon = new Coupon({
             code,
+            minimum,
             offer: couponDiscount,
             validity
         })
