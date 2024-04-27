@@ -304,8 +304,9 @@ exports.cancelOrder = async (req, res) => {
     const { productId, cartQty, itemsId, price } = req.query
     const userId = req.session.user
 
-    const order = await Product.findOne({ userId: userId, 'items._id': itemsId })
-
+    const order = await Order.findOne({ userId: userId, 'items._id': itemsId })
+     
+    console.log('dgdfsg:' ,order)
 
     let amount = cartQty * price
 
