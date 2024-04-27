@@ -146,7 +146,7 @@ adminRoutes.post('/weeklyDownload', orderManageController.weeklyDownloads)
 adminRoutes.post('/dailyDownload', orderManageController.dailyDownloads)
 adminRoutes.post('/monthlyDownload', orderManageController.monthlyDownloads)
 adminRoutes.post('/customDownload', orderManageController.customDownloads)
-adminRoutes.post('/yearlyDownload', orderManageController.customDownloads)
+adminRoutes.post('/yearlyDownload', orderManageController.yearlyDownloads)
 
 
 adminRoutes.get('/referalOffer', isAdminLoggedIn, offerManage.referal)

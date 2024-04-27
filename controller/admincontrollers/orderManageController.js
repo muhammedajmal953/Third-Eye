@@ -150,6 +150,12 @@ exports.weeklyDownloads = async (req, res) => {
     sales.forEach(order => {
       const { username, shippingAddress, odrderedDate, totalAmount } = order;
 
+
+      shippingAddress = shippingAddress.split(',').map(str=>str.trim())
+      shippingAddress.pop()
+
+      shippingAddress=shippingAddress.join(',')
+
       // Iterate over each item in the order
       order.items.forEach(item => {
         const formattedItem = [
@@ -272,6 +278,11 @@ exports.dailyDownloads = async (req, res) => {
     sales.forEach(order => {
       const { username, shippingAddress, odrderedDate, totalAmount } = order;
 
+      shippingAddress = shippingAddress.split(',').map(str=>str.trim())
+      shippingAddress.pop()
+
+      shippingAddress = shippingAddress.join(',')
+      
       // Iterate over each item in the order
       order.items.forEach(item => {
         const formattedItem = [
@@ -390,6 +401,11 @@ exports.monthlyDownloads = async (req, res) => {
     // Iterate over each order document
     sales.forEach(order => {
       const { username, shippingAddress, odrderedDate, totalAmount } = order;
+
+      shippingAddress = shippingAddress.split(',').map(str=>str.trim())
+      shippingAddress.pop()
+
+      shippingAddress=shippingAddress.join(',')
 
       // Iterate over each item in the order
       order.items.forEach(item => {
@@ -512,6 +528,13 @@ exports.customDownloads = async (req, res) => {
     sales.forEach(order => {
       const { username, shippingAddress, odrderedDate, totalAmount } = order;
 
+
+      shippingAddress = shippingAddress.split(',').map(str=>str.trim())
+      shippingAddress.pop()
+
+      shippingAddress = shippingAddress.join(',')
+      
+
       // Iterate over each item in the order
       order.items.forEach(item => {
         const formattedItem = [
@@ -570,8 +593,10 @@ exports.yearlyReport = async (req, res) => {
     let shipping=0
     // Iterate over each order document
     for(let order of sales) {
-      const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+      const { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
+      
 
+      
       // Iterate over each item in the order
       for (let item of order.items) {
         const formattedItem = {
@@ -611,8 +636,7 @@ exports.yearlyDownloads = async (req, res) => {
     const today = new Date();
     const firstDayOfYear = new Date(today.getFullYear(), 1, 1);
     const lastDayOfYear = new Date(today.getFullYear(), 11, 31);
-    console.log(firstDayOfYear);
-    console.log(lastDayOfYear);
+  
     // Query orders within the specified date range
     const sales = await Order.find({
       odrderedDate: { $gte: firstDayOfYear, $lte: lastDayOfYear }
@@ -633,7 +657,12 @@ exports.yearlyDownloads = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      const { username, shippingAddress, odrderedDate, totalAmount } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount } = order;
+
+      shippingAddress = shippingAddress.split(',').map(str=>str.trim())
+      shippingAddress.pop()
+
+      shippingAddress=shippingAddress.join(',')
 
       // Iterate over each item in the order
       order.items.forEach(item => {
@@ -653,7 +682,7 @@ exports.yearlyDownloads = async (req, res) => {
 
     // Push total sales as a separate row at the end
     formattedOrders.push(['Total sales', '', '', '', '', totalSales]);
-    console.log('formatted doc', formattedOrders);
+  
     const tableOptions = {
       headers: tableHeaders,
       rows: formattedOrders

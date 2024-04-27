@@ -306,7 +306,6 @@ exports.cancelOrder = async (req, res) => {
 
     const order = await Order.findOne({ userId: userId, 'items._id': itemsId })
      
-    console.log('dgdfsg:' ,order)
 
     let amount = cartQty * price
 
@@ -404,7 +403,7 @@ exports.invoiceDownload = async (req, res) => {
 
     doc.pipe(res);
 
-    doc.fontSize(12).text('Monthly Sales Report', { align: 'center' }).moveDown();
+    doc.fontSize(12).text('Invoice', { align: 'center' }).moveDown();
     const tableHeaders = ["User's Name", 'Phone', 'Order Date', 'Product Name', 'Quantity', 'Price', 'total'];
 
     let downloadDetails = []
