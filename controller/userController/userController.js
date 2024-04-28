@@ -74,11 +74,18 @@ exports.user_login = async (req, res) => {
       email: loginEmail,
     });
 
+
+    if (!userData) {
+      return res.redirect("/user/login?message=Enter a Valid Email");
+    }
+
     if (userData.isBlocked == true) {
       return res.render("./Users/userLogin", {
         message: "You are blocked With admin",
       });
     }
+
+
 
     // If user data exists
     if (userData) {
@@ -99,6 +106,7 @@ exports.user_login = async (req, res) => {
           // Redirect to login page with an alert for invalid credentials
           res.redirect("/user/login?message=incorrect password");
         }
+        
       });
     } else {
       // Redirect to login page with an alert for invalid credentials

@@ -140,7 +140,7 @@ exports.weeklyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Weekly Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address', 'Order Date', 'Product Name', 'Price', 'Quantity'];
+    const tableHeaders = ["User's Name", 'Address','orderId', 'Order Date', 'Product Name', 'Price', 'Quantity'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -148,7 +148,7 @@ exports.weeklyDownloads = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      const { username, shippingAddress, odrderedDate, totalAmount } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
 
       shippingAddress = shippingAddress.split(',').map(str=>str.trim())
@@ -156,11 +156,15 @@ exports.weeklyDownloads = async (req, res) => {
 
       shippingAddress=shippingAddress.join(',')
 
+      
+
+
       // Iterate over each item in the order
       order.items.forEach(item => {
         const formattedItem = [
           username,
           shippingAddress,
+          _id,
           odrderedDate.toDateString(),
           item.productName,
           item.price,
@@ -173,11 +177,11 @@ exports.weeklyDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '', '', '', totalSales]);
+    formattedOrders.push(['Total sales', '', '','', '', '', totalSales]);
     console.log('formatted doc', formattedOrders);
     const tableOptions = {
       headers: tableHeaders,
-      rows: formattedOrders
+      rows: formattedOrders,
     };
 
     doc.table(tableOptions);
@@ -211,7 +215,7 @@ exports.dailyReport = async (req, res) => {
     let shipping=0
     // Iterate over each order document
     for(let order of sales) {
-      const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
       for (let item of order.items) {
@@ -268,7 +272,7 @@ exports.dailyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Daily Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address', 'Order Date', 'Product Name', 'Price', 'Quantity'];
+    const tableHeaders = ["User's Name", 'Address','orderId', 'Order Date', 'Product Name', 'Price', 'Quantity'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -276,7 +280,7 @@ exports.dailyDownloads = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      const { username, shippingAddress, odrderedDate, totalAmount } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       shippingAddress = shippingAddress.split(',').map(str=>str.trim())
       shippingAddress.pop()
@@ -288,6 +292,7 @@ exports.dailyDownloads = async (req, res) => {
         const formattedItem = [
           username,
           shippingAddress,
+          _id,
           odrderedDate.toDateString(),
           item.productName,
           item.price,
@@ -300,7 +305,7 @@ exports.dailyDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '', '', '', totalSales]);
+    formattedOrders.push(['Total sales', '', '','', '', '', totalSales]);
     const tableOptions = {
       headers: tableHeaders,
       rows: formattedOrders
@@ -339,7 +344,7 @@ exports.monthlyReport = async (req, res) => {
     let shipping=0
     // Iterate over each order document
     for(let order of sales) {
-      const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
       for (let item of order.items) {
@@ -392,7 +397,7 @@ exports.monthlyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Monthly Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address', 'Order Date', 'Product Name', 'Price', 'Quantity'];
+    const tableHeaders = ["User's Name", 'Address', 'orderId','Order Date', 'Product Name', 'Price', 'Quantity'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -400,7 +405,7 @@ exports.monthlyDownloads = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      const { username, shippingAddress, odrderedDate, totalAmount } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       shippingAddress = shippingAddress.split(',').map(str=>str.trim())
       shippingAddress.pop()
@@ -412,6 +417,7 @@ exports.monthlyDownloads = async (req, res) => {
         const formattedItem = [
           username,
           shippingAddress,
+          _id,
           odrderedDate.toDateString(),
           item.productName,
           item.price,
@@ -464,7 +470,7 @@ exports.customReport = async (req, res) => {
     let shipping=0
     // Iterate over each order document
     for(let order of sales) {
-      const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       // Iterate over each item in the order
       for (let item of order.items) {
@@ -518,7 +524,7 @@ exports.customDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Custom Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address', 'Order Date', 'Product Name', 'Price', 'Quantity'];
+    const tableHeaders = ["User's Name", 'Address','orderId','Order Date', 'Product Name', 'Price', 'Quantity'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -526,7 +532,7 @@ exports.customDownloads = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      const { username, shippingAddress, odrderedDate, totalAmount } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
 
       shippingAddress = shippingAddress.split(',').map(str=>str.trim())
@@ -540,6 +546,7 @@ exports.customDownloads = async (req, res) => {
         const formattedItem = [
           username,
           shippingAddress,
+          _id,
           odrderedDate.toDateString(),
           item.productName,
           item.price,
@@ -552,7 +559,7 @@ exports.customDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '', '', '', totalSales]);
+    formattedOrders.push(['Total sales', '', '','', '', '', totalSales]);
     console.log('formatted doc', formattedOrders);
     const tableOptions = {
       headers: tableHeaders,
@@ -593,7 +600,7 @@ exports.yearlyReport = async (req, res) => {
     let shipping=0
     // Iterate over each order document
     for(let order of sales) {
-      const { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
       
 
       
@@ -649,7 +656,7 @@ exports.yearlyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Yearly Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address', 'Order Date', 'Product Name', 'Price', 'Quantity'];
+    const tableHeaders = ["User's Name", 'Address', 'orderId','Order Date', 'Product Name', 'Price', 'Quantity'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -657,7 +664,7 @@ exports.yearlyDownloads = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      let { username, shippingAddress, odrderedDate, totalAmount } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
 
       shippingAddress = shippingAddress.split(',').map(str=>str.trim())
       shippingAddress.pop()
@@ -669,6 +676,7 @@ exports.yearlyDownloads = async (req, res) => {
         const formattedItem = [
           username,
           shippingAddress,
+          _id,
           odrderedDate.toDateString(),
           item.productName,
           item.price,

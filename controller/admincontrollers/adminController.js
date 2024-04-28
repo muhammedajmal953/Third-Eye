@@ -8,12 +8,13 @@ const Users = require("../../model/userModel");
 // Render login page
 exports.get_login = (req, res) => {
   try {
+    let  message  =req.query.message
     if (req.session.admin) {
       // If admin is already logged in, redirect to dashboard
       return res.redirect("/admin/dashboard");
     }
     // not logged in redirect to login page
-    return res.render("./admin/login");
+    return res.render("./admin/login", { message });
   } catch (error) {
    
     console.error("Error rendering login page:", error);
@@ -21,18 +22,20 @@ exports.get_login = (req, res) => {
   }
 };
 
-//admin login handling
+//admin login handling 
 
 exports.admin_login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const admins = await Admin.findOne({ email: email, password: password });
+    if (!admins) {
+      return res.redirect("/admin?message=invalid credentials");
+    }
     if (email == admins.email && password == admins.password) {
       req.session.admin = admins._id;
       res.redirect("/admin/Dashboard");
     } else {
-      req.session.error = "Invalid Credentials";
-      return res.redirect("/admin");
+      return res.redirect("/admin?message=invalid credentials");
     }
   } catch (error) {
     res.render('admin/admin404')
