@@ -9,14 +9,19 @@ exports.get_products = async (req, res) => {
   try {
     const page = req.params.page;
     const sortBy = req.query.sort;
+    
     const totalProducts = await Product.find({ quantity: { $gt: 0 } });
     const limit = 6;
     const totalPages = Math.ceil(totalProducts.length / limit);
     const { category } = req.query;
+  
     const productOffer = await ProductOffer.find()
     const catagoryOffer = await CatagoryOffer.find()
     // const sortBy = 'hiToLow';
     let sortCriteria = {};
+    
+    
+    if(category)   req.session.filter=category
 
     if (sortBy == "hiToLow") {
       sortCriteria = { price: -1 };
@@ -30,9 +35,9 @@ exports.get_products = async (req, res) => {
 
     const skip = (page - 1) * limit;
 
-    if (category) {
+    if (req.session.filter) {
       const products = await Product.find({
-        catagory: category,
+        catagory: req.session.filter,
         quantity: { $gt: 0 },
       })
         .sort(sortCriteria)
