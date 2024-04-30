@@ -108,14 +108,17 @@ exports.view_products = async (req, res) => {
       }
     }
     for (item of catagoryOffer) {
+      
       if (product.catagory === item.catagoryName) {
+        console.log("Category:", product.catagory, "Category Name:", item.catagoryName);
         product.cOffer = item.offer
+        break
       } else {
         product.cOffer =0
       }
     }
 
-
+    console.log(product.pOffer);
     res.render("./Users/ProductDetails", { product });
   } catch (error) {
     res.render('Users/404error')

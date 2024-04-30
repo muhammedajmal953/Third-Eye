@@ -51,7 +51,7 @@
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
                 <div class="offcanvas-header">
                     <h3 class="mt-1">THIRD EYE</h3>
-                  
+
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                         aria-label="Close"></button>
                 </div>
@@ -292,6 +292,7 @@
                             <tr>
                                 <th>Coupon Code</th>
                                 <th>offer</th>
+                                <th>Minimum Purchase</th>
                             </tr>
                             <% for(let coupon of coupons) {%>
                                 <tr>
@@ -300,6 +301,10 @@
                                         <%=coupon.code %>
                                     </td>
                                     <td>For <%=coupon.offer %>% off</td>
+
+                                    <td>
+                                       Rs- <%= coupon.minimum %>
+                                    </td>
                                 </tr>
                                 <% } %>
                         </table>
@@ -330,7 +335,7 @@
                             With a mission to provide stylish and high-quality eyewear to customers worldwide, Visionary
                             Optics offers
                             a diverse range of products, including prescription glasses, sunglasses, and contact lenses.
-                           
+
                         </p>
                     </div>
                 </div>
@@ -507,7 +512,7 @@
             var coupon = document.getElementById('couponCode').value
             console.log(paymentMethod);
 
-            if (!addressVal ) {
+            if (!addressVal) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Validation Error!',
@@ -610,7 +615,7 @@
                 });
                 return;
             }
-            
+
             if (response.data === 'this coupon is not available for this amount') {
                 Swal.fire({
                     icon: 'warning',
