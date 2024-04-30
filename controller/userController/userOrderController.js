@@ -305,7 +305,7 @@ exports.cancelOrder = async (req, res) => {
     const userId = req.session.user
 
     const order = await Order.findOne({ userId: userId, 'items._id': itemsId })
-     
+
 
     let amount = cartQty * price
 
@@ -318,7 +318,7 @@ exports.cancelOrder = async (req, res) => {
     const product = await Product.updateOne({ _id: productId }, { $inc: { quantity: cartQty } })
 
     if (order.paymentMethod === 'paypal') {
-      
+
       let wallet = await Wallet.findOne({ userId: userId });
       if (!wallet) {
         wallet = new Wallet({
@@ -395,6 +395,22 @@ exports.orderDetails = async (req, res) => {
 exports.invoiceDownload = async (req, res) => {
   try {
     const { productId, cartQty, itemId, cartPrice } = req.query
+    const user = await Users.findOne({ _id: req.session.user })
+    const product = await Product.findOne({ _id: productId })
+
+    const order = await Order.findOne({ 'items._id': itemId })
+
+
+    let shippingAddress = order.shippingAddress
+
+
+    shippingAddress = shippingAddress.split(',').map(str=>str.trim())
+    shippingAddress.pop()
+
+    shippingAddress=shippingAddress.join(',')
+
+    const { username, phone } = user
+
 
     const doc = new PDFDocument();
 
@@ -403,32 +419,38 @@ exports.invoiceDownload = async (req, res) => {
 
     doc.pipe(res);
 
-    doc.fontSize(12).text('Invoice', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Phone', 'Order Date', 'Product Name', 'Quantity', 'Price', 'total'];
+    doc.fontSize(15).text('Invoice', { align: 'center',underline: true }).moveDown();
+    doc.fontSize(10).text(`Name:-${username}`, { align: 'start' }).moveDown();
+    doc.fontSize(10).text(`Address:-`, { align: 'start' })
+    doc.fontSize(8).text(`${shippingAddress}`, { align: 'start' }).moveDown()
+    doc.fontSize(8).text(`phone:-${phone}`, { align: 'start' }).moveDown().moveDown()
+    
+
+    
+
+    const tableHeaders = ['orderId', 'Order Date', 'Product Name', 'Quantity', 'Price', 'total'];
 
     let downloadDetails = []
 
 
     let totalAmount = 0
 
-    const product = await Product.findOne({ _id: productId })
+   
 
-    const order = await Order.findOne({ 'items._id': itemId })
-
-    const user = await Users.findOne({ _id: req.session.user })
-
+    
 
 
     const { productName, price } = product
 
     const orderedDate = order.odrderedDate
 
-    const { username, phone } = user
+    const orderId = order._id
+
+   
     let discount = (price - cartPrice) * cartQty
 
     let InvoiceDetails = [
-      username,
-      phone,
+      orderId,
       orderedDate.toDateString(),
       productName,
       cartQty,
@@ -438,9 +460,9 @@ exports.invoiceDownload = async (req, res) => {
 
     downloadDetails.push(InvoiceDetails)
 
-    downloadDetails.push(['Discount', '', '', '', '', '', discount])
+    downloadDetails.push(['Discount', '', '', '', '', discount])
 
-    downloadDetails.push(['Total Amount', '', '', '', '', '', cartQty * cartPrice])
+    downloadDetails.push(['Total Amount', '', '', '', '', cartQty * cartPrice])
 
     const tableOptions = {
       headers: tableHeaders,
