@@ -171,6 +171,7 @@
             <h6 class="fw-bold mb-3 py-2 px-3 bg-light">Products</h6>
             <% let sumOfDiscount=0,diffrence=0 ,totalPrice=0, actualTotal=0%>
               <% for (let i=0; i < products.length; i++) { %>
+                <%actualTotal+=products[i].price*products[i].cartQty %>
                 <div class="card rounded-0 mb-3">
                   <div class="card-body">
                     <div class="d-flex flex-column flex-xl-row gap-3">
@@ -190,7 +191,7 @@
                                 <% if (offerToApply) { %>
                                   <% discountedPrice=Math.floor(products[i].price - (products[i].price * offerToApply /
                                     100)); 
-                                    actualTotal+=products[i].price*products[i].cartQty
+                                    
                                     %>
                                     <% diffrence=products[i].price - discountedPrice; %>
                                       <% sumOfDiscount +=diffrence*products[i].cartQty; %>
