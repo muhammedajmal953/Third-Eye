@@ -107,10 +107,7 @@ exports.weeklyReport = async (req, res) => {
     };
 
 
-    console.log('actotal:', actualTotal)
-    console.log('shipping:',shipping)
-    console.log(totalSales);
-
+   
     // Render the view with the formatted data
     res.render('admin/weeklyReport', { formattedOrders, totalSales,actualTotal,shipping });
   } catch (error) {
@@ -140,7 +137,7 @@ exports.weeklyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Weekly Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address','orderId', 'Order Date', 'Product Name', 'Price', 'Quantity'];
+    const tableHeaders = ["User's Name", 'Address','orderId', 'Order Date', 'Product Name', 'Price', 'Quantity','Total'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -168,7 +165,8 @@ exports.weeklyDownloads = async (req, res) => {
           odrderedDate.toDateString(),
           item.productName,
           item.price,
-          item.cartQty
+          item.cartQty,
+          item.price*item.cartQty
         ];
 
         formattedOrders.push(formattedItem);
@@ -177,7 +175,7 @@ exports.weeklyDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '','', '', '', totalSales]);
+    formattedOrders.push(['Total sales', '', '','', '', '','', totalSales]);
     console.log('formatted doc', formattedOrders);
     const tableOptions = {
       headers: tableHeaders,
@@ -243,10 +241,6 @@ exports.dailyReport = async (req, res) => {
     };
 
 
-    console.log('actotal:', actualTotal)
-    console.log('shipping:',shipping)
-    console.log(totalSales);
-    // Render the view with the formatted data
     res.render('admin/dailyReport', { formattedOrders, totalSales,actualTotal,shipping });
   } catch (error) {
     // Handle errors
@@ -272,7 +266,7 @@ exports.dailyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Daily Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address','orderId', 'Order Date', 'Product Name', 'Price', 'Quantity'];
+    const tableHeaders = ["User's Name", 'Address','orderId', 'Order Date', 'Product Name', 'Price', 'Quantity','Total'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -296,7 +290,8 @@ exports.dailyDownloads = async (req, res) => {
           odrderedDate.toDateString(),
           item.productName,
           item.price,
-          item.cartQty
+          item.cartQty,
+          item.price*item.cartQty
         ];
 
         formattedOrders.push(formattedItem);
@@ -305,7 +300,7 @@ exports.dailyDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '','', '', '', totalSales]);
+    formattedOrders.push(['Total sales', '', '','', '', '','', totalSales]);
     const tableOptions = {
       headers: tableHeaders,
       rows: formattedOrders
@@ -397,7 +392,7 @@ exports.monthlyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Monthly Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address', 'orderId','Order Date', 'Product Name', 'Price', 'Quantity'];
+    const tableHeaders = ["User's Name", 'Address', 'orderId','Order Date', 'Product Name', 'Price', 'Quantity','Total'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -421,7 +416,9 @@ exports.monthlyDownloads = async (req, res) => {
           odrderedDate.toDateString(),
           item.productName,
           item.price,
-          item.cartQty
+          item.cartQty,
+          item.price*item.cartQty
+
         ];
 
         formattedOrders.push(formattedItem);
@@ -430,7 +427,7 @@ exports.monthlyDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '', '', '', totalSales]);
+    formattedOrders.push(['Total sales', '', '', '', '','', totalSales]);
     console.log('formatted doc', formattedOrders);
     const tableOptions = {
       headers: tableHeaders,
@@ -524,7 +521,7 @@ exports.customDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Custom Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address','orderId','Order Date', 'Product Name', 'Price', 'Quantity'];
+    const tableHeaders = ["User's Name", 'Address','orderId','Order Date', 'Product Name', 'Price', 'Quantity','Total'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -550,7 +547,8 @@ exports.customDownloads = async (req, res) => {
           odrderedDate.toDateString(),
           item.productName,
           item.price,
-          item.cartQty
+          item.cartQty,
+          item.price*item.cartQty
         ];
 
         formattedOrders.push(formattedItem);
@@ -559,7 +557,7 @@ exports.customDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '','', '', '', totalSales]);
+    formattedOrders.push(['Total sales', '', '','', '', '','', totalSales]);
     console.log('formatted doc', formattedOrders);
     const tableOptions = {
       headers: tableHeaders,
@@ -656,7 +654,7 @@ exports.yearlyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Yearly Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address', 'orderId','Order Date', 'Product Name', 'Price', 'Quantity'];
+    const tableHeaders = ["User's Name", 'Address', 'orderId','Order Date', 'Product Name', 'Price', 'Quantity','total'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -680,7 +678,8 @@ exports.yearlyDownloads = async (req, res) => {
           odrderedDate.toDateString(),
           item.productName,
           item.price,
-          item.cartQty
+          item.cartQty,
+          item.price*item.cartQty
         ];
 
         formattedOrders.push(formattedItem);
@@ -689,7 +688,7 @@ exports.yearlyDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '', '', '', totalSales]);
+    formattedOrders.push(['Total sales', '', '', '', '','', totalSales]);
   
     const tableOptions = {
       headers: tableHeaders,
