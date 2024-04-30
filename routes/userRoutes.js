@@ -143,7 +143,10 @@ userRoutes.post('/user/quickPayment', cancelledPaymentController.quickPayment)
 
 userRoutes.get('/user/successQuickPayment', cancelledPaymentController.successQuickPayement)
 
-userRoutes.post('/user/invoiceDownload',userOrderController.invoiceDownload)
+userRoutes.post('/user/invoiceDownload', userOrderController.invoiceDownload)
+
+
+userRoutes.post('/user/clearFilter',userProductController.clearFilter)
 
 
 

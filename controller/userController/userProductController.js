@@ -19,7 +19,7 @@ exports.get_products = async (req, res) => {
     const catagoryOffer = await CatagoryOffer.find()
     // const sortBy = 'hiToLow';
     let sortCriteria = {};
-    
+    let filter =null
     
     if(category)   req.session.filter=category
 
@@ -56,6 +56,8 @@ exports.get_products = async (req, res) => {
         }
       }
 
+   filter = req.session.filter
+
       const totalPages = Math.ceil(products.length / limit);
       const catagory = await Catagory.find();
       return res.render("./Users/productsGrid", {
@@ -64,6 +66,8 @@ exports.get_products = async (req, res) => {
         sortBy,
         totalPages,
         page,
+        filter
+        
       });
     }
     const products = await Product.find({ quantity: { $gt: 0 } })
@@ -89,12 +93,19 @@ exports.get_products = async (req, res) => {
       sortBy,
       totalPages,
       page,
+      filter
     });
   } catch (error) {
     console.log(error);
     res.render('Users/404error')
   }
 };
+
+exports.clearFilter = (req, res) => {
+  req.session.filter = null
+  
+  res.json('success')
+}
 
 exports.view_products = async (req, res) => {
   try {

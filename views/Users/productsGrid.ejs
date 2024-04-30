@@ -51,7 +51,7 @@
         <div class="offcanvas-header">
           <h3 class="mt-1">THIRD EYE</h3>
           <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          
+
         </div>
         <div class="offcanvas-body primary-menu">
           <ul class="navbar-nav justify-content-start flex-grow-1 gap-1">
@@ -96,7 +96,7 @@
           </ul>
         </div>
       </div>
-      
+
       <ul class="navbar-nav secondary-menu flex-row">
         <li class="nav-item">
           <a class="nav-link dark-mode-icon" href="javascript:;">
@@ -175,6 +175,7 @@
                             <div class="categories-wrapper height-1 p-1">
                               <%for(i=0;i<catagory.length;i++){%>
                                 <%if(catagory[i].isActive===true){%>
+                               
                                   <div class="form-check">
                                     <input class="form-check-input" name="category" type="checkbox"
                                       value="<%=catagory[i].catagoryName%>" id="chekCate1">
@@ -196,10 +197,12 @@
                             <div class="Price-wrapper p-1">
                               <div class="input-group">
                                 <!-- <input type="text" name="minPrice" class="form-control rounded-0" placeholder="$10"> -->
-                                <span class="input-group-text bg-section-1 border-0">-</span>
+                                <span class="input-group-text bg-section-1 border-0"></span>
                                 <!-- <input type="text" name="maxPrice" class="form-control rounded-0" placeholder="$10000"> -->
                                 <button type="submit" class="btn btn-outline-dark rounded-0 ms-2">Apply<i
                                     class="bi bi-chevron-right"></i></button>
+                                <button type="button" onclick="clearFilter()"
+                                  class="btn btn-outline-dark rounded-0 ms-2">Clear<i class="bi bi-trash"></i></button>
                               </div>
                             </div>
                           </div>
@@ -259,15 +262,13 @@
                               <%=products[i].catagory%>
                             </p>
                             <div class="product-price d-flex align-items-center gap-2 mt-2">
-                              <% let pOffer = products[i].pOffer||0;
-                                let cOffer = products[i].cOffer||0;
-                                let offerToApply=Math.max(pOffer,cOffer)
-                                %>
+                              <% let pOffer=products[i].pOffer||0; let cOffer=products[i].cOffer||0; let
+                                offerToApply=Math.max(pOffer,cOffer) %>
                                 <% if (offerToApply) { %>
                                   <div class="h6 fw-bold">
                                     Rs- <%=Math.floor(products[i].price-(products[i].price*offerToApply /100))%>
                                   </div>
-                                  <div class="h6 fw-light text-muted text-decoration-line-through">Rs- 
+                                  <div class="h6 fw-light text-muted text-decoration-line-through">Rs-
                                     <%=products[i].price%>
                                   </div>
                                   <div class="h6 fw-bold text-danger">(<%=offerToApply%>% off)</div>
@@ -422,10 +423,53 @@
   <script src="/user/plugins/slick/slick.min.js"></script>
   <script src="/user/js/main.js"></script>
   <script src="/user/js/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 
 
 </body>
+<script>
+  let categoryFilters = ' <%- JSON.stringify(filter || []) %>'
+  window.onload = function () {
+    // Get the category filters from the session
+   
+
+    // Get all the checkboxes
+    const checkboxes = document.querySelectorAll('input[name="category"]');
+
+    // Loop through each checkbox
+    checkboxes.forEach(checkbox => {
+      // If the checkbox value matches any category filter
+      if (categoryFilters.includes(checkbox.value)) {
+        // Check the checkbox
+        checkbox.checked = true;
+      }
+    });
+  };
+
+
+  async function clearFilter() {
+    try {
+      const response = await axios.post('/user/clearFilter');
+      if (response.data === 'success') {
+        categoryFilters=[]
+        const checkboxes = document.querySelectorAll('input[name="category"]');
+
+        // Loop through each checkbox
+        checkboxes.forEach(checkbox => {
+       
+         
+            checkbox.checked = false;
+          
+        });
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('An error occurred while clearing filter:', error);
+    }
+  }
+
+</script>
 
 
 <!-- Mirrored from codervent.com/shopingo/demo/shopingo_V1/shop-grid.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 14 Dec 2023 05:42:55 GMT -->
