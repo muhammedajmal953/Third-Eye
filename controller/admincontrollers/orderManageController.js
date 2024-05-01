@@ -176,7 +176,7 @@ exports.weeklyDownloads = async (req, res) => {
 
     // Push total sales as a separate row at the end
     formattedOrders.push(['Total sales', '', '', '', '', '', '', totalSales]);
-    console.log('formatted doc', formattedOrders);
+   
     const tableOptions = {
       headers: tableHeaders,
       rows: formattedOrders,
@@ -428,7 +428,7 @@ exports.monthlyDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '', '', '', '', totalSales]);
+    formattedOrders.push(['Total sales', '', '', '', '', '','', totalSales]);
     console.log('formatted doc', formattedOrders);
     const tableOptions = {
       headers: tableHeaders,
