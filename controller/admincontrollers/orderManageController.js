@@ -20,7 +20,7 @@ exports.orders = async (req, res) => {
       res.render("./admin/orderManage", { orders: "", totalPages: [] });
     }
     res.render("./admin/orderManage", { orders, totalPages });
-  } catch (error) { 
+  } catch (error) {
     res.render('admin/admin404')
   }
 };
@@ -34,7 +34,7 @@ exports.ordersDetails = async (req, res) => {
     const orderedItems = order.items;
 
     res.render("./admin/orderdetails", { orderedItems, order });
-  } catch (error) { 
+  } catch (error) {
     res.render('admin/admin404')
   }
 };
@@ -50,7 +50,7 @@ exports.change_status = async (req, res) => {
     );
 
     res.status(200).json(changedStatus);
-  } catch (error) { 
+  } catch (error) {
     res.render('admin/admin404')
   }
 };
@@ -74,12 +74,12 @@ exports.weeklyReport = async (req, res) => {
       // Render the view with an empty array if there are no sales
       return res.render('admin/weeklyReport', { formattedOrders: [] });
     }
-    let actualTotal=0
+    let actualTotal = 0
     let totalSales = 0
-    let shipping=0
+    let shipping = 0
     // Iterate over each order document
-    for(let order of sales) {
-      const { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+    for (let order of sales) {
+      const { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
 
       // Iterate over each item in the order
       for (let item of order.items) {
@@ -94,22 +94,22 @@ exports.weeklyReport = async (req, res) => {
 
         };
 
-        let product=await Product.findOne({_id:item.productId})
-       
-        let actualPrice = product.price * item.cartQty
-        shipping+=item.cartQty*40
-        actualTotal+=actualPrice
+        let product = await Product.findOne({ _id: item.productId })
 
-        
+        let actualPrice = product.price * item.cartQty
+        shipping += item.cartQty * 40
+        actualTotal += actualPrice
+
+
         formattedOrders.push(formattedItem);
       };
       totalSales = totalSales + totalAmount
     };
 
 
-   
+
     // Render the view with the formatted data
-    res.render('admin/weeklyReport', { formattedOrders, totalSales,actualTotal,shipping });
+    res.render('admin/weeklyReport', { formattedOrders, totalSales, actualTotal, shipping });
   } catch (error) {
     // Handle errors
     console.error(error);
@@ -137,7 +137,7 @@ exports.weeklyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Weekly Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address','orderId', 'Order Date', 'Product Name', 'Price', 'Quantity','Total'];
+    const tableHeaders = ["User's Name", 'Address', 'orderId', 'Order Date', 'Product Name', 'Price', 'Quantity', 'Total'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -145,15 +145,15 @@ exports.weeklyDownloads = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
 
 
-      shippingAddress = shippingAddress.split(',').map(str=>str.trim())
+      shippingAddress = shippingAddress.split(',').map(str => str.trim())
       shippingAddress.pop()
 
-      shippingAddress=shippingAddress.join(',')
+      shippingAddress = shippingAddress.join(',')
 
-      
+
 
 
       // Iterate over each item in the order
@@ -166,7 +166,7 @@ exports.weeklyDownloads = async (req, res) => {
           item.productName,
           item.price,
           item.cartQty,
-          item.price*item.cartQty
+          item.price * item.cartQty
         ];
 
         formattedOrders.push(formattedItem);
@@ -175,7 +175,7 @@ exports.weeklyDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '','', '', '','', totalSales]);
+    formattedOrders.push(['Total sales', '', '', '', '', '', '', totalSales]);
     console.log('formatted doc', formattedOrders);
     const tableOptions = {
       headers: tableHeaders,
@@ -208,12 +208,12 @@ exports.dailyReport = async (req, res) => {
       // Render the view with an empty array if there are no sales
       return res.render('admin/dailyReport', { formattedOrders: [] });
     }
-    let actualTotal=0
+    let actualTotal = 0
     let totalSales = 0
-    let shipping=0
+    let shipping = 0
     // Iterate over each order document
-    for(let order of sales) {
-      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+    for (let order of sales) {
+      let { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
 
       // Iterate over each item in the order
       for (let item of order.items) {
@@ -228,20 +228,20 @@ exports.dailyReport = async (req, res) => {
 
         };
 
-        let product=await Product.findOne({_id:item.productId})
-       
-        let actualPrice = product.price * item.cartQty
-        shipping+=item.cartQty*40
-        actualTotal+=actualPrice
+        let product = await Product.findOne({ _id: item.productId })
 
-        
+        let actualPrice = product.price * item.cartQty
+        shipping += item.cartQty * 40
+        actualTotal += actualPrice
+
+
         formattedOrders.push(formattedItem);
       };
       totalSales = totalSales + totalAmount
     };
 
 
-    res.render('admin/dailyReport', { formattedOrders, totalSales,actualTotal,shipping });
+    res.render('admin/dailyReport', { formattedOrders, totalSales, actualTotal, shipping });
   } catch (error) {
     // Handle errors
     console.error(error);
@@ -266,7 +266,7 @@ exports.dailyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Daily Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address','orderId', 'Order Date', 'Product Name', 'Price', 'Quantity','Total'];
+    const tableHeaders = ["User's Name", 'Address', 'orderId', 'Order Date', 'Product Name', 'Price', 'Quantity', 'Total'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -274,13 +274,13 @@ exports.dailyDownloads = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
 
-      shippingAddress = shippingAddress.split(',').map(str=>str.trim())
+      shippingAddress = shippingAddress.split(',').map(str => str.trim())
       shippingAddress.pop()
 
       shippingAddress = shippingAddress.join(',')
-      
+
       // Iterate over each item in the order
       order.items.forEach(item => {
         const formattedItem = [
@@ -291,7 +291,7 @@ exports.dailyDownloads = async (req, res) => {
           item.productName,
           item.price,
           item.cartQty,
-          item.price*item.cartQty
+          item.price * item.cartQty
         ];
 
         formattedOrders.push(formattedItem);
@@ -300,7 +300,7 @@ exports.dailyDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '','', '', '','', totalSales]);
+    formattedOrders.push(['Total sales', '', '', '', '', '', '', totalSales]);
     const tableOptions = {
       headers: tableHeaders,
       rows: formattedOrders
@@ -320,26 +320,27 @@ exports.dailyDownloads = async (req, res) => {
 exports.monthlyReport = async (req, res) => {
   try {
     const today = new Date();
-    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+    
     // Query orders within the specified date range
     const sales = await Order.find({
       odrderedDate: { $gte: firstDayOfMonth, $lte: lastDayOfMonth }
     });
 
     const formattedOrders = [];
-
+    let totalSales = 0
+    let actualTotal = 0
+    let shipping = 0
+    
     if (!sales || sales.length === 0) {
       // Render the view with an empty array if there are no sales
-      return res.render('admin/monthlyReport', { formattedOrders: [] });
+      return res.render('admin/monthlyReport', { formattedOrders: [] ,totalSales, actualTotal, shipping});
     }
-    let totalSales = 0
-    let actualTotal=0
-    let shipping=0
+  
     // Iterate over each order document
-    for(let order of sales) {
-      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+    for (let order of sales) {
+      let { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
 
       // Iterate over each item in the order
       for (let item of order.items) {
@@ -354,20 +355,20 @@ exports.monthlyReport = async (req, res) => {
 
         };
 
-        let product=await Product.findOne({_id:item.productId})
-       
-        let actualPrice = product.price * item.cartQty
-        shipping+=item.cartQty*40
-        actualTotal+=actualPrice
+        let product = await Product.findOne({ _id: item.productId })
 
-        
+        let actualPrice = product.price * item.cartQty
+        shipping += item.cartQty * 40
+        actualTotal += actualPrice
+
+
         formattedOrders.push(formattedItem);
       };
       totalSales = totalSales + totalAmount
     };
-  
+
     // Render the view with the formatted data
-    res.render('admin/monthlyReport', { formattedOrders, totalSales,actualTotal,shipping });
+    res.render('admin/monthlyReport', { formattedOrders, totalSales, actualTotal, shipping });
   } catch (error) {
     // Handle errors
     console.error(error);
@@ -377,8 +378,8 @@ exports.monthlyReport = async (req, res) => {
 exports.monthlyDownloads = async (req, res) => {
   try {
     const today = new Date();
-    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 0);
 
     // Query orders within the specified date range
     const sales = await Order.find({
@@ -392,7 +393,7 @@ exports.monthlyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Monthly Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address', 'orderId','Order Date', 'Product Name', 'Price', 'Quantity','Total'];
+    const tableHeaders = ["User's Name", 'Address', 'orderId', 'Order Date', 'Product Name', 'Price', 'Quantity', 'Total'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -400,12 +401,12 @@ exports.monthlyDownloads = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
 
-      shippingAddress = shippingAddress.split(',').map(str=>str.trim())
+      shippingAddress = shippingAddress.split(',').map(str => str.trim())
       shippingAddress.pop()
 
-      shippingAddress=shippingAddress.join(',')
+      shippingAddress = shippingAddress.join(',')
 
       // Iterate over each item in the order
       order.items.forEach(item => {
@@ -417,7 +418,7 @@ exports.monthlyDownloads = async (req, res) => {
           item.productName,
           item.price,
           item.cartQty,
-          item.price*item.cartQty
+          item.price * item.cartQty
 
         ];
 
@@ -427,7 +428,7 @@ exports.monthlyDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '', '', '','', totalSales]);
+    formattedOrders.push(['Total sales', '', '', '', '', '', totalSales]);
     console.log('formatted doc', formattedOrders);
     const tableOptions = {
       headers: tableHeaders,
@@ -463,11 +464,11 @@ exports.customReport = async (req, res) => {
       return res.render('admin/customReport', { formattedOrders: [], totalSales, date });
     }
 
-    let actualTotal=0
-    let shipping=0
+    let actualTotal = 0
+    let shipping = 0
     // Iterate over each order document
-    for(let order of sales) {
-      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+    for (let order of sales) {
+      let { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
 
       // Iterate over each item in the order
       for (let item of order.items) {
@@ -482,19 +483,19 @@ exports.customReport = async (req, res) => {
 
         };
 
-        let product=await Product.findOne({_id:item.productId})
-       
-        let actualPrice = product.price * item.cartQty
-        shipping+=item.cartQty*40
-        actualTotal+=actualPrice
+        let product = await Product.findOne({ _id: item.productId })
 
-        
+        let actualPrice = product.price * item.cartQty
+        shipping += item.cartQty * 40
+        actualTotal += actualPrice
+
+
         formattedOrders.push(formattedItem);
       };
       totalSales = totalSales + totalAmount
     };
     // Render the view with the formatted data
-    res.render('admin/customReport', { formattedOrders, totalSales, date,actualTotal,shipping });
+    res.render('admin/customReport', { formattedOrders, totalSales, date, actualTotal, shipping });
   } catch (error) {
     // Handle errors
     console.error(error);
@@ -521,7 +522,7 @@ exports.customDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Custom Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address','orderId','Order Date', 'Product Name', 'Price', 'Quantity','Total'];
+    const tableHeaders = ["User's Name", 'Address', 'orderId', 'Order Date', 'Product Name', 'Price', 'Quantity', 'Total'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -529,14 +530,14 @@ exports.customDownloads = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
 
 
-      shippingAddress = shippingAddress.split(',').map(str=>str.trim())
+      shippingAddress = shippingAddress.split(',').map(str => str.trim())
       shippingAddress.pop()
 
       shippingAddress = shippingAddress.join(',')
-      
+
 
       // Iterate over each item in the order
       order.items.forEach(item => {
@@ -548,7 +549,7 @@ exports.customDownloads = async (req, res) => {
           item.productName,
           item.price,
           item.cartQty,
-          item.price*item.cartQty
+          item.price * item.cartQty
         ];
 
         formattedOrders.push(formattedItem);
@@ -557,7 +558,7 @@ exports.customDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '','', '', '','', totalSales]);
+    formattedOrders.push(['Total sales', '', '', '', '', '', '', totalSales]);
     console.log('formatted doc', formattedOrders);
     const tableOptions = {
       headers: tableHeaders,
@@ -593,15 +594,15 @@ exports.yearlyReport = async (req, res) => {
       // Render the view with an empty array if there are no sales
       return res.render('admin/yearlyReport', { formattedOrders: [] });
     }
-    let actualTotal=0
+    let actualTotal = 0
     let totalSales = 0
-    let shipping=0
+    let shipping = 0
     // Iterate over each order document
-    for(let order of sales) {
+    for (let order of sales) {
       let { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
-      
 
-      
+
+
       // Iterate over each item in the order
       for (let item of order.items) {
         const formattedItem = {
@@ -615,19 +616,19 @@ exports.yearlyReport = async (req, res) => {
 
         };
 
-        let product=await Product.findOne({_id:item.productId})
-       
-        let actualPrice = product.price * item.cartQty
-        shipping+=item.cartQty*40
-        actualTotal+=actualPrice
+        let product = await Product.findOne({ _id: item.productId })
 
-        
+        let actualPrice = product.price * item.cartQty
+        shipping += item.cartQty * 40
+        actualTotal += actualPrice
+
+
         formattedOrders.push(formattedItem);
       };
       totalSales = totalSales + totalAmount
     };
     // Render the view with the formatted data
-    res.render('admin/yearlyReport', { formattedOrders, totalSales,actualTotal,shipping });
+    res.render('admin/yearlyReport', { formattedOrders, totalSales, actualTotal, shipping });
   } catch (error) {
     // Handle errors
     console.error(error);
@@ -641,7 +642,7 @@ exports.yearlyDownloads = async (req, res) => {
     const today = new Date();
     const firstDayOfYear = new Date(today.getFullYear(), 1, 1);
     const lastDayOfYear = new Date(today.getFullYear(), 11, 31);
-  
+
     // Query orders within the specified date range
     const sales = await Order.find({
       odrderedDate: { $gte: firstDayOfYear, $lte: lastDayOfYear }
@@ -654,7 +655,7 @@ exports.yearlyDownloads = async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(12).text('Yearly Sales Report', { align: 'center' }).moveDown();
-    const tableHeaders = ["User's Name", 'Address', 'orderId','Order Date', 'Product Name', 'Price', 'Quantity','total'];
+    const tableHeaders = ["User's Name", 'Address', 'orderId', 'Order Date', 'Product Name', 'Price', 'Quantity', 'total'];
 
     const formattedOrders = []
     let totalSales = 0
@@ -662,12 +663,12 @@ exports.yearlyDownloads = async (req, res) => {
 
     // Iterate over each order document
     sales.forEach(order => {
-      let { username, shippingAddress, odrderedDate, totalAmount,_id } = order;
+      let { username, shippingAddress, odrderedDate, totalAmount, _id } = order;
 
-      shippingAddress = shippingAddress.split(',').map(str=>str.trim())
+      shippingAddress = shippingAddress.split(',').map(str => str.trim())
       shippingAddress.pop()
 
-      shippingAddress=shippingAddress.join(',')
+      shippingAddress = shippingAddress.join(',')
 
       // Iterate over each item in the order
       order.items.forEach(item => {
@@ -679,7 +680,7 @@ exports.yearlyDownloads = async (req, res) => {
           item.productName,
           item.price,
           item.cartQty,
-          item.price*item.cartQty
+          item.price * item.cartQty
         ];
 
         formattedOrders.push(formattedItem);
@@ -688,11 +689,18 @@ exports.yearlyDownloads = async (req, res) => {
     });
 
     // Push total sales as a separate row at the end
-    formattedOrders.push(['Total sales', '', '', '', '','', totalSales]);
-  
+    formattedOrders.push(['Total sales', '', '', '', '', '', '', totalSales]);
+
     const tableOptions = {
       headers: tableHeaders,
-      rows: formattedOrders
+      rows: formattedOrders,
+      border: {
+        top: true,
+        bottom: true,
+        left: true,
+        right: true,
+      },
+      borderColor: 'black'
     };
 
     doc.table(tableOptions);
@@ -711,7 +719,7 @@ exports.yearlyDownloads = async (req, res) => {
 exports.approveReturn = async (req, res) => {
   try {
     const { productId, cartQty, itemId, userId } = req.body
-    
+
     console.log(req.body);
     const product = await Product.findOne({ _id: productId });
     if (!product) {
@@ -719,26 +727,26 @@ exports.approveReturn = async (req, res) => {
     }
     const amount = product.price * cartQty;
 
-  let wallet = await Wallet.findOne({ userId: userId });
-  if (!wallet) {
-    wallet = new Wallet({
-      userId: userId,
-      balance: amount,
-      transaction: [{ status: `Refund`, date: Date.now(), amount:amount }]
-    });
-    await wallet.save();
-  } else {
+    let wallet = await Wallet.findOne({ userId: userId });
+    if (!wallet) {
+      wallet = new Wallet({
+        userId: userId,
+        balance: amount,
+        transaction: [{ status: `Refund`, date: Date.now(), amount: amount }]
+      });
+      await wallet.save();
+    } else {
 
-    await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount }, $push: {transaction: { status: `Refund`, date: Date.now(), amount:amount } } })
-  }
-  await Product.findOneAndUpdate({ _id: productId }, { $inc: { quantity: cartQty } });
+      await Wallet.findOneAndUpdate({ userId: userId }, { $inc: { balance: amount }, $push: { transaction: { status: `Refund`, date: Date.now(), amount: amount } } })
+    }
+    await Product.findOneAndUpdate({ _id: productId }, { $inc: { quantity: cartQty } });
 
-  await Order.updateOne(
-    { userId: userId, 'items._id': itemId },
-    { $set: { 'items.$.status': 'Returned' } }
-  );
+    await Order.updateOne(
+      { userId: userId, 'items._id': itemId },
+      { $set: { 'items.$.status': 'Returned' } }
+    );
 
-  res.json('success');
+    res.json('success');
   } catch (error) {
     res.render('admin/admin404')
   }
