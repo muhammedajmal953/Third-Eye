@@ -144,8 +144,8 @@ exports.orderPlace = async (req, res) => {
           "payment_method": "paypal"
         },
         "redirect_urls": {
-          "return_url": `https://third-eye-ow7x.onrender.com/user/successOrder?cart=${cart}`, // Your success URL
-          "cancel_url": `https://third-eye-ow7x.onrender.com/user/cancelledPayment?cart=${cart}`    // Your cancel URL
+          "return_url": `https://ecom.thethirdeye.shop/user/successOrder?cart=${cart}`, // Your success URL
+          "cancel_url": `https://ecom.thethirdeye.shop/user/cancelledPayment?cart=${cart}`    // Your cancel URL
         },
         "transactions": [{
           "amount": {
