@@ -7,7 +7,7 @@
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0tYJMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
     <script
@@ -18,50 +18,58 @@
     <title>login form-ThirdEye - eCommerce</title>
   </head>
   <body>
-   
-    <div class="login-container">
-      <%if(message){%>
-        <p class="text-danger"><%=message%></p>
+    <div class="container mt-5">
+      <div class="login-container">
+        <%if(message){%>
+          <p class="text-danger"><%=message%></p>
         <%}%>
-      <form
-        class="login-form"
-        method="POST"
-        action="/user/login"
-        onsubmit="return validateLoginForm()"
-      >
-        <h1>Welcome Back</h1>
-        <p>Please login to your account</p>
-        <div class="input-group">
-          <input
-            type="text"
-            id="username"
-            name="loginEmail"
-            placeholder="Enter email"
-            required
-          />
-          <p id="usernameVal"></p>
-        </div>
-        <div class="input-group">
-          <input
-            type="password"
-            id="password"
-            name="loginPassword"
-            placeholder="Password"
-            required
-          />
-          <p id="passwordVal"></p>
-        </div>
+        <form
+          class="login-form"
+          method="POST"
+          action="/user/login"
+          onsubmit="return validateLoginForm()"
+        >
+          <h1 class="mb-3">Welcome Back</h1>
+          <p>Please login to your account</p>
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="loginEmail"
+              placeholder="Enter email"
+              required
+            />
+            <p id="usernameVal" class="text-danger small"></p>
+          </div>
+          <div class="mb-3">
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="loginPassword"
+              placeholder="Password"
+              required
+            />
+            <p id="passwordVal" class="text-danger small"></p>
+          </div>
 
-        <button type="submit">Submit</button>
-        <div class="bottom-text">
-          <p>Don't have an account? <a href="/user/signup">Sign Up</a></p>
-          <p><a href="/user/forgotPassword">Forgot password?</a></p>
+          <button type="submit" class="btn btn-primary w-100">Submit</button>
+          <div class="text-center mt-3">
+            <p>Don't have an account? <a href="/user/signup">Sign Up</a></p>
+            <p><a href="/user/forgotPassword">Forgot password?</a></p>
+          </div>
+        </form>
+
+        <div class="card mt-4">
+          <div class="card-body">
+            <h5 class="card-title">Dummy Data to Login</h5>
+            <p class="card-text"><strong>Email:</strong> ajmal@gmail.com</p>
+            <p class="card-text"><strong>Password:</strong> ajmal@123</p>
+          </div>
         </div>
-        <!-- <a href="/user/auth/google" class="btn btn-danger">sign in with google</a> -->
-      </form>
+      </div>
     </div>
+    <script src="/js/formValidations.js"></script>
   </body>
-
-  <script src="/js/formValidations.js"></script>
- 
 </html>
