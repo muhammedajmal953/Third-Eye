@@ -4,7 +4,8 @@ const nodemailer=require('nodemailer')
 require('dotenv').config({path:'../.env'})
 
 
-const transportMail=nodemailer.createTransport({
+const transportMail = nodemailer.createTransport({
+    
     service:'gmail',
     auth:{
            user:process.env.Myemail,
@@ -13,7 +14,9 @@ const transportMail=nodemailer.createTransport({
 })
 
 
-const sendMail=async(to,text)=>{
+const sendMail = async (to, text) => {
+    console.log(process.env.Mypassword);
+    
     try {
        const mailOptions={
         from:process.env.Myemail,
@@ -26,7 +29,6 @@ const sendMail=async(to,text)=>{
        return info
     } catch (error) {
         console.error('Error occurred while sending email:', error);
-        throw error;
     }
 }
 

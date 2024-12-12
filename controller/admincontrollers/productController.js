@@ -24,10 +24,20 @@ exports.products = async (req, res) => {
 exports.add_products = async (req, res) => {
   try {
     // Extract image URLs from the uploaded files
+    const existingProduct = await Product.findOne({ productName: req.body.name })
+    
+    if (existingProduct) {
+     return res.json('productname is already added')
+    }
+
+
+
     const imageUrls = [];
     if (!req.files || req.files.length === 0) {
       return res.json('NoImages'); 
     }
+   
+   
 
    else {
     if (req.files) {

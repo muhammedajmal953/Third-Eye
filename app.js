@@ -9,7 +9,7 @@ require("dotenv").config()
 const passport = require('./services/passportAuth');
  
 
-
+   
 // Defining the port for the server
 const PORT = process.env.PORT
 
@@ -42,17 +42,14 @@ app.use(session({
 }));
 
 
-app.use(passport.initialize())
+app.use(passport.initialize())   
 
 
 // Routing for admin and user functionalities
 app.use('/admin', adminRoutes);
-app.use('/', userRoutes);
+app.use('/', userRoutes); 
 
-
-
-
-
+ 
 // Starting the server and listening on the defined port
 app.listen(PORT, () => {
     console.log(`Server is running on ${process.env.PORT}`);

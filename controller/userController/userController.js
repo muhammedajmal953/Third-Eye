@@ -25,8 +25,8 @@ exports.landing = async (req, res) => {
     if (req.session.user) {
       return res.redirect("/user/home");
     }
-    const catagory = await Catagory.find().limit(4);
-    const product = await Product.find().limit(4);
+    const catagory = await Catagory.find().limit(5);
+    const product = await Product.find().limit(5);
     // Rendering user home page and passing retrieved categories and products to the view
     res.render("./Users/landing", { catagory: catagory, product: product });
   } catch (error) {
@@ -146,6 +146,8 @@ exports.user_SignUp = async (req, res) => {
       globalPassword = hash;
     });
     let shortId = generateRandomString()
+    console.log('singup email',email);
+    
     globalEmail = email;
     globalPhone = phone;
     globalUsername = username;
@@ -175,6 +177,10 @@ exports.user_SignUp = async (req, res) => {
 exports.verifyEmail = async (req, res) => {
   const userOtp = req.body.otp;
 
+  console.log(userOtp,'send to back');
+  
+  console.log(globalEmail);
+  
   const referals = await Referal.find() 
 
   const referal = referals[0]
